@@ -2,7 +2,7 @@
 Please install *Python 3.10.6* before you install the dependencies. If you already have an earlier version of Python installed, please upgrade your version.
 
 You need to install the following packages on your machine or a virtual environment to run the website using the following pip commands:
-- ```pip install django``` (for web development)
+- ```pip install django=4.1.4``` (for web development)
 - ```pip install pysentimiento``` (for sentiment analysis using the BERT model)
 - ```pip install vaderSentiment``` (for sentiment analysis the VADER lexicon)
 
