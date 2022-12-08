@@ -20,5 +20,12 @@ For documentation on how to use VADER, please read their GitHub's documentation.
 For BERT, please read the following documentation.
 - [PySentimiento GitHub Documentation](https://github.com/pysentimiento/pysentimiento)
 
+# Misc notes
+- To log-in into the *administrator* page, use the following credentials:
+  ```
+  username: myadmin
+  password: testing321
+  ```
+
 # Other links
 - [Web page sketches](https://www.figma.com/file/hXYV9D1kKhyBl5I5N21MsM/Website-Design?node-id=0%3A1&t=HLugZxy81sUyIc1p-1)
