@@ -6,6 +6,9 @@ You need to install the following packages on your machine or a virtual environm
 - ```pip install pysentimiento``` (for sentiment analysis using the BERT model)
 - ```pip install vaderSentiment``` (for sentiment analysis the VADER lexicon)
 
+## Notes on virtual environments
+As much as possible, use ```venv``` as the name of your virtual environment. If you want to use another name, please add the name of your folder to the repository's ```.gitignore``` file.
+
 # Documentations / Tutorials
 For Django tutorials, I recommend Corey Schafer's YouTube tutorials that covers a lot of the features of Django, as well as Bootstrap 4 for designing the website. Supplemental readings can be found on Django's official website.
 - [Corey Schafer's Django tutorial](https://www.youtube.com/watch?v=UmljXZIypDc&list=PL-osiE80TeTtoQCKZ03TU5fNfx2UY6U4p)
