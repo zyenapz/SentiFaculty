@@ -11,10 +11,10 @@ For Django tutorials, I recommend Corey Schafer's YouTube tutorials that covers 
 - [Corey Schafer's Django tutorial](https://www.youtube.com/watch?v=UmljXZIypDc&list=PL-osiE80TeTtoQCKZ03TU5fNfx2UY6U4p)
 - [Django Documentation](https://www.djangoproject.com/)
 
-For documentation on how to use VADER, it's best to use their GitHub page
+For documentation on how to use VADER, please read their GitHub's documentation.
 - [VADER GitHub Documentation](https://github.com/cjhutto/vaderSentiment)
 
-For BERT, use
+For BERT, please read the following documentation.
 - [PySentimiento GitHub Documentation](https://github.com/pysentimiento/pysentimiento)
 
 # Other links
