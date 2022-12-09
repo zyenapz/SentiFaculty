@@ -29,3 +29,4 @@ For BERT, please read the following documentation.
 
 # Other links
 - [Web page sketches](https://www.figma.com/file/hXYV9D1kKhyBl5I5N21MsM/Website-Design?node-id=0%3A1&t=HLugZxy81sUyIc1p-1)
+- [Entity-Relationship Diagram](https://www.figma.com/file/qaF0ljgcPJO45VGFYkBbSl/SentiFaculty-ERD?node-id=0%3A1&t=DQ7HkJdIjpiYsmIU-0)
