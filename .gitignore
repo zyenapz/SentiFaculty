@@ -1,2 +1,5 @@
 .directory
 .venv
+venv
+*.pyc
+*.sqlite3
