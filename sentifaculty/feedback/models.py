@@ -44,7 +44,7 @@ class Feedback(models.Model):
         NEUTRAL = 0
         NEGATIVE = -1
 
-    content = models.CharField(min_length=10, max_length=100)
+    content = models.CharField(max_length=100)
     actual_sentiment = models.IntegerField(choices=Sentiment.choices)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     faculty = models.ForeignKey(Faculty, on_delete=models.CASCADE)
