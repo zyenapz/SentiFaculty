@@ -6,6 +6,9 @@ You need to install the following packages on your machine or a virtual environm
 - ```pip install pysentimiento``` (for sentiment analysis using the BERT model)
 - ```pip install vaderSentiment``` (for sentiment analysis the VADER lexicon)
 
+## BRANCHES
+developM is the development branch for **Mu-Cepheus** 
+
 ## A note on virtual environments
 As much as possible, use ```venv``` as the name of your virtual environment. If you want to use another name, please add the name of your folder to the repository's ```.gitignore``` file.
 
