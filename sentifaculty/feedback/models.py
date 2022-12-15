@@ -1,9 +1,13 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+import time
 
 
 class Section(models.Model):
     section_ID = models.CharField(max_length=3, primary_key=True)
+
+    def __str__(self) -> str:
+        return self.section_ID
 
 
 class Strand(models.Model):
@@ -32,6 +36,9 @@ class Strand(models.Model):
         default=StrandChoices.HUMSS,
     )
 
+    def __str__(self) -> str:
+        return self.strand_name
+
 
 class Student(models.Model):
     student_ID = models.CharField(max_length=10, primary_key=True)
@@ -42,6 +49,9 @@ class Student(models.Model):
     )
     strand_ID = models.ForeignKey(Strand, on_delete=models.PROTECT)
     email = models.EmailField()
+
+    def __str__(self) -> str:
+        return self.student_ID
 
 
 class Feedback(models.Model):
@@ -59,6 +69,9 @@ class Feedback(models.Model):
     bert_senti_ID = models.ForeignKey(
         'BERT_Sentiment', on_delete=models.PROTECT)
 
+    def __str__(self) -> str:
+        return self.content
+
 
 class Academic_Year(models.Model):
     # FIXME How do we store the year values? The date field cannot store truncated values
@@ -66,13 +79,25 @@ class Academic_Year(models.Model):
     start_year = models.DateField()
     end_year = models.DateField()
 
+    def __str__(self) -> str:
+        # BUG need to test this, it might explode
+        return f"{self.start_year.strftime('%Y')}-{self.end_year.strftime('%Y')}"
+
 class VADER_Sentiment(models.Model):
     positive_score=models.DecimalField(max_digits=4,decimal_places=2)
     negative_score=models.DecimalField(max_digits=4,decimal_places=2)
 
+    def __str__(self) -> str:
+        # BUG test this too
+        return f'POS:{self.positive_score} NEG:{self.negative_score}'
+
 class BERT_Sentiment(models.Model):
     positive_score=models.DecimalField(max_digits=4,decimal_places=2)
     negative_score=models.DecimalField(max_digits=4,decimal_places=2)
+
+    def __str__(self) -> str:
+        # BUG test this too
+        return f'POS:{self.positive_score} NEG:{self.negative_score}'
 
 # NOTE Which models should reside in the visualizer app?
 # Teachers will be in users, alongside the admin but not as an administrator account
