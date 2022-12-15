@@ -3,7 +3,7 @@ import time
 from django.core import validators
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
+from visualizer.models import Teacher
 
 class Section(models.Model):
     section_ID = models.CharField(max_length=3, primary_key=True)
@@ -63,7 +63,7 @@ class Feedback(models.Model):
         NEGATIVE = "NEGATIVE", _('NEGATIVE')
 
     # NOTE We are creating the relationship on an as of yet undefined model https://docs.djangoproject.com/en/4.1/ref/models/fields/#lazy-relationships
-    teacher_ID = models.ForeignKey('Teacher', on_delete=models.PROTECT)
+    teacher_ID = models.ForeignKey(Teacher, on_delete=models.PROTECT)
     student_ID = models.ForeignKey(Student, on_delete=models.PROTECT)
     academic_year_ID = models.ForeignKey(
         'Academic_Year', on_delete=models.PROTECT)
