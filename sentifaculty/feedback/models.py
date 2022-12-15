@@ -1,6 +1,8 @@
+import time
+
+from django.core import validators
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-import time
 
 
 class Section(models.Model):
@@ -55,14 +57,20 @@ class Student(models.Model):
 
 
 class Feedback(models.Model):
+    class FeedbackSentimentChoices(models.TextChoices):
+        POSITIVE = "POSITIVE", _('POSITIVE')
+        NEUTRAL = "NEUTRAL", _('NEUTRAL')
+        NEGATIVE = "NEGATIVE", _('NEGATIVE')
+
     # NOTE We are creating the relationship on an as of yet undefined model https://docs.djangoproject.com/en/4.1/ref/models/fields/#lazy-relationships
     teacher_ID = models.ForeignKey('Teacher', on_delete=models.PROTECT)
     student_ID = models.ForeignKey(Student, on_delete=models.PROTECT)
     academic_year_ID = models.ForeignKey(
         'Academic_Year', on_delete=models.PROTECT)
-    # FIXME min_length is not an accepted argument do we just enforce programatically? (10 char minimum)
-    content = models.CharField(max_length=100)
-    actual_sentiment = models.CharField(max_length=20)
+    content = models.CharField(max_length=100, validators=[
+                               validators.MinLengthValidator(10)])
+    actual_sentiment = models.CharField(
+        max_length=10, choices=FeedbackSentimentChoices.choices, default=FeedbackSentimentChoices.NEUTRAL)
     submission_date = models.DateTimeField(auto_now_add=True)
     vader_senti_ID = models.ForeignKey(
         'VADER_Sentiment', on_delete=models.PROTECT)
@@ -83,17 +91,19 @@ class Academic_Year(models.Model):
         # BUG need to test this, it might explode
         return f"{self.start_year.strftime('%Y')}-{self.end_year.strftime('%Y')}"
 
+
 class VADER_Sentiment(models.Model):
-    positive_score=models.DecimalField(max_digits=4,decimal_places=2)
-    negative_score=models.DecimalField(max_digits=4,decimal_places=2)
+    positive_score = models.DecimalField(max_digits=4, decimal_places=2)
+    negative_score = models.DecimalField(max_digits=4, decimal_places=2)
 
     def __str__(self) -> str:
         # BUG test this too
         return f'POS:{self.positive_score} NEG:{self.negative_score}'
 
+
 class BERT_Sentiment(models.Model):
-    positive_score=models.DecimalField(max_digits=4,decimal_places=2)
-    negative_score=models.DecimalField(max_digits=4,decimal_places=2)
+    positive_score = models.DecimalField(max_digits=4, decimal_places=2)
+    negative_score = models.DecimalField(max_digits=4, decimal_places=2)
 
     def __str__(self) -> str:
         # BUG test this too
