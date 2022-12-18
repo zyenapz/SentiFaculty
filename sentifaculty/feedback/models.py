@@ -1,9 +1,8 @@
-import time
-
 from django.core import validators
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from visualizer.models import Teacher
+
 
 class Section(models.Model):
     section_ID = models.CharField(max_length=3, primary_key=True)
@@ -47,7 +46,6 @@ class Student(models.Model):
     section_ID = models.ForeignKey(
         Section,
         on_delete=models.PROTECT
-        # NOTE WHAT TO DO ON DELETE?
     )
     strand_ID = models.ForeignKey(Strand, on_delete=models.PROTECT)
     email = models.EmailField()
@@ -109,7 +107,4 @@ class BERT_Sentiment(models.Model):
         # BUG test this too
         return f'POS:{self.positive_score} NEG:{self.negative_score}'
 
-# NOTE Which models should reside in the visualizer app?
-# Teachers will be in users, alongside the admin but not as an administrator account
-# Subject maybe? And then academic year remains here
 # NOTE just restore from commit 7f736d238f6027af33925928e3b055358dce0b50 if this is really bad
