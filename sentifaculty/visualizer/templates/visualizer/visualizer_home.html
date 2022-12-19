@@ -1,5 +1,4 @@
 {%extends "feedback/base.html"%}
-{%load static%}
 
 {% block content %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Offcanvas navbar large">
@@ -24,7 +23,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#">Link</a>
                     </li>
-                    {%if user.is_authenticated%}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
@@ -39,7 +37,6 @@
                             <li><a class="dropdown-item" href="{%url 'logout'%}">Logout</a></li>
                         </ul>
                     </li>
-                    {%endif%}
                 </ul>
             </div>
         </div>

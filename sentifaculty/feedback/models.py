@@ -106,5 +106,3 @@ class BERT_Sentiment(models.Model):
     def __str__(self) -> str:
         # BUG test this too
         return f'POS:{self.positive_score} NEG:{self.negative_score}'
-
-# NOTE just restore from commit 7f736d238f6027af33925928e3b055358dce0b50 if this is really bad

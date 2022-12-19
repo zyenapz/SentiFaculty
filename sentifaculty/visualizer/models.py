@@ -10,6 +10,13 @@ class Teacher(models.Model):
     # the Teacher entity also has a teacher ID, which is why I opted not to use a proxy model
     user = models.OneToOneField(User, on_delete=models.PROTECT)
 
+    def __str__(self) -> str:
+        return self.user.username
+
 
 class Subject(models.Model):
     teacher_ID = models.ForeignKey(Teacher, on_delete=models.PROTECT)
+    subject_name=models.CharField(max_length=250,default='subj')
+
+    def __str__(self) -> str:
+        return self.subject_name
