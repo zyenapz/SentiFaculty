@@ -16,8 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('feedback.urls')),
-    path('visualizer/', include('visualizer.urls'))
+    path('visualizer/', include('visualizer.urls')),
 ]

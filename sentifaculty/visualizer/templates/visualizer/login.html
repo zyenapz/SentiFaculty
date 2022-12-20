@@ -1,0 +1,19 @@
+{%extends "feedback/base.html"%}
+{%load static%}
+
+{%block stylesheets%}
+<link rel="stylesheet" type="text/css" href="{% static 'visualizer/login.css' %}">
+{%endblock%}
+
+{% block content %}
+<div class="text-center container-fluid">
+    <main class="form-signin w-100 m-auto">
+        <form method="post">
+            {%csrf_token%}
+            {{form}}
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+            <p class="mt-5 mb-3 text-muted">Sentifaculty</p>
+        </form>
+    </main>
+</div>
+{% endblock %}
