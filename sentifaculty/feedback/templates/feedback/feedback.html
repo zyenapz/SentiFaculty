@@ -1,9 +1,9 @@
 {% extends 'feedback/base.html' %}
 {%load static%}
 
-{%block stylesheets%}
+{% block stylesheets %}
 <link rel="stylesheet" type="text/css" href="{% static 'feedback/main.css' %}">
-{%endblock%}
+{% endblock stylesheets %}
 
 {% block content %}
 <article class="media content-section">
@@ -11,4 +11,4 @@
         <h1>Feedback</h1>
     </div>
 </article>
-{% endblock %}
+{% endblock content %}
