@@ -1,8 +1,7 @@
-import time
-
 from django.core import validators
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from visualizer.models import Teacher
 
 
 class Section(models.Model):
@@ -47,7 +46,6 @@ class Student(models.Model):
     section_ID = models.ForeignKey(
         Section,
         on_delete=models.PROTECT
-        # NOTE WHAT TO DO ON DELETE?
     )
     strand_ID = models.ForeignKey(Strand, on_delete=models.PROTECT)
     email = models.EmailField()
@@ -63,7 +61,7 @@ class Feedback(models.Model):
         NEGATIVE = "NEGATIVE", _('NEGATIVE')
 
     # NOTE We are creating the relationship on an as of yet undefined model https://docs.djangoproject.com/en/4.1/ref/models/fields/#lazy-relationships
-    teacher_ID = models.ForeignKey('Teacher', on_delete=models.PROTECT)
+    teacher_ID = models.ForeignKey(Teacher, on_delete=models.PROTECT)
     student_ID = models.ForeignKey(Student, on_delete=models.PROTECT)
     academic_year_ID = models.ForeignKey(
         'Academic_Year', on_delete=models.PROTECT)
@@ -108,8 +106,3 @@ class BERT_Sentiment(models.Model):
     def __str__(self) -> str:
         # BUG test this too
         return f'POS:{self.positive_score} NEG:{self.negative_score}'
-
-# NOTE Which models should reside in the visualizer app?
-# Teachers will be in users, alongside the admin but not as an administrator account
-# Subject maybe? And then academic year remains here
-# NOTE just restore from commit 7f736d238f6027af33925928e3b055358dce0b50 if this is really bad
