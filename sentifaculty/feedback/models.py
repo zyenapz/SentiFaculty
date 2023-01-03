@@ -69,18 +69,18 @@ class Feedback(models.Model):
     teacher_ID = models.ForeignKey(Teacher, on_delete=models.PROTECT)
     student_ID = models.ForeignKey(Student, on_delete=models.PROTECT)
     academic_year_ID = models.ForeignKey(
-        'Academic_Year', on_delete=models.PROTECT)
+        'AcademicYear', on_delete=models.PROTECT)
     submission_date = models.DateTimeField(auto_now_add=True)
-    vader_senti_ID = models.ForeignKey(
-        'VADER_Sentiment', on_delete=models.PROTECT)
-    bert_senti_ID = models.ForeignKey(
-        'BERT_Sentiment', on_delete=models.PROTECT)
+    vader_ID = models.ForeignKey(
+        'VaderSentiment', on_delete=models.PROTECT)
+    bert_ID = models.ForeignKey(
+        'BertSentiment', on_delete=models.PROTECT)
 
     def __str__(self) -> str:
         return self.content
 
 
-class Academic_Year(models.Model):
+class AcademicYear(models.Model):
     # FIXME How do we store the year values? The date field cannot store truncated values
     # so if we use the DateField() we must filter by year
     start_year = models.DateField()
@@ -91,7 +91,7 @@ class Academic_Year(models.Model):
         return f"{self.start_year.strftime('%Y')}-{self.end_year.strftime('%Y')}"
 
 
-class VADER_Sentiment(models.Model):
+class VaderSentiment(models.Model):
     positive_score = models.DecimalField(max_digits=4, decimal_places=2)
     negative_score = models.DecimalField(max_digits=4, decimal_places=2)
 
@@ -100,7 +100,7 @@ class VADER_Sentiment(models.Model):
         return f'POS:{self.positive_score} NEG:{self.negative_score}'
 
 
-class BERT_Sentiment(models.Model):
+class BertSentiment(models.Model):
     positive_score = models.DecimalField(max_digits=4, decimal_places=2)
     negative_score = models.DecimalField(max_digits=4, decimal_places=2)
 
