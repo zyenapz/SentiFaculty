@@ -55,20 +55,21 @@ class Student(models.Model):
 
 
 class Feedback(models.Model):
-    class FeedbackSentimentChoices(models.TextChoices):
+    class SentimentChoice(models.TextChoices):
         POSITIVE = "POSITIVE", _('POSITIVE')
         NEUTRAL = "NEUTRAL", _('NEUTRAL')
         NEGATIVE = "NEGATIVE", _('NEGATIVE')
+
+    content = models.TextField(max_length=100, validators=[
+                               validators.MinLengthValidator(10)])
+    actual_sentiment = models.CharField(
+        max_length=10, choices=SentimentChoice.choices, default=SentimentChoice.NEUTRAL)
 
     # NOTE We are creating the relationship on an as of yet undefined model https://docs.djangoproject.com/en/4.1/ref/models/fields/#lazy-relationships
     teacher_ID = models.ForeignKey(Teacher, on_delete=models.PROTECT)
     student_ID = models.ForeignKey(Student, on_delete=models.PROTECT)
     academic_year_ID = models.ForeignKey(
         'Academic_Year', on_delete=models.PROTECT)
-    content = models.CharField(max_length=100, validators=[
-                               validators.MinLengthValidator(10)])
-    actual_sentiment = models.CharField(
-        max_length=10, choices=FeedbackSentimentChoices.choices, default=FeedbackSentimentChoices.NEUTRAL)
     submission_date = models.DateTimeField(auto_now_add=True)
     vader_senti_ID = models.ForeignKey(
         'VADER_Sentiment', on_delete=models.PROTECT)
