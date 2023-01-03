@@ -80,9 +80,7 @@ class Feedback(models.Model):
 
 
 class AcademicYear(models.Model):
-    # FIXME How do we store the year values? The date field cannot store truncated values
-    # so if we use the DateField() we must filter by year
-    start_year = models.PositiveIntegerField()
+    start_year = models.PositiveIntegerField(primary_key=True)
     end_year = models.PositiveIntegerField()
 
     # def __str__(self) -> str:
