@@ -8,7 +8,7 @@ def feedback(request):
     form = FeedbackForm
 
     if request.method == "POST":
-        print(request.POST)
+        # print(request.POST)
         form = FeedbackForm(request.POST)
 
         if form.is_valid():
@@ -18,4 +18,5 @@ def feedback(request):
         'title': "Feedback",
         'form': form,
     }
+    
     return render(request, 'feedback/feedback.html', context)

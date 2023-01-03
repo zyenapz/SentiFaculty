@@ -2,7 +2,7 @@ from django.core import validators
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from visualizer.models import Teacher
-
+from django.core.exceptions import ValidationError
 
 class Section(models.Model):
     section_ID = models.CharField(max_length=3, primary_key=True)
@@ -68,8 +68,7 @@ class Feedback(models.Model):
     # NOTE We are creating the relationship on an as of yet undefined model https://docs.djangoproject.com/en/4.1/ref/models/fields/#lazy-relationships
     teacher_ID = models.ForeignKey(Teacher, on_delete=models.PROTECT)
     student_ID = models.ForeignKey(Student, on_delete=models.PROTECT)
-    academic_year_ID = models.ForeignKey(
-        'AcademicYear', on_delete=models.PROTECT)
+    academic_year_ID = models.ForeignKey('AcademicYear', on_delete=models.PROTECT)
     submission_date = models.DateTimeField(auto_now_add=True)
     vader_ID = models.ForeignKey(
         'VaderSentiment', on_delete=models.PROTECT)
@@ -83,12 +82,21 @@ class Feedback(models.Model):
 class AcademicYear(models.Model):
     # FIXME How do we store the year values? The date field cannot store truncated values
     # so if we use the DateField() we must filter by year
-    start_year = models.DateField()
-    end_year = models.DateField()
+    start_year = models.PositiveIntegerField()
+    end_year = models.PositiveIntegerField()
+
+    # def __str__(self) -> str:
+    #     # BUG need to test this, it might explode
+    #     return f"{self.start_year.strftime('%Y')}-{self.end_year.strftime('%Y')}"
 
     def __str__(self) -> str:
-        # BUG need to test this, it might explode
-        return f"{self.start_year.strftime('%Y')}-{self.end_year.strftime('%Y')}"
+        return f"{self.start_year}-{self.end_year}"
+
+    def clean(self):
+        if self.start_year >= self.end_year:
+            raise ValidationError("'Start year' must not be equal or later than the 'End year'")
+        elif self.end_year <= self.start_year:
+            raise ValidationError("'End year' must not be equal or earlier than the 'Start year'")
 
 
 class VaderSentiment(models.Model):
