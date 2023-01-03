@@ -83,10 +83,6 @@ class AcademicYear(models.Model):
     start_year = models.PositiveIntegerField(primary_key=True)
     end_year = models.PositiveIntegerField()
 
-    # def __str__(self) -> str:
-    #     # BUG need to test this, it might explode
-    #     return f"{self.start_year.strftime('%Y')}-{self.end_year.strftime('%Y')}"
-
     def __str__(self) -> str:
         return f"{self.start_year}-{self.end_year}"
 
