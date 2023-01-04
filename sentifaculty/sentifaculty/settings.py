@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'feedback.apps.FeedbackConfig',
+    'student.apps.StudentConfig',
     'visualizer.apps.VisualizerConfig',
     'django.contrib.admin',
     'django.contrib.auth',

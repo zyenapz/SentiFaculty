@@ -1,0 +1,20 @@
+{% extends 'student/base.html' %}
+{%load static%}
+
+{%block stylesheets%}
+<link rel="stylesheet" type="text/css" href="{% static 'feedback/main.css' %}">
+{%endblock%}
+
+{% block content %}
+<article class="media content-section">
+    <div class="media-body">
+        <h1>Feedback</h1>
+
+        <form action="" method="post">
+            {% csrf_token %}
+            {{form}}
+            <input type="submit">
+        </form>
+    </div>
+</article>
+{% endblock %}
