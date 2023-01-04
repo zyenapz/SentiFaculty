@@ -5,7 +5,6 @@ from .models import AcademicYear
 # Create your views here.
 def feedback(request):
 
-    form = FeedbackForm
 
     if request.method == "POST":
         # print(request.POST)
@@ -14,9 +13,11 @@ def feedback(request):
         if form.is_valid():
             form.save()
 
-    context = {
-        'title': "Feedback",
-        'form': form,
-    }
-    
+    else:
+        form = FeedbackForm()
+        context = {
+            'title': "Feedback",
+            'form': form,
+        }
+        
     return render(request, 'feedback/feedback.html', context)
