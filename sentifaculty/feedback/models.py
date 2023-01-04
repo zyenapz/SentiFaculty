@@ -54,31 +54,6 @@ class Student(models.Model):
         return self.student_ID
 
 
-class Feedback(models.Model):
-    class SentimentChoice(models.TextChoices):
-        POSITIVE = "POSITIVE", _('POSITIVE')
-        NEUTRAL = "NEUTRAL", _('NEUTRAL')
-        NEGATIVE = "NEGATIVE", _('NEGATIVE')
-
-    content = models.TextField(max_length=100, validators=[
-                               validators.MinLengthValidator(10)])
-    actual_sentiment = models.CharField(
-        max_length=10, choices=SentimentChoice.choices, default=SentimentChoice.NEUTRAL)
-
-    # NOTE We are creating the relationship on an as of yet undefined model https://docs.djangoproject.com/en/4.1/ref/models/fields/#lazy-relationships
-    teacher_ID = models.ForeignKey(Teacher, on_delete=models.PROTECT)
-    student_ID = models.ForeignKey(Student, on_delete=models.PROTECT)
-    academic_year_ID = models.ForeignKey('AcademicYear', on_delete=models.PROTECT)
-    submission_date = models.DateTimeField(auto_now_add=True)
-    vader_ID = models.ForeignKey(
-        'VaderSentiment', on_delete=models.PROTECT)
-    bert_ID = models.ForeignKey(
-        'BertSentiment', on_delete=models.PROTECT)
-
-    def __str__(self) -> str:
-        return self.content
-
-
 class AcademicYear(models.Model):
     start_year = models.PositiveIntegerField(primary_key=True)
     end_year = models.PositiveIntegerField()
@@ -92,6 +67,29 @@ class AcademicYear(models.Model):
         elif self.end_year <= self.start_year:
             raise ValidationError("'End year' must not be equal or earlier than the 'Start year'")
 
+class Feedback(models.Model):
+    class SentimentChoice(models.TextChoices):
+        POSITIVE = "POSITIVE", _('POSITIVE')
+        NEUTRAL = "NEUTRAL", _('NEUTRAL')
+        NEGATIVE = "NEGATIVE", _('NEGATIVE')
+
+    content = models.TextField(max_length=100, validators=[
+                               validators.MinLengthValidator(10)])
+    actual_sentiment = models.CharField(
+        max_length=10, choices=SentimentChoice.choices, default=SentimentChoice.NEUTRAL)
+    submission_date = models.DateTimeField(auto_now_add=True)
+
+    # NOTE We are creating the relationship on an as of yet undefined model https://docs.djangoproject.com/en/4.1/ref/models/fields/#lazy-relationships
+    teacher = models.ForeignKey(Teacher, on_delete=models.PROTECT)
+    student = models.ForeignKey(Student, on_delete=models.PROTECT)
+    academic_year = models.ForeignKey(AcademicYear, on_delete=models.PROTECT)
+    vader = models.ForeignKey(
+        'VaderSentiment', on_delete=models.PROTECT)
+    bert = models.ForeignKey(
+        'BertSentiment', on_delete=models.PROTECT)
+
+    def __str__(self) -> str:
+        return self.content
 
 class VaderSentiment(models.Model):
     positive_score = models.DecimalField(max_digits=4, decimal_places=2)
