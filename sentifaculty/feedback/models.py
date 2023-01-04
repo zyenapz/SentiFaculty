@@ -2,7 +2,7 @@ from django.core import validators
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from visualizer.models import Teacher
-
+from django.core.exceptions import ValidationError
 
 class Section(models.Model):
     section_ID = models.CharField(max_length=3, primary_key=True)
@@ -55,42 +55,45 @@ class Student(models.Model):
 
 
 class Feedback(models.Model):
-    class FeedbackSentimentChoices(models.TextChoices):
+    class SentimentChoice(models.TextChoices):
         POSITIVE = "POSITIVE", _('POSITIVE')
         NEUTRAL = "NEUTRAL", _('NEUTRAL')
         NEGATIVE = "NEGATIVE", _('NEGATIVE')
 
+    content = models.TextField(max_length=100, validators=[
+                               validators.MinLengthValidator(10)])
+    actual_sentiment = models.CharField(
+        max_length=10, choices=SentimentChoice.choices, default=SentimentChoice.NEUTRAL)
+
     # NOTE We are creating the relationship on an as of yet undefined model https://docs.djangoproject.com/en/4.1/ref/models/fields/#lazy-relationships
     teacher_ID = models.ForeignKey(Teacher, on_delete=models.PROTECT)
     student_ID = models.ForeignKey(Student, on_delete=models.PROTECT)
-    academic_year_ID = models.ForeignKey(
-        'Academic_Year', on_delete=models.PROTECT)
-    content = models.CharField(max_length=100, validators=[
-                               validators.MinLengthValidator(10)])
-    actual_sentiment = models.CharField(
-        max_length=10, choices=FeedbackSentimentChoices.choices, default=FeedbackSentimentChoices.NEUTRAL)
+    academic_year_ID = models.ForeignKey('AcademicYear', on_delete=models.PROTECT)
     submission_date = models.DateTimeField(auto_now_add=True)
-    vader_senti_ID = models.ForeignKey(
-        'VADER_Sentiment', on_delete=models.PROTECT)
-    bert_senti_ID = models.ForeignKey(
-        'BERT_Sentiment', on_delete=models.PROTECT)
+    vader_ID = models.ForeignKey(
+        'VaderSentiment', on_delete=models.PROTECT)
+    bert_ID = models.ForeignKey(
+        'BertSentiment', on_delete=models.PROTECT)
 
     def __str__(self) -> str:
         return self.content
 
 
-class Academic_Year(models.Model):
-    # FIXME How do we store the year values? The date field cannot store truncated values
-    # so if we use the DateField() we must filter by year
-    start_year = models.DateField()
-    end_year = models.DateField()
+class AcademicYear(models.Model):
+    start_year = models.PositiveIntegerField(primary_key=True)
+    end_year = models.PositiveIntegerField()
 
     def __str__(self) -> str:
-        # BUG need to test this, it might explode
-        return f"{self.start_year.strftime('%Y')}-{self.end_year.strftime('%Y')}"
+        return f"{self.start_year}-{self.end_year}"
+
+    def clean(self):
+        if self.start_year >= self.end_year:
+            raise ValidationError("'Start year' must not be equal or later than the 'End year'")
+        elif self.end_year <= self.start_year:
+            raise ValidationError("'End year' must not be equal or earlier than the 'Start year'")
 
 
-class VADER_Sentiment(models.Model):
+class VaderSentiment(models.Model):
     positive_score = models.DecimalField(max_digits=4, decimal_places=2)
     negative_score = models.DecimalField(max_digits=4, decimal_places=2)
 
@@ -99,7 +102,7 @@ class VADER_Sentiment(models.Model):
         return f'POS:{self.positive_score} NEG:{self.negative_score}'
 
 
-class BERT_Sentiment(models.Model):
+class BertSentiment(models.Model):
     positive_score = models.DecimalField(max_digits=4, decimal_places=2)
     negative_score = models.DecimalField(max_digits=4, decimal_places=2)
 
