@@ -29,7 +29,7 @@ def feedback(request):
         'form': form,
     }
 
-    # Test
+    # TODO: Just testing
     analyzer = SFAnalyzer()
     comment = "He is very disorganized and I don't like his attitude."
 
