@@ -64,8 +64,8 @@ class AcademicYear(models.Model):
     def clean(self):
         if self.start_year >= self.end_year:
             raise ValidationError("'Start year' must not be equal or later than the 'End year'")
-        elif self.end_year <= self.start_year:
-            raise ValidationError("'End year' must not be equal or earlier than the 'Start year'")
+        if self.end_year != self.start_year + 1:
+            raise ValidationError("'End year' can only be 1 year later than 'Start year'")
 
 class Feedback(models.Model):
     class SentimentChoice(models.TextChoices):
@@ -73,7 +73,7 @@ class Feedback(models.Model):
         NEUTRAL = "NEUTRAL", _('NEUTRAL')
         NEGATIVE = "NEGATIVE", _('NEGATIVE')
 
-    content = models.TextField(max_length=100, validators=[
+    comment = models.TextField(max_length=100, validators=[
                                validators.MinLengthValidator(10)])
     actual_sentiment = models.CharField(
         max_length=10, choices=SentimentChoice.choices, default=SentimentChoice.NEUTRAL)
@@ -89,7 +89,7 @@ class Feedback(models.Model):
         'BertSentiment', on_delete=models.PROTECT)
 
     def __str__(self) -> str:
-        return self.content
+        return self.comment
 
 class VaderSentiment(models.Model):
     positive_score = models.DecimalField(max_digits=4, decimal_places=2)
