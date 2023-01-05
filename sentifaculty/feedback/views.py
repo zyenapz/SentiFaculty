@@ -2,6 +2,8 @@ from django.shortcuts import HttpResponseRedirect, render
 from .forms import FeedbackForm
 from .models import AcademicYear, BertSentiment, Feedback, Student, VaderSentiment
 from visualizer.models import Teacher
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from pysentimiento import create_analyzer
 
 # Create your views here.
 def feedback(request):
@@ -17,6 +19,7 @@ def feedback(request):
             new_feedback.vader = VaderSentiment.objects.first()
             new_feedback.bert = BertSentiment.objects.first()
 
+
             new_feedback.save()
             form.save_m2m()
 
@@ -25,5 +28,11 @@ def feedback(request):
         'title': "Feedback",
         'form': form,
     }
+
+    bert = create_analyzer(task="sentiment", lang="en")
+    print(bert.predict("I like you!"))
+
+    vader = SentimentIntensityAnalyzer()
+    print(vader.polarity_scores("I like you!"))
         
     return render(request, 'feedback/feedback.html', context)

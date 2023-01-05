@@ -31,8 +31,15 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # Custom apps (our apps)
     'feedback.apps.FeedbackConfig',
     'visualizer.apps.VisualizerConfig',
+
+    # Third party libraries
+    'pysentimiento',
+    'vaderSentiment',
+
+    # Django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
