@@ -1,9 +1,9 @@
 from django.shortcuts import HttpResponseRedirect, render
+
+from feedback.helpers.analyzer import SFAnalyzer
 from .forms import FeedbackForm
 from .models import AcademicYear, BertSentiment, Feedback, Student, VaderSentiment
 from visualizer.models import Teacher
-from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-from pysentimiento import create_analyzer
 
 # Create your views here.
 def feedback(request):
@@ -29,10 +29,14 @@ def feedback(request):
         'form': form,
     }
 
-    bert = create_analyzer(task="sentiment", lang="en")
-    print(bert.predict("I like you!"))
+    # Test
+    analyzer = SFAnalyzer()
+    comment = "He is very disorganized and I don't like his attitude."
 
-    vader = SentimentIntensityAnalyzer()
-    print(vader.polarity_scores("I like you!"))
+    print(analyzer.use_vader(comment))
+
+    print(analyzer.use_bert(comment))
+
+    print(analyzer.use_hybrid(comment))
         
     return render(request, 'feedback/feedback.html', context)

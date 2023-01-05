@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'visualizer.apps.VisualizerConfig',
 
     # Third party libraries
-    'pysentimiento',
+    'pysentimiento', # BERT
     'vaderSentiment',
 
     # Django apps
