@@ -18,8 +18,8 @@ class SFAnalyzer:
         vader = self.use_vader(comment)
         bert = self.use_bert(comment).probas
 
-        hybrid_neg = (vader['neg'] - bert['NEG']) / 2
-        hybrid_pos = (vader['pos'] - bert['POS']) / 2
+        hybrid_neg = (vader['neg'] + bert['NEG']) / 2
+        hybrid_pos = (vader['pos'] + bert['POS']) / 2
 
         hybrid_all = hybrid_pos - hybrid_neg
 
