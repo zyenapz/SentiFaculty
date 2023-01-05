@@ -67,6 +67,17 @@ class AcademicYear(models.Model):
         if self.end_year != self.start_year + 1:
             raise ValidationError("'End year' can only be 1 year later than 'Start year'")
 
+class SentimentScore(models.Model):
+    MAX_DIGITS = 4
+    MAX_DECIMAL = 2
+
+    vader_pos = models.DecimalField(max_digits=MAX_DIGITS, decimal_places=MAX_DECIMAL)
+    vader_neg = models.DecimalField(max_digits=MAX_DIGITS, decimal_places=MAX_DECIMAL)
+    bert_pos = models.DecimalField(max_digits=MAX_DIGITS, decimal_places=MAX_DECIMAL)
+    bert_neg = models.DecimalField(max_digits=MAX_DIGITS, decimal_places=MAX_DECIMAL)
+    hybrid_pos = models.DecimalField(max_digits=MAX_DIGITS, decimal_places=MAX_DECIMAL)
+    hybrid_neg = models.DecimalField(max_digits=MAX_DIGITS, decimal_places=MAX_DECIMAL)
+
 class Feedback(models.Model):
     class SentimentChoice(models.TextChoices):
         POSITIVE = "POSITIVE", _('POSITIVE')
@@ -79,31 +90,11 @@ class Feedback(models.Model):
         max_length=10, choices=SentimentChoice.choices, default=SentimentChoice.NEUTRAL)
     submission_date = models.DateTimeField(auto_now_add=True)
 
-    # NOTE We are creating the relationship on an as of yet undefined model https://docs.djangoproject.com/en/4.1/ref/models/fields/#lazy-relationships
-    teacher = models.ForeignKey(Teacher, on_delete=models.PROTECT)
-    student = models.ForeignKey(Student, on_delete=models.PROTECT)
-    academic_year = models.ForeignKey(AcademicYear, on_delete=models.PROTECT)
-    vader = models.ForeignKey(
-        'VaderSentiment', on_delete=models.PROTECT)
-    bert = models.ForeignKey(
-        'BertSentiment', on_delete=models.PROTECT)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    academic_year = models.ForeignKey(AcademicYear, on_delete=models.CASCADE)
+    sentiment_score = models.ForeignKey(SentimentScore, on_delete=models.CASCADE)
+
 
     def __str__(self) -> str:
         return self.comment
-
-class VaderSentiment(models.Model):
-    positive_score = models.DecimalField(max_digits=4, decimal_places=2)
-    negative_score = models.DecimalField(max_digits=4, decimal_places=2)
-
-    def __str__(self) -> str:
-        # BUG test this too
-        return f'POS:{self.positive_score} NEG:{self.negative_score}'
-
-
-class BertSentiment(models.Model):
-    positive_score = models.DecimalField(max_digits=4, decimal_places=2)
-    negative_score = models.DecimalField(max_digits=4, decimal_places=2)
-
-    def __str__(self) -> str:
-        # BUG test this too
-        return f'POS:{self.positive_score} NEG:{self.negative_score}'
