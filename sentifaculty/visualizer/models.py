@@ -3,8 +3,10 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 class Subject(models.Model):
-    teacher_ID = models.ForeignKey('users.Teacher', on_delete=models.PROTECT)
-    subject_name=models.CharField(max_length=250,default='subj')
+    subject_id = models.CharField(max_length=10, primary_key=True)
+    subject_name = models.CharField(max_length=250, default='subj')
+
+    teacher_ID = models.ForeignKey("users.Teacher", on_delete=models.PROTECT)
 
     def __str__(self) -> str:
         return self.subject_name

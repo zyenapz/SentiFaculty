@@ -1,21 +1,22 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from visualizer.models import Section, Strand
-
 # Create your models here.
 class Person(models.Model):
     
-    __ID_MAX_LENGTH = 10
+    __ID_MAXLEN = 10
+    __NAME_MAXLEN = 50
 
     # NOTE we are extending User via a OneToOneField: https://docs.djangoproject.com/en/4.1/topics/auth/customizing/#extending-user
     # NOTE extending User like this is completely unnecessary
     # but our ERD defines a Teacher entity, so there will be a discrepancy if we do not
     # have it in our model, we can remove this if we want to
     # the Teacher entity also has a teacher ID, which is why I opted not to use a proxy model
-    person_ID = models.CharField(max_length=__ID_MAX_LENGTH, primary_key=True)
+    person_ID = models.CharField(max_length=__ID_MAXLEN, primary_key=True)
     user = models.OneToOneField(User, on_delete=models.PROTECT)
     email = models.EmailField()
+    first_name = models.CharField(max_length=__NAME_MAXLEN)
+    last_name = models.CharField(max_length=__NAME_MAXLEN)
 
     class Meta:
         abstract = True
@@ -23,14 +24,9 @@ class Person(models.Model):
     def __str__(self) -> str:
         return self.user.username
 
-
 class Student(Person):
-    pass
-    # section_ID = models.ForeignKey(
-    #     Section,
-    #     on_delete=models.PROTECT
-    # )
-    # strand_ID = models.ForeignKey(Strand, on_delete=models.PROTECT)
+    section_ID = models.ForeignKey("visualizer.Section", on_delete=models.PROTECT)
+    strand_ID = models.ForeignKey("visualizer.Strand", on_delete=models.PROTECT)
 
 class Teacher(Person):
     pass
