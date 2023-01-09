@@ -1,9 +1,9 @@
 from django.shortcuts import HttpResponseRedirect, render
 
-from feedback.helpers.analyzer import SFAnalyzer, Sentiment
+from feedback.helpers.analyzer import SFAnalyzer
+from users.models import Teacher, Student
 from .forms import FeedbackForm
-from .models import AcademicYear, Feedback, SentimentScore, Student
-from visualizer.models import Teacher
+from .models import AcademicYear, SentimentScore
 
 # Create your views here.
 def feedback(request):
@@ -13,12 +13,6 @@ def feedback(request):
 
         if form.is_valid():
             new_feedback = form.save(commit=False)
-
-            # TODO: THESE OBJECTS ARE DUMMY DATA ...
-            # ... except for the sentiment scores
-            new_feedback.teacher = Teacher.objects.get(pk=1)
-            new_feedback.student = Student.objects.first()
-            new_feedback.academic_year = AcademicYear.objects.first()
 
             # Calculate Vader, BERT and hybrid scores
             analyzer = SFAnalyzer()
@@ -36,7 +30,14 @@ def feedback(request):
             )
 
             score.save()
+
             new_feedback.sentiment_score = score
+
+            # TODO: THESE OBJECTS ARE DUMMY DATA ...
+            # ... except for the sentiment scores
+            new_feedback.teacher = Teacher.objects.get(pk=1)
+            new_feedback.student = Student.objects.first()
+            new_feedback.academic_year = AcademicYear.objects.first()
 
             # Save form
             new_feedback.save()

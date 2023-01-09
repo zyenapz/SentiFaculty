@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     # Custom apps (our apps)
     'feedback.apps.FeedbackConfig',
     'visualizer.apps.VisualizerConfig',
+    'users.apps.UsersConfig',
 
     # Third party libraries
     'pysentimiento', # BERT

@@ -1,22 +1,58 @@
-from django.contrib.auth.models import User
 from django.db import models
-
-
-class Teacher(models.Model):
-    # NOTE we are extending User via a OneToOneField: https://docs.djangoproject.com/en/4.1/topics/auth/customizing/#extending-user
-    # NOTE extending User like this is completely unnecessary
-    # but our ERD defines a Teacher entity, so there will be a discrepancy if we do not
-    # have it in our model, we can remove this if we want to
-    # the Teacher entity also has a teacher ID, which is why I opted not to use a proxy model
-    user = models.OneToOneField(User, on_delete=models.PROTECT)
-
-    def __str__(self) -> str:
-        return self.user.username
-
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
 class Subject(models.Model):
-    teacher_ID = models.ForeignKey(Teacher, on_delete=models.PROTECT)
+    teacher_ID = models.ForeignKey('users.Teacher', on_delete=models.PROTECT)
     subject_name=models.CharField(max_length=250,default='subj')
 
     def __str__(self) -> str:
         return self.subject_name
+
+class Section(models.Model):
+    section_ID = models.CharField(max_length=3, primary_key=True)
+
+    def __str__(self) -> str:
+        return self.section_ID
+
+class Strand(models.Model):
+    # https://docs.djangoproject.com/en/4.1/ref/models/fields/#choices
+    # NOTE Used the 'choices' field option
+    class StrandChoices(models.TextChoices):
+        ABM = "ABM", _('ABM')
+        ABMB = "ABM-B", _('ABM-B')
+        ABMBUS = "ABMBUS", _('ABMBUS')
+        HE = "HE", _('HE')
+        HUMS = "HUMS", _('HUMS')
+        HUMSS = "HUMSS", _('HUMSS')
+        ICT = "ICT", _('ICT')
+        STEM = "STEM", _('STEM')
+        STEMM = "STEM-M", _('STEM-M')
+        STEMS = "STEM-S", _('STEM-S')
+        STEMB = "STEMB", _('STEMB')
+        STEMF = "STEMF", _('STEMF')
+        STEMG = "STEMG", _('STEMG')
+        STEMMA = "STEMMA", _('STEMMA')
+        STEMSC = "STEMSC", _('STEMSC')
+
+    strand_name = models.CharField(
+        max_length=10,
+        choices=StrandChoices.choices,
+        default=StrandChoices.HUMSS,
+    )
+
+    def __str__(self) -> str:
+        return self.strand_name
+
+class AcademicYear(models.Model):
+    start_year = models.PositiveIntegerField(primary_key=True)
+    end_year = models.PositiveIntegerField()
+
+    def __str__(self) -> str:
+        return f"{self.start_year}-{self.end_year}"
+
+    def clean(self):
+        if self.start_year >= self.end_year:
+            raise ValidationError("'Start year' must not be equal or later than the 'End year'")
+        if self.end_year != self.start_year + 1:
+            raise ValidationError("'End year' can only be 1 year later than 'Start year'")
