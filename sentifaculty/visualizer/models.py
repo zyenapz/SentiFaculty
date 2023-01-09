@@ -53,13 +53,12 @@ class Strand(models.Model):
 
     def clean(self):
         # RegEx Patterns
-        pat_alphadash = re.compile(r"[A-Z\-]")
-        pat_lead_dash = re.compile(r"^-")
+        pat_alphadash = re.compile(r"^[A-Z\-]+$")
 
         if not pat_alphadash.match(self.strand_name):
-            raise ValidationError("Only CAPITALIZED alphabetic characters and dashes are allowed.")
-        elif pat_lead_dash.match(self.strand_name):
-            raise ValidationError("A dash can't be the first character.")
+            raise ValidationError("Only CAPITALIZED alphabetic characters and dashes are accepted. No spaces allowed.")
+        if self.strand_name.startswith("-") or self.strand_name.endswith("-"):
+            raise ValidationError("Input cannot start or end with a dash.")
 
 class AcademicYear(models.Model):
     start_year = models.PositiveIntegerField(primary_key=True)
