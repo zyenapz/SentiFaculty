@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{%block stylesheets%}
+<link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
+{%endblock%}
+
+{% block content %}
+<article class="media content-section">
+    <div class="media-body">
+        <h1>Select Teacher</h1>
+
+        <form action="" method="post">
+            {% csrf_token %}
+            {{form}}
+            <input type="submit">
+        </form>
+    </div>
+</article>
+{% endblock %}

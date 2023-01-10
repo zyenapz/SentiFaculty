@@ -1,12 +1,15 @@
 from django.shortcuts import HttpResponseRedirect, render
+from django.contrib.auth.decorators import login_required
 
 from feedback.helpers.analyzer import SFAnalyzer
 from users.models import Teacher, Student
-from .forms import FeedbackForm
+from .forms import FeedbackForm, SelectTeacherForm
 from .models import AcademicYear, SentimentScore
 
-# Create your views here.
-def feedback(request):
+# NOTE (@login_required decorator)
+# NOTE https://docs.djangoproject.com/en/4.1/topics/auth/default/ 
+#@login_required
+def get_feedback(request):
 
     if request.method == "POST":
         form = FeedbackForm(request.POST)
@@ -50,3 +53,9 @@ def feedback(request):
     }
         
     return render(request, 'feedback/feedback.html', context)
+
+def select_teacher(request):
+    form = SelectTeacherForm()
+
+    context = {'form': form}
+    return render(request, 'feedback/select.html', context)    
