@@ -1,6 +1,6 @@
 from django.apps import apps
 from django.contrib import admin
-from .models import MclUser
+from .models import MclUser, Principal, Student, Teacher
 
 from django.contrib.auth.admin import UserAdmin
 
@@ -13,12 +13,13 @@ class MclUserAdmin(UserAdmin):
     form = MclUserChangeForm
     model = MclUser
     list_display = ["email", "mcl_id", "first_name",
-                    "last_name", "is_staff", "is_active"]
+                    "last_name", "is_staff", "is_active", 'user_type']
     list_filter = ["email", "mcl_id", "first_name",
-                   "last_name", "is_staff", "is_active"]
+                   "last_name", "is_staff", "is_active", 'user_type']
 
     fieldsets = (
-        ('Student Info', {
+        ('User Info', {
+                # 'fields': ('mcl_id', 'first_name', 'last_name', 'user_type'),
                 'fields': ('mcl_id', 'first_name', 'last_name'),
             }
         ),
@@ -29,13 +30,13 @@ class MclUserAdmin(UserAdmin):
         ('Permissions', {
                 'fields': ('is_staff', 'is_active')
             }
-        ),
+        )
     )
 
     add_fieldsets = (
         (
-            'Student Info', {
-                'fields': ('mcl_id', 'first_name', 'last_name'),
+            'User Info', {
+                'fields': ('mcl_id', 'first_name', 'last_name', 'user_type'),
             }
         ),
         (
@@ -50,6 +51,9 @@ class MclUserAdmin(UserAdmin):
 
 
 admin.site.register(MclUser, MclUserAdmin)
+admin.site.register(Student)
+admin.site.register(Teacher)
+admin.site.register(Principal)
 
 # Register your models here.
 # feedback_models = apps.get_app_config('users').get_models()
