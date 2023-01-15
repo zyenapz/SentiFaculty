@@ -63,7 +63,7 @@ class FacultyEvaluation(models.Model):
     academic_year = models.OneToOneField(AcademicYear, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
-        return f"FE for AY: {self.academic_year}"
+        return f"FE {self.academic_year}"
 
 # LIST OF STRANDS
 # https://docs.djangoproject.com/en/4.1/ref/models/fields/#choices

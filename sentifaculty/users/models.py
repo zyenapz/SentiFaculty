@@ -62,6 +62,9 @@ class Student(Person):
     year_level = models.ForeignKey("visualizer.YearLevel", on_delete=models.PROTECT)
     faculty_eval = models.ForeignKey("visualizer.FacultyEvaluation", on_delete=models.CASCADE)
 
+    def __str__(self) -> str:
+        return f"({self.faculty_eval}) {self.user.first_name} {self.user.last_name}"
+
     def clean(self):
         if self.user.user_type != STUDENT:
             raise ValidationError("User must be a Student.")
