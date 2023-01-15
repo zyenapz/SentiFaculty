@@ -38,3 +38,6 @@ class SentimentScore(models.Model):
 class Evaluatee(models.Model):
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
     subject = models.ForeignKey('visualizer.Subject', on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return f"({self.subject.subject_code}) {self.teacher}"

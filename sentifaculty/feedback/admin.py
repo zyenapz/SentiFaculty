@@ -5,7 +5,7 @@ from .models import Evaluatee, Feedback, SentimentScore
 
 class FeedbackAdmin(admin.ModelAdmin):
     model = Feedback
-    list_display = ['comment', 'evaluatee', 'student', 'actual_sentiment', 'submission_date']
+    list_display = ['id', 'comment', 'evaluatee', 'student', 'actual_sentiment', 'submission_date']
     # list_filter = ['teacher', 'actual_sentiment', 'academic_year', 'submission_date']
 
 admin.site.register(Feedback, FeedbackAdmin)
