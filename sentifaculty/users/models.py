@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError
 from users.managers import MclUserManager
 
 # User Type - choices
+DEFAULT = 0
 STUDENT = 1
 TEACHER = 2
 PRINCIPAL = 3
@@ -30,7 +31,7 @@ class MclUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now)
 
-    user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICE, default=STUDENT)
+    user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICE, default=DEFAULT)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -51,9 +52,15 @@ class Person(models.Model):
     def __str__(self) -> str:
         return f"{self.user.first_name} {self.user.last_name}"
 
+    class Meta:
+        abstract = True
+
 class Student(Person):
+    user = models.ForeignKey(MclUser, on_delete=models.CASCADE)
     section_ID = models.ForeignKey("visualizer.Section", on_delete=models.PROTECT)
     strand_ID = models.ForeignKey("visualizer.Strand", on_delete=models.PROTECT)
+    year_level = models.ForeignKey("visualizer.YearLevel", on_delete=models.PROTECT)
+    faculty_eval = models.ForeignKey("visualizer.FacultyEvaluation", on_delete=models.CASCADE)
 
     def clean(self):
         if self.user.user_type != STUDENT:

@@ -49,9 +49,13 @@ class MclUserAdmin(UserAdmin):
     search_fields = ('email',)
     ordering = ('email',)
 
+class StudentAdmin(admin.ModelAdmin):
+    model = Student
+    list_display = ['user', 'section_ID', 'strand_ID']
+
 
 admin.site.register(MclUser, MclUserAdmin)
-admin.site.register(Student)
+admin.site.register(Student, StudentAdmin)
 admin.site.register(Teacher)
 admin.site.register(Principal)
 

@@ -137,7 +137,7 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = 'fb-getfb'
+LOGIN_REDIRECT_URL = 'fb-select'
 LOGIN_URL = 'login'
 AUTH_USER_MODEL = 'users.MclUser'
 ACCOUNT_USERNAME_REQUIRED = False
