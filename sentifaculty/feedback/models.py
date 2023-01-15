@@ -24,6 +24,10 @@ class Feedback(models.Model):
     def __str__(self) -> str:
         return self.comment
 
+    def clean(self) -> str:
+        # TODO add validation to ensure that a 'Student' can only submit one entry for every 'Evaluatee'
+        pass
+
 class SentimentScore(models.Model):
     MAX_DIGITS = 4
     MAX_DECIMAL = 2
