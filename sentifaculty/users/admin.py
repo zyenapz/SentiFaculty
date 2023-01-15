@@ -51,7 +51,7 @@ class MclUserAdmin(UserAdmin):
 
 class StudentAdmin(admin.ModelAdmin):
     model = Student
-    list_display = ['user', 'section_ID', 'strand_ID']
+    list_display = ['id', 'user', 'section_ID', 'strand_ID', 'year_level', 'faculty_eval']
 
 
 admin.site.register(MclUser, MclUserAdmin)

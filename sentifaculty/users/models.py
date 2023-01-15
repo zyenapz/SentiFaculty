@@ -66,6 +66,8 @@ class Student(Person):
         if self.user.user_type != STUDENT:
             raise ValidationError("User must be a Student.")
 
+        # TODO add validation to ensure that 'MclUser' can only be assigned to one unique 'FacultyEvaluation'
+
 class Teacher(Person):
     def clean(self):
         if self.user.user_type != TEACHER:

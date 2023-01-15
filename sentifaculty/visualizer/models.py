@@ -8,10 +8,12 @@ class Subject(models.Model):
     subject_code = models.CharField(max_length=10, unique=True)
     subject_name = models.CharField(max_length=250, default='subj')
 
-    teacher = models.ForeignKey("users.Teacher", on_delete=models.PROTECT)
-
     def __str__(self) -> str:
         return self.subject_name
+
+    def clean(self):
+        pass 
+        # TODO add validation
 
 class Section(models.Model):
     section_ID = models.CharField(max_length=3, primary_key=True)
@@ -36,10 +38,13 @@ class Strand(models.Model):
 
 class YearLevel(models.Model):
     class YearLevelChoices(models.TextChoices):
-        GRADE_11 = "GRADE_11", _("Grade 11")
-        GRADE_12 = "GRADE_12", _("Grade 12")
+        GRADE_11 = "Grade 11", _("Grade 11")
+        GRADE_12 = "Grade 12", _("Grade 12")
 
     level = models.CharField(choices=YearLevelChoices.choices, unique=True, max_length=10)
+
+    def __str__(self) -> str:
+        return self.level
 
 class AcademicYear(models.Model):
     start_year = models.PositiveIntegerField(primary_key=True)
@@ -56,6 +61,9 @@ class AcademicYear(models.Model):
 
 class FacultyEvaluation(models.Model):
     academic_year = models.OneToOneField(AcademicYear, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return f"FE for AY: {self.academic_year}"
 
 # LIST OF STRANDS
 # https://docs.djangoproject.com/en/4.1/ref/models/fields/#choices

@@ -6,7 +6,7 @@ from visualizer.models import AcademicYear, FacultyEvaluation, Section, Strand, 
 # Admin classes
 class SubjectAdmin(admin.ModelAdmin):
     model = Subject
-    list_display = [field.name for field in Subject._meta.get_fields()]
+    list_display = ['id', 'subject_code', 'subject_name']
 
 # Register models
 admin.site.register(Subject, SubjectAdmin)
