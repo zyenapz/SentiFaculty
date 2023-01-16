@@ -19,6 +19,12 @@ For documentation on how to use VADER, please read their GitHub's documentation.
 For BERT, please read the following documentation.
 - [PySentimiento GitHub Documentation](https://github.com/pysentimiento/pysentimiento)
 
+# ==Implementing corpus into VADER==
+The corpus folder should contain corpus.txt, just copy the contents of the file into vader_lexicon.txt, which should be located in `lib/python3.10/site-packages/vaderSentiment/` within your virtual environment or python installation folder.
+Dataset sources:
+- [Corpora](https://github.com/dariusk/corpora)
+- [Adjectives list by Jordan Siem](https://www.kaggle.com/datasets/jordansiem/adjectives-list)
+
 # Misc notes
 - To log-in into the *administrator* page, use the following credentials:
   ```
