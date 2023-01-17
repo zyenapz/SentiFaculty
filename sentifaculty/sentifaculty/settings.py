@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # Third party libraries
     'pysentimiento', # BERT
     'vaderSentiment',
+    'widget_tweaks',
 
     # Django apps
     'django.contrib.admin',
