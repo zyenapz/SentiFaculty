@@ -47,6 +47,8 @@ def get_feedback(request):
             # TODO: THESE OBJECTS ARE DUMMY DATA ...
             # ... except for the sentiment scores
             new_feedback.teacher = Teacher.objects.get(pk=1)
+
+            # TODO: Change to current logged in user
             new_feedback.student = Student.objects.first()
             new_feedback.academic_year = AcademicYear.objects.first()
 
