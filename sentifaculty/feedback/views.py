@@ -71,4 +71,6 @@ def select_teacher(request):
 # TODO Construct a proper redirect url later depending on whether or not ...
 # ... a user has logged in as student, teacher, or principal
 def todo_page(request):
-    return HttpResponse("<html><body>Under construction. You are not logged in as a student nor admin.</body></html>")
+    # return HttpResponse("<html><body>Under construction. You are not logged in as a student nor admin.</body></html>")
+    context = {'wip_name': "Visualizer"}
+    return render(request, 'wip.html', context)

@@ -57,10 +57,10 @@ class Person(models.Model):
 
 class Student(Person):
     user = models.ForeignKey(MclUser, on_delete=models.CASCADE)
-    section_ID = models.ForeignKey("visualizer.Section", on_delete=models.PROTECT)
-    strand_ID = models.ForeignKey("visualizer.Strand", on_delete=models.PROTECT)
+    section = models.ForeignKey("visualizer.Section", on_delete=models.PROTECT)
+    strand = models.ForeignKey("visualizer.Strand", on_delete=models.PROTECT)
     year_level = models.ForeignKey("visualizer.YearLevel", on_delete=models.PROTECT)
-    faculty_eval = models.ForeignKey("visualizer.FacultyEvaluation", on_delete=models.CASCADE)
+    subjects = models.ManyToManyField("visualizer.Subject")
 
     def __str__(self) -> str:
         return f"({self.faculty_eval}) {self.user.first_name} {self.user.last_name}"

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{%block stylesheets%}
+<link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
+{%endblock%}
+
+{% block content %}
+<article class="media content-section">
+    <div class="media-body">
+        <h1>This page is a work-in-progress (WIP)!</h1>
+        <h3>When complete, this page will show the '{{ wip_name }}' page.</h3>
+    </div>
+</article>
+{% endblock %}

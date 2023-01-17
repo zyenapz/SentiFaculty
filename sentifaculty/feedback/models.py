@@ -18,8 +18,9 @@ class Feedback(models.Model):
     submission_date = models.DateTimeField(auto_now_add=True)
 
     evaluatee = models.ForeignKey('Evaluatee', on_delete=models.CASCADE)
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.PROTECT)
     sentiment_score = models.ForeignKey('SentimentScore', on_delete=models.CASCADE)
+    faculty_eval = models.ForeignKey('visualizer.FacultyEvaluation', on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return self.comment

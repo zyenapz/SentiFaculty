@@ -16,13 +16,13 @@ class Subject(models.Model):
         # TODO add validation
 
 class Section(models.Model):
-    section_ID = models.CharField(max_length=3, primary_key=True)
+    section_ID = models.CharField(max_length=3)
 
     def __str__(self) -> str:
         return self.section_ID
 
 class Strand(models.Model):
-    strand_name = models.CharField(max_length=8, primary_key=True)
+    strand_name = models.CharField(max_length=8)
 
     def __str__(self) -> str:
         return self.strand_name
@@ -47,7 +47,7 @@ class YearLevel(models.Model):
         return self.level
 
 class AcademicYear(models.Model):
-    start_year = models.PositiveIntegerField(primary_key=True)
+    start_year = models.PositiveIntegerField()
     end_year = models.PositiveIntegerField()
 
     def __str__(self) -> str:
@@ -61,6 +61,7 @@ class AcademicYear(models.Model):
 
 class FacultyEvaluation(models.Model):
     academic_year = models.OneToOneField(AcademicYear, on_delete=models.CASCADE)
+    is_active = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return f"FE {self.academic_year}"

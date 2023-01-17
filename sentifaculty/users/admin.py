@@ -51,7 +51,8 @@ class MclUserAdmin(UserAdmin):
 
 class StudentAdmin(admin.ModelAdmin):
     model = Student
-    list_display = ['id', 'user', 'section_ID', 'strand_ID', 'year_level', 'faculty_eval']
+    list_display = ['id', 'user', 'section', 'strand', 'year_level']
+    filter_horizontal = ['subjects',]
 
 
 admin.site.register(MclUser, MclUserAdmin)
