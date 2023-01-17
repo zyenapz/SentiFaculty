@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'pysentimiento', # BERT
     'vaderSentiment',
     'widget_tweaks',
+    'django_bootstrap_icons',
 
     # Django apps
     'django.contrib.admin',

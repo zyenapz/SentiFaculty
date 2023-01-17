@@ -55,17 +55,22 @@ def get_feedback(request):
 
     form = FeedbackForm()
     context = {
-        'title': "Feedback",
+        'title': "Get Feedback",
         'form': form,
+        'navbar_name': "getfeedback",
     }
         
-    return render(request, 'feedback/feedback.html', context)
+    return render(request, 'feedback/getfeedback.html', context)
 
 @user_passes_test(student_check, login_url="todo-page")
 def select_teacher(request):
     form = SelectTeacherForm()
 
-    context = {'form': form}
+    context = {
+        'title': "Select Faculty",
+        'form': form, 
+        'navbar_name': "select",
+    }
     return render(request, 'feedback/select.html', context)    
 
 # TODO Construct a proper redirect url later depending on whether or not ...

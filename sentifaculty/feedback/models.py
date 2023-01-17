@@ -1,14 +1,15 @@
 from django.core import validators
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django import forms
 
 from users.models import Student, Teacher 
 from visualizer.models import AcademicYear
 
 class SentimentChoice(models.TextChoices):
-    POSITIVE = "POSITIVE", _('POSITIVE')
-    NEUTRAL = "NEUTRAL", _('NEUTRAL')
-    NEGATIVE = "NEGATIVE", _('NEGATIVE')
+    POSITIVE = "POSITIVE", _('Positive')
+    NEUTRAL = "NEUTRAL", _('Neutral')
+    NEGATIVE = "NEGATIVE", _('Negative')
 
 class Feedback(models.Model):
 

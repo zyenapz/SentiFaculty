@@ -1,13 +1,18 @@
 from django.forms import ModelForm 
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
 from users.models import Teacher
 from .models import Feedback
 
 class FeedbackForm(ModelForm):
+
     class Meta:
         model = Feedback
         fields = ['comment', 'actual_sentiment']
+        widgets = {
+            'actual_sentiment': forms.RadioSelect()
+        }
 
 class SelectTeacherForm(forms.Form):
     teacher = forms.ModelChoiceField(queryset=Teacher.objects.all())
