@@ -1,11 +1,19 @@
 {% extends 'feedback/base.html' %}
 {% load static %}
+{% load bootstrap_icons %}
 {% load widget_tweaks %}
 
 {% block feedback-content %}
 <h1 class="text-center">
     Feedback
 </h1>
+
+<div class="text-center mb-4">
+    {% bs_icon 'person-circle' size='5em' %}
+    <p class="mt-4 mb-0">{{ evaluatee.teacher.user.last_name.upper }}, {{ evaluatee.teacher.user.first_name }}</p>
+    <p class="m-0">({{ evaluatee.teacher.user.mcl_id }})</p>
+    <p class="m-0">{{ evaluatee.subject.subject_name.upper }} ({{ evaluatee.subject.subject_code }}) </p>
+</div>  
 
 <form action="" method="post">
     {% csrf_token %}

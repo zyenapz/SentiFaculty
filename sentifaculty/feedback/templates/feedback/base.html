@@ -2,6 +2,9 @@
 {% load bootstrap_icons %}
 {% load widget_tweaks %}
 
+{% block stylesheet %}
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid">
     <div class="row flex-nowrap">
@@ -13,20 +16,19 @@
                         <a href="{%url 'fb-select' %}" class="nav-link align-middle px-0">
 
                             {% if navbar_name == "getfeedback" %}
-                            {% bs_icon 'arrow-bar-left' %} 
-                            <i class="fs-4"></i> <span class="ms-1 d-none d-sm-inline">Back</span>
+                            {% bs_icon 'arrow-bar-left' color "#ffc12e" %} 
+                            <i class="fs-4"></i> <span class="ms-1 d-none d-sm-inline" style="color:#ffc12e;">Back</span>
                             {% else %}
-                            {% bs_icon 'people-fill' %} 
-                            <i class="fs-4"></i> <span class="ms-1 d-none d-sm-inline">Select Faculty</span>
+                            {% bs_icon 'people-fill' color "#ffc12e" %} 
+                            <i class="fs-4"></i> <span class="ms-1 d-none d-sm-inline" style="color:#ffc12e;">Select Faculty</span>
                             {% endif %}
-
                             
                         </a>
                     </li>
                     <li class="nav-item">
                         <a href="{%url 'logout' %}" class="nav-link align-middle px-0">
-                            {% bs_icon 'door-closed' %} 
-                            <i class="fs-4"></i> <span class="ms-1 d-none d-sm-inline">Log Out</span>
+                            {% bs_icon 'door-closed' color "#ffc12e" %} 
+                            <i class="fs-4"></i> <span class="ms-1 d-none d-sm-inline" style="color:#ffc12e;">Log Out</span>
                         </a>
                     </li>
                 </ul>

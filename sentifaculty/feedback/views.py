@@ -1,12 +1,13 @@
 from django.http import HttpResponse
-from django.shortcuts import HttpResponseRedirect, render
+from django.shortcuts import HttpResponseRedirect, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
+from django.core import serializers
 
 from feedback.helpers.analyzer import SFAnalyzer
 from users.models import Teacher, Student, STUDENT, ADMIN
-from .forms import FeedbackForm, SelectTeacherForm
-from .models import AcademicYear, SentimentScore
+from .forms import FeedbackForm, SelectEvaluateeForm
+from .models import AcademicYear, SentimentScore, Evaluatee
 
 # NOTE (@login_required decorator)
 # NOTE https://docs.djangoproject.com/en/4.1/topics/auth/default/ 
@@ -58,13 +59,24 @@ def get_feedback(request):
         'title': "Get Feedback",
         'form': form,
         'navbar_name': "getfeedback",
+        'evaluatee': next(serializers.deserialize("json", request.session.get('selected_evaluatee', None))).object,
     }
         
     return render(request, 'feedback/getfeedback.html', context)
 
 @user_passes_test(student_check, login_url="todo-page")
 def select_teacher(request):
-    form = SelectTeacherForm()
+
+    if request.method == "POST":
+        form = SelectEvaluateeForm(request.POST)
+
+        if form.is_valid():
+            selected_evaluatee = form.cleaned_data['teacher']
+            request.session['selected_evaluatee'] = serializers.serialize('json', [selected_evaluatee])
+            return redirect('fb-getfb')  
+
+    else:
+        form = SelectEvaluateeForm()
 
     context = {
         'title': "Select Faculty",
