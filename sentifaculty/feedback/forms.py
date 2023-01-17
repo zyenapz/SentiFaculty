@@ -15,6 +15,7 @@ class FeedbackForm(ModelForm):
         }
 
 class SelectEvaluateeForm(forms.Form):
+    # TODO add a way to filter evaluatees based on if they are taken by a Student
     teacher = forms.ModelChoiceField(queryset=Evaluatee.objects.all())
 
     def __init__(self, *args, **kwargs):
