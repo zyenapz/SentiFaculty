@@ -1,7 +1,7 @@
 from django.apps import apps
 from django.contrib import admin
 
-from .models import Evaluatee, Feedback, SentimentScore
+from .models import Evaluatee, Feedback, HistoricalFeedback, SentimentScore
 
 class FeedbackAdmin(admin.ModelAdmin):
     model = Feedback
@@ -11,3 +11,4 @@ class FeedbackAdmin(admin.ModelAdmin):
 admin.site.register(Feedback, FeedbackAdmin)
 admin.site.register(SentimentScore)
 admin.site.register(Evaluatee)
+admin.site.register(HistoricalFeedback)

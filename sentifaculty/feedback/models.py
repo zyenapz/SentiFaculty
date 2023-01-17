@@ -5,11 +5,12 @@ from django.utils.translation import gettext_lazy as _
 from users.models import Student, Teacher 
 from visualizer.models import AcademicYear
 
+class SentimentChoice(models.TextChoices):
+    POSITIVE = "POSITIVE", _('POSITIVE')
+    NEUTRAL = "NEUTRAL", _('NEUTRAL')
+    NEGATIVE = "NEGATIVE", _('NEGATIVE')
+
 class Feedback(models.Model):
-    class SentimentChoice(models.TextChoices):
-        POSITIVE = "POSITIVE", _('POSITIVE')
-        NEUTRAL = "NEUTRAL", _('NEUTRAL')
-        NEGATIVE = "NEGATIVE", _('NEGATIVE')
 
     comment = models.TextField(max_length=100, validators=[
                                validators.MinLengthValidator(10)])
@@ -46,3 +47,15 @@ class Evaluatee(models.Model):
 
     def __str__(self) -> str:
         return f"({self.subject.subject_code}) {self.teacher}"
+
+class HistoricalFeedback(models.Model):
+    comment = models.TextField(max_length=100, validators=[
+                               validators.MinLengthValidator(10)])
+    actual_sentiment = models.CharField(
+        max_length=10, choices=SentimentChoice.choices, default=SentimentChoice.NEUTRAL)
+    submission_date = models.DateTimeField(auto_now_add=True)
+
+    teacher = models.ForeignKey('users.Teacher', on_delete=models.CASCADE)
+    faculty_eval = models.ForeignKey('visualizer.FacultyEvaluation', on_delete=models.CASCADE)
+    sentiment_score = models.ForeignKey(SentimentScore, on_delete=models.CASCADE)
+

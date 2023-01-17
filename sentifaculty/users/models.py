@@ -63,7 +63,7 @@ class Student(Person):
     subjects = models.ManyToManyField("visualizer.Subject")
 
     def __str__(self) -> str:
-        return f"({self.faculty_eval}) {self.user.first_name} {self.user.last_name}"
+        return f"{self.user.first_name} {self.user.last_name}"
 
     def clean(self):
         if self.user.user_type != STUDENT:
