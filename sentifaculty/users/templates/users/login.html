@@ -3,20 +3,17 @@
 {% load crispy_forms_tags %}
 {% load widget_tweaks %}
 
-{%block stylesheets%}
-<!-- Main CSS -->
-<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
-
+{% block stylesheets %}
 <!-- Page-specific CSS -->
 <style>
   .asteriskField {
     display: none;
   }
 </style>
-{%endblock%}
+{% endblock %}
 
 {% block content %}
-<div class="row mb-4 justify-content-center align-items-center">
+<div class="row mt-xl-5 mb-4 justify-content-center align-items-center">
 
   <!-- Banner -->
   <div class="col-sm-4">

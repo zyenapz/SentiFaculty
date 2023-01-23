@@ -1,44 +1,45 @@
 {% extends 'base.html' %}
 {% load bootstrap_icons %}
 {% load widget_tweaks %}
+{% load static %}
 
 {% block stylesheets %}
+<!-- Page-specific CSS -->
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row flex-nowrap">
-        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-mcl">
-            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
-                <span class="fs-5 d-none d-sm-inline">Menu</span>
-                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-                    <li class="nav-item">
-                        <a href="{%url 'fb-select' %}" class="nav-link align-middle px-0">
+<div class="row">
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-mcl">
+        <div class="container-fluid">
+            <img src="{% static 'images/mcl_logo-small.png' %}" alt="" width="50" height="50" class="d-inline-block align-text-top me-2">
+            <a class="navbar-brand text-white" href="#">SentiFaculty</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse ms-2" id="navbarNav">
+            <ul class="navbar-nav">
 
-                            {% if navbar_name == "getfeedback" %}
-                            {% bs_icon 'arrow-bar-left' color "#ffc12e" %} 
-                            <i class="fs-4"></i> <span class="ms-1 d-none d-sm-inline" style="color:#ffc12e;">Back</span>
-                            {% else %}
-                            {% bs_icon 'people-fill' color "#ffc12e" %} 
-                            <i class="fs-4"></i> <span class="ms-1 d-none d-sm-inline" style="color:#ffc12e;">Select Faculty</span>
-                            {% endif %}
-                            
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{%url 'logout' %}" class="nav-link align-middle px-0">
-                            {% bs_icon 'door-closed' color "#ffc12e" %} 
-                            <i class="fs-4"></i> <span class="ms-1 d-none d-sm-inline" style="color:#ffc12e;">Log Out</span>
-                        </a>
-                    </li>
-                </ul>
-                <hr>
+                <li class="nav-item">
+                {% if navbar_name == "getfeedback" %}
+                <a class="nav-link" href="{%url 'fb-select' %}">Go Back</a>
+                {% else %}
+                <a class="nav-link" href="{%url 'fb-select' %}">Select Faculty</a>
+                {% endif %}
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{%url 'logout' %}">Log Out</a>
+                </li>
+            
+            </ul>
             </div>
         </div>
-        <div class="col py-4">
-            {% block feedback-content %}{%endblock%}
-        </div>
-    </div>
-</div>
+        </nav>
 
+    <!-- Content -->
+    <div class="col py-4">
+        {% block feedback-content %}{%endblock%}
+    </div>
+
+</div>
 {% endblock %}

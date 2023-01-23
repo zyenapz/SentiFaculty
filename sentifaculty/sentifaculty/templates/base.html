@@ -21,29 +21,29 @@
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}?{% now "U" %}">
 
-    {%block stylesheets %}{%endblock%}
+    {% block stylesheets %}{% endblock %}
 
     <!-- Javascript -->
-    {%block javascript %}{%endblock%}
+    {% block javascript %}{% endblock %}
 
   </head>
 
   <body>
     <div class="container-fluid min-vh-100 d-flex flex-column">
 
-      <!-- Aside-->
-      <div class="row d-flex flex-grow-1 .g-0">
-      </div>
+      {% comment %} <!-- Aside-->
+      <div class="row d-flex flex-grow-1">
+      </div> {% endcomment %}
 
       <!-- Content -->
-      <div class="row d-flex flex-grow-1 .g-0">
+      <div class="row d-flex flex-grow-1">
         <div class="col">
           {% block content %}{% endblock %}
         </div>
       </div>
 
       <!-- Copyright -->
-      <div class="row .g-0">
+      <div class="row">
         <div class="col text-center text-md-start justify-content-between py-4 px-4 px-xl-5 bg-mcl">
           <div class="text-white">
             SentiFaculty. A project by Group 2022CS04.
