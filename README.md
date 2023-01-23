@@ -6,6 +6,7 @@ You need to install the following packages on your machine or a virtual environm
 - ```pip install vaderSentiment``` (for sentiment analysis the VADER lexicon)
 - ```pip install nltk``` (for corpus and text preprocessing, also includes VADER)
 - ```pip install emoji``` (for preprocessing)
+-alternatively, just ```py -m pip install -r requirements.txt``` or ```python3 -m pip install -r requirements.txt```
 
 
 ## A note on virtual environments
