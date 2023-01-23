@@ -25,15 +25,18 @@
 
     <!-- Javascript -->
     {%block javascript %}{%endblock%}
+
   </head>
 
   <body>
     <div class="container-fluid min-vh-100 d-flex flex-column">
 
-      <div class="row flex-grow-1 .g-0">
+      <!-- Aside-->
+      <div class="row d-flex flex-grow-1 .g-0">
       </div>
 
-      <div class="row flex-grow-1 .g-0">
+      <!-- Content -->
+      <div class="row d-flex flex-grow-1 .g-0">
         <div class="col">
           {% block content %}{% endblock %}
         </div>
