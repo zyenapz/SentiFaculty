@@ -1,4 +1,5 @@
-import re,string
+import re,string,emoji
+from nltk.tokenize import word_tokenize
 
 slangDict = {
     'awsm': 'awesome',
@@ -620,34 +621,24 @@ slangDict = {
 }
 
 def removeAbbreviations(argString):
-    cleanedString=re.sub(r"\b[A-Z\.]{2,}s?\b", "", argString)
-    return cleanedString
+    return re.sub(r"\b[A-Z\.]{2,}s?\b", "", argString)
 
 def removeEmojis(argString):
-    emojis = re.compile("["
-        u"\U00002700-\U000027BF"
-        u"\U0001F600-\U0001F64F"
-        u"\U00002600-\U000026FF"
-        u"\U0001F300-\U0001F5FF"
-        u"\U0001F900-\U0001F9FF"
-        u"\U0001FA70-\U0001FAFF"
-        u"\U0001F680-\U0001F6FF"
-                      "]+", re.UNICODE)
-    return re.sub(emojis, '', argString)
+    return emoji.replace_emoji(argString,replace="")
 
 def removePunctuation(argString):
     return argString.translate(str.maketrans("","",string.punctuation))
 
 #remove slang also deemphasizes due to calling lower()
 def removeSlang(argString):
-    tokenizedString = argString.split()
+    tokenizedString = word_tokenize(argString)
     cleanedText = []
-    for word in tokenizedString:
-        wordLower = word.lower()
+    for token in tokenizedString:
+        wordLower = token.lower()
         if wordLower in slangDict:
             cleanedText.append(slangDict[wordLower])
         else:
-            cleanedText.append(word)
+            cleanedText.append(token)
     slanged = " ".join(cleanedText)
     return slanged
 

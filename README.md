@@ -4,7 +4,8 @@ You need to install the following packages on your machine or a virtual environm
 - ```pip install django=4.1.4``` (for web development)
 - ```pip install pysentimiento``` (for sentiment analysis using the BERT model)
 - ```pip install vaderSentiment``` (for sentiment analysis the VADER lexicon)
-- ```pip install nltk``` (for corpus, also includes VADER)
+- ```pip install nltk``` (for corpus and text preprocessing, also includes VADER)
+- ```pip install emoji``` (for preprocessing)
 
 
 ## A note on virtual environments
