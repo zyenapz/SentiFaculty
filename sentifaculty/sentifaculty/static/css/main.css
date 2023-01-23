@@ -26,3 +26,8 @@
   background-color: #1b2c53;
   border-radius: 4px;
 }
+
+label.required::after {
+  content: ' *';
+  color: #ff0000;
+}

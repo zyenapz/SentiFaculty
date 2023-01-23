@@ -18,7 +18,7 @@
 <form action="" method="post">
     {% csrf_token %}
     {{ form.comment|add_class:"form-control form-control-lg"|attr:"placeholder:Enter your feedback" }}
-    <h6 class="mt-5">How do you feel about this teacher?</h6>
+    <h6 class="mt-5">Is the sentiment of your comment: </h6>
     {{ form.actual_sentiment|add_class:"inline-radio" }}
     <div class="text-center text-lg-start mt-4 pt-2">
         <button type="submit" class="btn btn-primary btn-mcl btn-lg text-center"

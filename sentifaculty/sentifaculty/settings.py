@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'vaderSentiment',
     'widget_tweaks',
     'django_bootstrap_icons',
+    'crispy_forms',
+    'crispy_bootstrap5',
 
     # Django apps
     'django.contrib.admin',
@@ -144,3 +146,7 @@ LOGIN_URL = 'login'
 AUTH_USER_MODEL = 'users.MclUser'
 ACCOUNT_USERNAME_REQUIRED = False
 USERNAME_FIELD = 'email'
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"

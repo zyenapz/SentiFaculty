@@ -6,6 +6,7 @@ from django.core import serializers
 
 from feedback.helpers.analyzer import SFAnalyzer
 from users.models import Teacher, Student, STUDENT, ADMIN
+from visualizer.models import FacultyEvaluation
 from .forms import FeedbackForm, SelectEvaluateeForm
 from .models import AcademicYear, SentimentScore, Evaluatee
 
@@ -46,11 +47,11 @@ def get_feedback(request):
 
             # TODO: THESE OBJECTS ARE DUMMY DATA ...
             # ... except for the sentiment scores
-            new_feedback.teacher = Teacher.objects.get(pk=1)
+            new_feedback.evaluatee = next(serializers.deserialize("json", request.session.get('selected_evaluatee', None))).object
 
             # TODO: Change to current logged in user
             new_feedback.student = Student.objects.first()
-            new_feedback.academic_year = AcademicYear.objects.first()
+            new_feedback.faculty_eval = FacultyEvaluation.objects.first()
 
             # Save form
             new_feedback.save()

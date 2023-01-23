@@ -1,40 +1,54 @@
 {% extends 'base.html' %}
 {% load static %}
-
-{%block stylesheets%}
-<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
-{%endblock%}
-
+{% load crispy_forms_tags %}
 {% load widget_tweaks %}
 
+{%block stylesheets%}
+<!-- Main CSS -->
+<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+
+<!-- Page-specific CSS -->
+<style>
+  .asteriskField {
+    display: none;
+  }
+</style>
+{%endblock%}
+
 {% block content %}
-<div class="container-fluid h-custom">
-  <div class="row d-flex justify-content-center align-items-center h-100">
-    <div class="col-md-9 col-lg-6 col-xl-5">
-      <img src="{% static 'images/mcl_banner.png' %}"
-        class="img-fluid" alt="MCL Banner">
+  <div class="row mb-4 justify-content-center align-items-center">
+
+    <!-- Banner -->
+    <div class="col-lg-4">
+      <img src="{% static 'images/mcl_banner-2.png' %}" class="img-fluid" alt="MCL Logo">
     </div>
-    <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+
+    <!-- Form -->
+    <div class="col-md-8 col-lg-6">
+      
+      <h1 class="text-center">
+        Welcome to SentiFaculty
+      </h1>
+
+      <div class="divider d-flex align-items-center my-4">
+        <p class="text-center fw-bold mx-3 mb-0">Sign In</p>
+      </div>
 
       <form method="POST">
         {% csrf_token %}
 
-        <h1 class="text-center">
-          Welcome to SentiFaculty
-        </h1>
+        
 
-        <div class="divider d-flex align-items-center my-4">
-          <p class="text-center fw-bold mx-3 mb-0">Sign In</p>
-        </div>
+        {{ form|as_crispy_errors }}
 
         <!-- Email input -->
         <div class="form-outline mb-4">
-            {{ form.username|add_class:"form-control form-control-lg"|attr:"placeholder:Enter your email address" }}
+            {{ form.username|as_crispy_field }}
         </div>
 
         <!-- Password input -->
         <div class="form-outline mb-3">
-          {{ form.password|add_class:"form-control form-control-lg"|attr:"placeholder:Enter your password" }}
+          {{ form.password|as_crispy_field }}
         </div>
 
         <div class="text-center text-lg-start mt-4 pt-2">
@@ -43,7 +57,7 @@
         </div>
 
       </form>
+
     </div>
   </div>
-</div>
 {% endblock %}
