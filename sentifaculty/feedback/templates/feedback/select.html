@@ -1,20 +1,137 @@
 {% extends 'feedback/base.html' %}
 {% load static %}
 {% load widget_tweaks %}
+{% load crispy_forms_tags %}
 
-{% comment %} {% block stylesheets %}
-{% endblock %} {% endcomment %}
+{% block stylesheets %}
+<!-- Page-specific CSS -->
+<style>
+  label {
+    width: 100%;
+    font-size: 1rem;
+    padding: 0.5rem;
+  }
+
+  .card-input-element+.card {
+    height: calc(36px + 2*1rem);
+    // color: #00ff00;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: 2px solid transparent;
+    border-radius: 4px;
+  }
+
+  .card-input-element+.card:hover {
+    cursor: pointer;
+  }
+
+  .card-input-element:checked+.card {
+    border: 2px solid #00ff00;
+    -webkit-transition: border .3s;
+    -o-transition: border .3s;
+    transition: border .3s;
+  }
+
+  .card-input-element:checked+.card::after {
+    content: '\2713';
+    color: #00ff00;
+    font-size: 24px;
+    -webkit-animation-name: fadeInCheckbox;
+    animation-name: fadeInCheckbox;
+    -webkit-animation-duration: .5s;
+    animation-duration: .5s;
+    -webkit-animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @-webkit-keyframes fadeInCheckbox {
+    from {
+      opacity: 0;
+      background-color: 
+      -webkit-transform: rotateZ(-20deg);
+    }
+    to {
+      opacity: 1;
+      -webkit-transform: rotateZ(0deg);
+    }
+  }
+
+  @keyframes fadeInCheckbox {
+    from {
+      opacity: 0;
+      transform: rotateZ(-20deg);
+    }
+    to {
+      opacity: 1;
+      transform: rotateZ(0deg);
+    }
+  }
+
+  input[type="radio"] {
+    opacity: 1;
+    //width: 0;
+    //height: 0;
+  }
+
+  input[type="radio"]:active ~ label {
+    opacity: 1;
+  }
+
+  input[type="radio"]:checked ~ label {
+    opacity: 1;
+    border: 1px solid $font-color;
+  }
+
+  .teacher-card {
+    height: 10em;
+  }
+</style>
+{% endblock %}
 
 {% block feedback-content %}
 
 <h2 class="text-center">Select a Teacher</h2>
+<div class="container">
+  <form action="" method="post">
+      {% csrf_token %}
 
-<form action="" method="post">
-    {% csrf_token %}
-    {{ form.teacher }}
-    <div class="text-center mt-4 pt-2">
-        <button type="submit" class="btn btn-primary btn-mcl btn-lg text-center">Evaluate</button>
-    </div>
-</form>
+      <div class="row">
+        {% for choice in form.teacher %}
+        <div class="col">
+          <label>
+            <!-- NOTE The method to set the input's 'value' field is a bit hacky. 
+              It works because the counter just so happens to correspond to the django-generated id value
+              of the Evaluatee object.
+            -->
+            <input type="radio" name="teacher" class="card-input-element d-none" value="{{ forloop.counter }}" id="{{ choice.id_for_label }}" required>
+            <div class="card card-body bg-light d-flex flex-row justify-content-between align-items-center">
+              {{choice.choice_label}}
+            </div>
+          </label>
+        </div>
+
+        {% endfor %}
+      </div>
+
+      <div class="text-center mt-4 pt-2">
+          <button id="evaluateTeacher" type="submit" class="btn btn-lg btn-mcl text-center" disabled>Evaluate</button>
+      </div>
+  </form>
+</div>
+
+{% block bodyscript %}
+<script>
+  var radios = document.getElementsByClassName("card-input-element");
+  for (var i = radios.length - 1; i >= 0; --i) {
+    var e = radios[i];
+    e.onchange = function () {
+      document.getElementById("evaluateTeacher").removeAttribute("disabled");
+    };
+  }
+</script>
+{% endblock %}
+{% comment %} <script>
+</script> {% endcomment %}
 
 {% endblock %}
+
