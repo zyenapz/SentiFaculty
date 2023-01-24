@@ -25,6 +25,8 @@
 .btn-mcl {
   background-color: #1b2c53;
   border-radius: 4px;
+  padding-left: 2.5rem; 
+  padding-right: 2.5rem;
 }
 
 label.required::after {
