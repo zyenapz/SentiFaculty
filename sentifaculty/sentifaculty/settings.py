@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_bootstrap_icons',
     'crispy_forms',
     'crispy_bootstrap5',
+    # 'multiforloop', # TODO REMOVE LATER
 
     # Django apps
     'django.contrib.admin',

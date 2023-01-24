@@ -94,8 +94,8 @@
 <div class="container">
   <form action="" method="post">
       {% csrf_token %}
-
       <div class="row">
+
         {% for choice in form.teacher %}
         <div class="col">
           <label>
@@ -103,7 +103,7 @@
               It works because the counter just so happens to correspond to the django-generated id value
               of the Evaluatee object.
             -->
-            <input type="radio" name="teacher" class="card-input-element d-none" value="{{ forloop.counter }}" id="{{ choice.id_for_label }}" required>
+            {{choice.tag}}
             <div class="card card-body bg-light d-flex flex-row justify-content-between align-items-center">
               {{choice.choice_label}}
             </div>
