@@ -7,7 +7,7 @@
 <!-- Page-specific CSS -->
 <style>
   label {
-    width: 100%;
+    width: 60%;
     font-size: 1rem;
     padding: 0.5rem;
   }
@@ -32,6 +32,7 @@
     transition: border .3s;
   }
 
+/***
   .card-input-element:checked+.card::after {
     content: '\2713';
     color: #00ff00;
@@ -43,6 +44,7 @@
     -webkit-animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
+***/
 
   @-webkit-keyframes fadeInCheckbox {
     from {
@@ -91,25 +93,23 @@
 {% block feedback-content %}
 
 <h2 class="text-center">Select a Teacher</h2>
-<div class="container">
+<div class="container ">
   <form action="" method="post">
       {% csrf_token %}
-      <div class="row">
+      <div class="row gx-0">
 
         {% for choice in form.teacher %}
         <div class="col">
           <label>
-            <!-- NOTE The method to set the input's 'value' field is a bit hacky. 
-              It works because the counter just so happens to correspond to the django-generated id value
-              of the Evaluatee object.
-            -->
+
             {{choice.tag}}
             <div class="card card-body bg-light d-flex flex-row justify-content-between align-items-center">
+              <img class="rounded-circle shadow-4-strong" alt="avatar2" src="{% static 'images/anon.png' %}" width="30em" />
               {{choice.choice_label}}
             </div>
+            
           </label>
         </div>
-
         {% endfor %}
       </div>
 
