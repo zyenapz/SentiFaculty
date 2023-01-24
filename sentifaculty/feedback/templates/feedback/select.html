@@ -4,113 +4,127 @@
 {% load crispy_forms_tags %}
 
 {% block stylesheets %}
-<!-- Page-specific CSS -->
-<style>
-  label {
-    width: 60%;
-    font-size: 1rem;
-    padding: 0.5rem;
-  }
-
-  .card-input-element+.card {
-    height: calc(36px + 2*1rem);
-    // color: #00ff00;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-    border: 2px solid transparent;
-    border-radius: 4px;
-  }
-
-  .card-input-element+.card:hover {
-    cursor: pointer;
-  }
-
-  .card-input-element:checked+.card {
-    border: 2px solid #00ff00;
-    -webkit-transition: border .3s;
-    -o-transition: border .3s;
-    transition: border .3s;
-  }
-
-/***
-  .card-input-element:checked+.card::after {
-    content: '\2713';
-    color: #00ff00;
-    font-size: 24px;
-    -webkit-animation-name: fadeInCheckbox;
-    animation-name: fadeInCheckbox;
-    -webkit-animation-duration: .5s;
-    animation-duration: .5s;
-    -webkit-animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  }
-***/
-
-  @-webkit-keyframes fadeInCheckbox {
-    from {
-      opacity: 0;
-      background-color: 
-      -webkit-transform: rotateZ(-20deg);
+  <!-- Page-specific CSS -->
+  <style>
+    label {
+      width: 100%;
+      font-size: 1rem;
+      padding: 0.5rem;
     }
-    to {
+
+    .card-input-element+.card {
+      height: calc(36px + 20*1rem);
+      /*** color: #00ff00; ***/
+      -webkit-box-shadow: none;
+      box-shadow: none;
+      border: 2px solid transparent;
+      border-radius: 4px;
+    }
+
+    .card-input-element+.card:hover {
+      cursor: pointer;
+    }
+
+    .card-input-element:checked+.card {
+      border: 2px solid #00ff00;
+      -webkit-transition: border .3s;
+      -o-transition: border .3s;
+      transition: border .3s;
+    }
+
+  /***
+    .card-input-element:checked+.card::after {
+      content: '\2713';
+      color: #00ff00;
+      font-size: 24px;
+      -webkit-animation-name: fadeInCheckbox;
+      animation-name: fadeInCheckbox;
+      -webkit-animation-duration: .5s;
+      animation-duration: .5s;
+      -webkit-animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  ***/
+
+    @-webkit-keyframes fadeInCheckbox {
+      from {
+        opacity: 0;
+        background-color: 
+        -webkit-transform: rotateZ(-20deg);
+      }
+      to {
+        opacity: 1;
+        -webkit-transform: rotateZ(0deg);
+      }
+    }
+
+    @keyframes fadeInCheckbox {
+      from {
+        opacity: 0;
+        transform: rotateZ(-20deg);
+      }
+      to {
+        opacity: 1;
+        transform: rotateZ(0deg);
+      }
+    }
+
+    input[type="radio"] {
       opacity: 1;
-      -webkit-transform: rotateZ(0deg);
+      //width: 0;
+      //height: 0;
     }
-  }
 
-  @keyframes fadeInCheckbox {
-    from {
-      opacity: 0;
-      transform: rotateZ(-20deg);
-    }
-    to {
+    input[type="radio"]:active ~ label {
       opacity: 1;
-      transform: rotateZ(0deg);
     }
-  }
 
-  input[type="radio"] {
-    opacity: 1;
-    //width: 0;
-    //height: 0;
-  }
+    input[type="radio"]:checked ~ label {
+      opacity: 1;
+      border: 1px solid $font-color;
+    }
 
-  input[type="radio"]:active ~ label {
-    opacity: 1;
-  }
-
-  input[type="radio"]:checked ~ label {
-    opacity: 1;
-    border: 1px solid $font-color;
-  }
-
-  .teacher-card {
-    height: 10em;
-  }
-</style>
+    .teacher-card {
+      height: 10em;
+    }
+  </style>
 {% endblock %}
 
 {% block feedback-content %}
 
 <h2 class="text-center">Select a Teacher</h2>
 <div class="container ">
+  {% comment %} {% for choice in form.evaluatee.field.queryset %}
+    {{ choice.teacher.user.first_name }}
+    {{ choice.teacher.user.id }}
+  {% endfor %} {% endcomment %}
+
+
+  
   <form action="" method="post">
       {% csrf_token %}
+
       <div class="row gx-0">
 
-        {% for choice in form.teacher %}
-        <div class="col">
+        {% for choice in form.evaluatee.field.queryset %}
+        <div class="col-xl-3 col-sm-6 mb-5">
           <label>
-
-            {{choice.tag}}
-            <div class="card card-body bg-light d-flex flex-row justify-content-between align-items-center">
-              <img class="rounded-circle shadow-4-strong" alt="avatar2" src="{% static 'images/anon.png' %}" width="30em" />
-              {{choice.choice_label}}
-            </div>
-            
+          <input type="radio" name="evaluatee" value="{{choice.id}}" class="card-input-element d-none" id="{{ forloop.counter }}" required>
+          <div class="card bg-white rounded shadow-sm py-5 px-4 justify-content-between align-items-center">
+              <img src="https://bootstrapious.com/i/snippets/sn-team/teacher-2.jpg" alt="" width="100" class="img-fluid rounded-circle mb-3 img-thumbnail">
+              <h5 class="mb-0">{{choice.teacher.user.first_name}} {{choice.teacher.user.last_name}}</h5>
+              <span class="small text-uppercase text-muted">{{choice.subject.subject_name}} ({{choice.subject.subject_code}})</span>
+              <ul class="social mb-0 list-inline mt-3">
+                <!-- TODO put 'already evaluated' mark here -->
+                <li>
+                  Not yet evaluated
+                </li>
+              </ul>
+          </div>
           </label>
         </div>
         {% endfor %}
+        
       </div>
 
       <div class="text-center mt-4 pt-2">
@@ -135,3 +149,22 @@
 
 {% endblock %}
 
+
+
+<!-- 
+<div class="col">
+  <label>
+    {% comment %} <input type="radio" name="evaluatee" value="1" class="card-input-element d-none" id="id_evaluatee_0" required> {% endcomment %}
+    {% comment %} {{choice.tag}} {% endcomment %}
+    
+    <input type="radio" name="evaluatee" value="{{choice.id}}" class="card-input-element d-none"  id="{{ forloop.counter }}" required>
+    <div class="card card-body bg-light d-flex flex-row justify-content-between align-items-center">
+      <img class="rounded-circle shadow-4-strong" alt="avatar2" src="{% static 'images/anon.png' %}" width="30em" />
+      {{choice.teacher.user.first_name}}
+      {{choice.teacher.user.last_name}}
+      {{choice.subject.subject_code}}
+    </div>
+    
+  </label>
+</div>
+-->

@@ -74,7 +74,7 @@ def select_teacher(request):
         form = SelectEvaluateeForm(request.POST)
 
         if form.is_valid():
-            selected_evaluatee = form.cleaned_data['teacher']
+            selected_evaluatee = form.cleaned_data['evaluatee']
             request.session['selected_evaluatee'] = serializers.serialize('json', [selected_evaluatee])
             return redirect('fb-getfb')  
 

@@ -18,7 +18,7 @@ class SelectEvaluateeForm(forms.Form):
     # TODO add a way to filter evaluatees based on if they are taken by a Student
     query = Evaluatee.objects.all()
     ids = [obj.id for obj in query]
-    teacher = forms.ModelChoiceField(queryset=query, widget=forms.RadioSelect(attrs={'class': 'card-input-element d-none'}))
+    evaluatee = forms.ModelChoiceField(queryset=query, widget=forms.RadioSelect(attrs={'class': 'card-input-element d-none'}))
 
     def __init__(self, *args, **kwargs):
         super(SelectEvaluateeForm, self).__init__(*args, **kwargs)
