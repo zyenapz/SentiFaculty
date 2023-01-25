@@ -70,7 +70,7 @@ ROOT_URLCONF = 'sentifaculty.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'sentifaculty/templates/'],
+        'DIRS': [BASE_DIR / r'sentifaculty/templates/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
