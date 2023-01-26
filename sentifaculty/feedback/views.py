@@ -3,8 +3,9 @@ from django.shortcuts import HttpResponseRedirect, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from django.core import serializers
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.contrib import messages
+from django.db.models import Case, IntegerField, Value, When
 
 from feedback.helpers.analyzer import SFAnalyzer
 from users.models import Teacher, Student, STUDENT, ADMIN
@@ -19,7 +20,7 @@ def student_check(user):
     # TODO remove admin later
     return user.user_type == STUDENT or user.user_type == ADMIN
 
-# Helpers -------------------------------------------------------
+# GET-FEEDBACK VIEW ---------------------------------------------
 def calc_sentiment(text):
     # Calculate Vader, BERT and hybrid scores
     analyzer = SFAnalyzer()
@@ -38,7 +39,6 @@ def calc_sentiment(text):
 
     return score
 
-# Views ---------------------------------------------------------
 @user_passes_test(student_check, login_url="todo-page")
 def get_feedback(request):
     # Get selected evaluatee from session data
@@ -102,6 +102,33 @@ def get_feedback(request):
         
     return render(request, 'feedback/getfeedback.html', context)
 
+# SELECT-TEACHER VIEW -------------------------------------------
+def filter_evaluatees(init_query, user):
+    # Filter evaluatees based on whether or not the student is enrolled in their subject
+    # NOTE Relevant discussion links
+    # - https://stackoverflow.com/questions/1058135/django-convert-a-list-back-to-a-queryset
+    # - https://stackoverflow.com/questions/61686596/creating-a-queryset-manually-in-django-from-list-of-ids/61686789#61686789
+    user_subjects = user.subjects.all()
+    evaluatee_ids = list()
+
+    for evaluatee in init_query:
+        for subject in user_subjects:
+            # TODO filter it also based on the currently active faculty evaluation year
+            if evaluatee.subject == subject:
+                evaluatee_ids.append(evaluatee.id)
+
+    # Construct new query
+    new_query = Evaluatee.objects.filter(
+        pk__in=evaluatee_ids
+    ).order_by(
+        Case(
+            *[When(pk=pk, then=Value(i)) for i, pk in enumerate(evaluatee_ids)],
+            output_field=IntegerField()
+        ).asc()
+    )
+
+    return new_query
+
 @user_passes_test(student_check, login_url="todo-page")
 def select_teacher(request):
     # Retrieve already evaluated teachers
@@ -122,32 +149,43 @@ def select_teacher(request):
         if form.is_valid():
             selected_evaluatee = form.cleaned_data['evaluatee']
 
-            for evaluatee in already_evaluated:
-                if evaluatee.id == selected_evaluatee.id:
-                    messages.info(request, f"You have already evaluated {selected_evaluatee}.")
-                    return redirect('fb-select')
-                else:
-                    request.session['selected_evaluatee'] = serializers.serialize('json', [selected_evaluatee])
-                    return redirect('fb-getfb') 
+            if already_evaluated:
+                for evaluatee in already_evaluated:
+                    if evaluatee.id == selected_evaluatee.id:
+                        messages.info(request, f"You have already evaluated {selected_evaluatee}.")
+                        return redirect('fb-select')
+            else:
+                request.session['selected_evaluatee'] = serializers.serialize('json', [selected_evaluatee])
+                return redirect('fb-getfb') 
 
     else:
-        #query = Evaluatee.objects.all()
         feedbacks = Feedback.objects.filter(evaluator__student=user)
         already_evaluated = list()
 
         for feedback in feedbacks:
             for evaluatee in form.query:
 
-                if feedback.evaluatee == evaluatee:
+                if feedback.evaluatee == evaluatee: 
                     already_evaluated.append(evaluatee)
+
+        init_query = form['evaluatee'].field.queryset
+        new_query = filter_evaluatees(init_query, user)
+        has_subjects = new_query.exists()
+
+        form['evaluatee'].field.queryset = new_query
 
     context = {
         'title': "Select Faculty",
         'form': form, 
         'navbar_name': "select",
-        'already_evaluated': already_evaluated
+        'already_evaluated': already_evaluated,
+        'has_subjects': has_subjects,
     }
     return render(request, 'feedback/select.html', context)    
+
+
+
+
 
 # TODO Construct a proper redirect url later depending on whether or not ...
 # ... a user has logged in as student, teacher, or principal

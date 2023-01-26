@@ -59,7 +59,7 @@ class Student(Person):
     section = models.ForeignKey("visualizer.Section", on_delete=models.PROTECT)
     strand = models.ForeignKey("visualizer.Strand", on_delete=models.PROTECT)
     year_level = models.ForeignKey("visualizer.YearLevel", on_delete=models.PROTECT)
-    subjects = models.ManyToManyField("visualizer.Subject")
+    subjects = models.ManyToManyField("visualizer.Subject", blank=True)
 
     def __str__(self) -> str:
         return f"{self.user.first_name} {self.user.last_name}"

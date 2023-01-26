@@ -32,19 +32,12 @@ class SelectEvaluateeForm(forms.Form):
     evaluatee = forms.ModelChoiceField(queryset=query, widget=forms.RadioSelect(attrs={'class': 'card-input-element d-none'}))
 
     def __init__(self, *args, **kwargs):
-        slug = kwargs.pop('slug', None) # Correctly obtains slug from url
         super(SelectEvaluateeForm, self).__init__(*args, **kwargs)
 
-    def is_empty_query(self):
-        if not self.query.exists():
-            return True
-        else:
-            return False
-
-    #     self.fields['teacher'].label_from_instance = self.label_from_instance
-
-    # @staticmethod
-    # def label_from_instance(obj):
-    #     fname = obj.user.first_name
-    #     lname = obj.user.last_name
-    #     return f"{fname} {lname}"
+    # def is_empty_query(self):
+    #     print(self.evaluatee.field.queryset.exists())
+    #     print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+    #     if not self.evaluatee.field.queryset.exists():
+    #         return True
+    #     else:
+    #         return False
