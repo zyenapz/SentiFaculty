@@ -94,66 +94,64 @@
 
 <div class="container">
 
-  {% if not form.is_empty_query %}
-  <h2 class="text-center">Select a Teacher</h2>
-  {% if messages %}
-    <div class="row gx-0 mb-4">
-        {% for message in messages %}
-        <div class="card rounded shadow-sm messages bg-warning py-4">{{ message }}</div>
-        {% endfor %}
-    </div>
-  {% endif %}
+  {% if has_subjects %}
+    <h2 class="text-center">Select a Teacher</h2>
+    {% if messages %}
+      <div class="row gx-0 mb-4">
+          {% for message in messages %}
+          <div class="card rounded shadow-sm messages bg-warning py-4">{{ message }}</div>
+          {% endfor %}
+      </div>
+    {% endif %}
 
-  <form action="" method="post">
-      {% csrf_token %}
+    <form action="" method="post">
+        {% csrf_token %}
 
-      <div class="row gx-0 d-flex justify-content-center">
+        <div class="row gx-0 d-flex justify-content-center">
 
-        {% for choice in form.evaluatee.field.queryset %}
-          <div class="col-xl-3 col-sm-6 mb-5">
-            <label>
-            <input type="radio" name="evaluatee" value="{{choice.id}}" class="card-input-element d-none" id="{{choice.id}}" required>
-            <div class="card bg-white rounded shadow-sm py-5 px-4 justify-content-between align-items-center">
-                <img src="{% static 'images/mcl_banner-2.png' %}" alt="" width="100" class="img-fluid rounded-circle mb-3 img-thumbnail">
-                <h5 class="mb-0">{{choice.teacher.user.first_name}} {{choice.teacher.user.last_name}}</h5>
-                <span class="small text-uppercase text-muted">{{choice.subject.subject_name}} ({{choice.subject.subject_code}})</span>
-                <ul class="mb-0 list-inline mt-3">
-                  <!-- TODO put 'already evaluated' mark here -->
-                  <li class="text-uppercase">
-                    {% comment %} Not yet evaluated {% endcomment %}
-                    {% for evaluatee in already_evaluated %}
-                      {% if choice.id == evaluatee.id %}
-                        <img src="{% static 'images/checkmark.png' %}" alt="" width="30" class="img-fluid rounded-circle mb-3">
-                        <h6 class="text-muted">Already evaluated</h6>
-                      {% endif %}
-                    {% endfor %}
-                  </li>
-                </ul>
+          {% for choice in form.evaluatee.field.queryset %}
+            <div class="col-xl-3 col-sm-6 mb-5">
+              <label>
+              <input type="radio" name="evaluatee" value="{{choice.id}}" class="card-input-element d-none" id="{{choice.id}}" required>
+              <div class="card bg-white rounded shadow-sm py-5 px-4 justify-content-between align-items-center">
+                  <img src="{% static 'images/mcl_banner-2.png' %}" alt="" width="100" class="img-fluid rounded-circle mb-3 img-thumbnail">
+                  <h5 class="mb-0">{{choice.teacher.user.first_name}} {{choice.teacher.user.last_name}}</h5>
+                  <span class="small text-uppercase text-muted">{{choice.subject.subject_name}} ({{choice.subject.subject_code}})</span>
+                  <ul class="mb-0 list-inline mt-3">
+                    <!-- TODO put 'already evaluated' mark here -->
+                    <li class="text-uppercase">
+                      {% comment %} Not yet evaluated {% endcomment %}
+                      {% for evaluatee in already_evaluated %}
+                        {% if choice.id == evaluatee.id %}
+                          <img src="{% static 'images/checkmark.png' %}" alt="" width="30" class="img-fluid rounded-circle mb-3">
+                          <h6 class="text-muted">Already evaluated</h6>
+                        {% endif %}
+                      {% endfor %}
+                    </li>
+                  </ul>
+              </div>
+              </label>
             </div>
-            </label>
-          </div>
-        {% endfor %}
-        
-      </div>
+          {% endfor %}
+          
+        </div>
 
-      <div class="text-center mt-4 pt-2">
-          <button id="evaluateTeacher" type="submit" class="btn btn-lg btn-mcl text-center" disabled>Evaluate</button>
-      </div>
-  </form>
+        <div class="text-center mt-4 pt-2">
+            <button id="evaluateTeacher" type="submit" class="btn btn-lg btn-mcl text-center" disabled>Evaluate</button>
+        </div>
+    </form>
   {% else %}
+    <div class="row gx-0">
+      <div class="col mt-5">
+        <img src="{% static 'images/empty.png' %}" alt="" width="100" class="img-fluid mb-5">
+        <h3>Looks like you have no professors to evaluate at this time.</h3>
+        <h4 class="text-muted mb-5">You may log out and come back later!</h4>
 
-  <div class="row gx-0">
-    <div class="col mt-5">
-      <img src="{% static 'images/empty.png' %}" alt="" width="100" class="img-fluid mb-5">
-      <h3>Looks like you have no professors to evaluate at this time.</h3>
-      <h4 class="text-muted mb-5">You may log out and come back later!</h4>
-
-      <form action="{%url 'logout' %}">
-        <button id="logout" type="submit" class="btn btn-lg btn-mcl text-center">Log Out</button>
-      </form>
+        <form action="{%url 'logout' %}">
+          <button id="logout" type="submit" class="btn btn-lg btn-mcl text-center">Log Out</button>
+        </form>
+      </div>
     </div>
-  </div>
-
   {% endif %}
 </div>
 
