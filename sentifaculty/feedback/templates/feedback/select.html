@@ -96,6 +96,14 @@
 
   {% if not form.is_empty_query %}
   <h2 class="text-center">Select a Teacher</h2>
+  {% if messages %}
+    <div class="row gx-0 mb-4">
+        {% for message in messages %}
+        <div class="card rounded shadow-sm messages bg-warning py-4">{{ message }}</div>
+        {% endfor %}
+    </div>
+  {% endif %}
+
   <form action="" method="post">
       {% csrf_token %}
 

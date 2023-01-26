@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from django.core import serializers
 from django.db import transaction
+from django.contrib import messages
 
 from feedback.helpers.analyzer import SFAnalyzer
 from users.models import Teacher, Student, STUDENT, ADMIN
@@ -103,35 +104,42 @@ def get_feedback(request):
 
 @user_passes_test(student_check, login_url="todo-page")
 def select_teacher(request):
+    # Retrieve already evaluated teachers
+    user = request.user.student # Logged-in user
+    feedbacks = Feedback.objects.filter(evaluator__student=user)
+    already_evaluated = list()
+    form = SelectEvaluateeForm()
 
+    for feedback in feedbacks:
+        for evaluatee in form.query:
+            if feedback.evaluatee == evaluatee:
+                already_evaluated.append(evaluatee)
+
+    # Process form
     if request.method == "POST":
         form = SelectEvaluateeForm(request.POST)
 
         if form.is_valid():
             selected_evaluatee = form.cleaned_data['evaluatee']
-            request.session['selected_evaluatee'] = serializers.serialize('json', [selected_evaluatee])
-            return redirect('fb-getfb')  
+
+            for evaluatee in already_evaluated:
+                if evaluatee.id == selected_evaluatee.id:
+                    messages.info(request, f"You have already evaluated {selected_evaluatee}.")
+                    return redirect('fb-select')
+                else:
+                    request.session['selected_evaluatee'] = serializers.serialize('json', [selected_evaluatee])
+                    return redirect('fb-getfb') 
 
     else:
-        user = request.user.student
         #query = Evaluatee.objects.all()
-        form = SelectEvaluateeForm()
         feedbacks = Feedback.objects.filter(evaluator__student=user)
         already_evaluated = list()
-
-        # print(f"Hey:::: {feedbacks.first().evaluatee}")
-        # print(f"ALO:::: {form['evaluatee'].field.queryset}")
 
         for feedback in feedbacks:
             for evaluatee in form.query:
 
                 if feedback.evaluatee == evaluatee:
                     already_evaluated.append(evaluatee)
-                else:
-                    print("No match!")
-
-        user_subjects = request.user.student.subjects.all()
-        print(user_subjects)
 
     context = {
         'title': "Select Faculty",
