@@ -3,66 +3,100 @@ from django.shortcuts import HttpResponseRedirect, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from django.core import serializers
+from django.db import transaction
 
 from feedback.helpers.analyzer import SFAnalyzer
 from users.models import Teacher, Student, STUDENT, ADMIN
 from visualizer.models import FacultyEvaluation
-from .forms import FeedbackForm, SelectEvaluateeForm
-from .models import AcademicYear, SentimentScore, Evaluatee
+from .forms import CommentForm, SelectEvaluateeForm
+from .models import SentimentScore, Evaluatee, Feedback, Comment, Evaluator, Evaluatee
 
+# User tests ----------------------------------------------------
 # NOTE (@login_required decorator)
 # NOTE https://docs.djangoproject.com/en/4.1/topics/auth/default/ 
-
 def student_check(user):
     # TODO remove admin later
     return user.user_type == STUDENT or user.user_type == ADMIN
 
+# Helpers -------------------------------------------------------
+def calc_sentiment(text):
+    # Calculate Vader, BERT and hybrid scores
+    analyzer = SFAnalyzer()
+    vader = analyzer.use_vader(text)
+    bert = analyzer.use_bert(text)
+    hybrid = analyzer.use_hybrid(text)
+
+    score = SentimentScore(
+        vader_pos = vader.pos,
+        vader_neg = vader.neg,
+        bert_pos = bert.pos,
+        bert_neg = bert.neg,
+        hybrid_pos = hybrid.pos,
+        hybrid_neg = hybrid.neg,
+    )
+
+    return score
+
+# Views ---------------------------------------------------------
 @user_passes_test(student_check, login_url="todo-page")
 def get_feedback(request):
+    # Get selected evaluatee from session data
+    evaluatee = next(
+        serializers.deserialize(
+            "json", 
+            request.session.get('selected_evaluatee', None)
+        )
+    ).object
 
+    # Process form
     if request.method == "POST":
-        form = FeedbackForm(request.POST)
+        form = CommentForm(request.POST)
 
         if form.is_valid():
-            new_feedback = form.save(commit=False)
+            # Process comment
+            comment = form.save(commit=False)
+            score = calc_sentiment(comment.text)
+            comment.sentiment_score = score
 
-            # Calculate Vader, BERT and hybrid scores
-            analyzer = SFAnalyzer()
-            vader = analyzer.use_vader(new_feedback.comment)
-            bert = analyzer.use_bert(new_feedback.comment)
-            hybrid = analyzer.use_hybrid(new_feedback.comment)
-
-            score = SentimentScore(
-                vader_pos = vader.pos,
-                vader_neg = vader.neg,
-                bert_pos = bert.pos,
-                bert_neg = bert.neg,
-                hybrid_pos = hybrid.pos,
-                hybrid_neg = hybrid.neg,
+            # Process evaluator
+            student = request.user.student
+            evaluator = Evaluator(
+                section=student.section,
+                strand=student.strand,
+                year_level=student.year_level,
+                fe=FacultyEvaluation.objects.first(), # TODO dummy data
+                student=student,
+            )
+            
+            # Process feedback
+            feedback = Feedback(
+                evaluatee=evaluatee,
+                evaluator=evaluator,
+                comment=comment,
             )
 
-            score.save()
+            # Save objects
+            try:
+                with transaction.atomic():
+                    score.save()
+                    comment.save()
+                    evaluator.save()
+                    feedback.save()
 
-            new_feedback.sentiment_score = score
+            except IntegrityError:
+                print("Something went wrong")
 
-            # TODO: THESE OBJECTS ARE DUMMY DATA ...
-            # ... except for the sentiment scores
-            new_feedback.evaluatee = next(serializers.deserialize("json", request.session.get('selected_evaluatee', None))).object
+            return redirect('fb-select')       
 
-            # TODO: Change to current logged in user
-            new_feedback.student = Student.objects.first()
-            new_feedback.faculty_eval = FacultyEvaluation.objects.first()
+    else:
+        form = CommentForm()
+        form.fields['actual_sentiment'].initial = None
 
-            # Save form
-            new_feedback.save()
-            form.save_m2m()
-
-    form = FeedbackForm()
     context = {
         'title': "Get Feedback",
         'form': form,
         'navbar_name': "getfeedback",
-        'evaluatee': next(serializers.deserialize("json", request.session.get('selected_evaluatee', None))).object,
+        'evaluatee': evaluatee,
     }
         
     return render(request, 'feedback/getfeedback.html', context)
@@ -79,12 +113,31 @@ def select_teacher(request):
             return redirect('fb-getfb')  
 
     else:
+        user = request.user.student
+        #query = Evaluatee.objects.all()
         form = SelectEvaluateeForm()
+        feedbacks = Feedback.objects.filter(evaluator__student=user)
+        already_evaluated = list()
+
+        # print(f"Hey:::: {feedbacks.first().evaluatee}")
+        # print(f"ALO:::: {form['evaluatee'].field.queryset}")
+
+        for feedback in feedbacks:
+            for evaluatee in form.query:
+
+                if feedback.evaluatee == evaluatee:
+                    already_evaluated.append(evaluatee)
+                else:
+                    print("No match!")
+
+        user_subjects = request.user.student.subjects.all()
+        print(user_subjects)
 
     context = {
         'title': "Select Faculty",
         'form': form, 
         'navbar_name': "select",
+        'already_evaluated': already_evaluated
     }
     return render(request, 'feedback/select.html', context)    
 

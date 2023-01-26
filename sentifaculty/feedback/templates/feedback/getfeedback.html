@@ -17,7 +17,7 @@
 
 <form action="" method="post">
     {% csrf_token %}
-    {{ form.comment|add_class:"form-control form-control-lg"|attr:"placeholder:Enter your feedback" }}
+    {{ form.text|add_class:"form-control form-control-lg"|attr:"placeholder:Enter your feedback" }}
     <h6 class="mt-5">Is the sentiment of your comment: </h6>
     {{ form.actual_sentiment|add_class:"inline-radio" }}
     <div class="text-center mt-4 pt-2">

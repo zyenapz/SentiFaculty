@@ -1,14 +1,14 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
-from .models import MclUser
+from .models import MalayanUser
 
-class MclUserCreationForm(UserCreationForm):
+class MalayanUserCreationForm(UserCreationForm):
     class Meta:
-        model = MclUser
+        model = MalayanUser
         fields = ("email", "mcl_id", "first_name", "last_name")
 
-class MclUserChangeForm(UserChangeForm):
+class MalayanUserChangeForm(UserChangeForm):
     class Meta:
-        model = MclUser
+        model = MalayanUser
         fields = ("email", "mcl_id", "first_name", "last_name")

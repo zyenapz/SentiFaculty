@@ -99,25 +99,31 @@
   <form action="" method="post">
       {% csrf_token %}
 
-      <div class="row gx-0">
+      <div class="row gx-0 d-flex justify-content-center">
 
         {% for choice in form.evaluatee.field.queryset %}
-        <div class="col-xl-3 col-sm-6 mb-5">
-          <label>
-          <input type="radio" name="evaluatee" value="{{choice.id}}" class="card-input-element d-none" id="{{ forloop.counter }}" required>
-          <div class="card bg-white rounded shadow-sm py-5 px-4 justify-content-between align-items-center">
-              <img src="{% static 'images/mcl_banner-2.png' %}" alt="" width="100" class="img-fluid rounded-circle mb-3 img-thumbnail">
-              <h5 class="mb-0">{{choice.teacher.user.first_name}} {{choice.teacher.user.last_name}}</h5>
-              <span class="small text-uppercase text-muted">{{choice.subject.subject_name}} ({{choice.subject.subject_code}})</span>
-              <ul class="mb-0 list-inline mt-3">
-                <!-- TODO put 'already evaluated' mark here -->
-                <li class="text-uppercase">
-                  {% comment %} Not yet evaluated {% endcomment %}
-                </li>
-              </ul>
+          <div class="col-xl-3 col-sm-6 mb-5">
+            <label>
+            <input type="radio" name="evaluatee" value="{{choice.id}}" class="card-input-element d-none" id="{{choice.id}}" required>
+            <div class="card bg-white rounded shadow-sm py-5 px-4 justify-content-between align-items-center">
+                <img src="{% static 'images/mcl_banner-2.png' %}" alt="" width="100" class="img-fluid rounded-circle mb-3 img-thumbnail">
+                <h5 class="mb-0">{{choice.teacher.user.first_name}} {{choice.teacher.user.last_name}}</h5>
+                <span class="small text-uppercase text-muted">{{choice.subject.subject_name}} ({{choice.subject.subject_code}})</span>
+                <ul class="mb-0 list-inline mt-3">
+                  <!-- TODO put 'already evaluated' mark here -->
+                  <li class="text-uppercase">
+                    {% comment %} Not yet evaluated {% endcomment %}
+                    {% for evaluatee in already_evaluated %}
+                      {% if choice.id == evaluatee.id %}
+                        <img src="{% static 'images/checkmark.png' %}" alt="" width="30" class="img-fluid rounded-circle mb-3">
+                        <h6 class="text-muted">Already evaluated</h6>
+                      {% endif %}
+                    {% endfor %}
+                  </li>
+                </ul>
+            </div>
+            </label>
           </div>
-          </label>
-        </div>
         {% endfor %}
         
       </div>
@@ -156,21 +162,3 @@
   }
 </script>
 {% endblock %}
-
-<!-- 
-<div class="col">
-  <label>
-    {% comment %} <input type="radio" name="evaluatee" value="1" class="card-input-element d-none" id="id_evaluatee_0" required> {% endcomment %}
-    {% comment %} {{choice.tag}} {% endcomment %}
-    
-    <input type="radio" name="evaluatee" value="{{choice.id}}" class="card-input-element d-none"  id="{{ forloop.counter }}" required>
-    <div class="card card-body bg-light d-flex flex-row justify-content-between align-items-center">
-      <img class="rounded-circle shadow-4-strong" alt="avatar2" src="{% static 'images/anon.png' %}" width="30em" />
-      {{choice.teacher.user.first_name}}
-      {{choice.teacher.user.last_name}}
-      {{choice.subject.subject_code}}
-    </div>
-    
-  </label>
-</div>
--->

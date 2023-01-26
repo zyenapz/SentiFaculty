@@ -6,35 +6,57 @@ import re
 
 class Subject(models.Model):
     subject_code = models.CharField(max_length=10, unique=True)
-    subject_name = models.CharField(max_length=250, default='subj')
+    subject_name = models.CharField(max_length=250, default='Subject')
 
     def __str__(self) -> str:
-        return self.subject_name
+        return f"({self.subject_code}) {self.subject_name}"
 
     def clean(self):
         pass 
-        # TODO add validation
 
 class Section(models.Model):
-    section_ID = models.CharField(max_length=3)
+    section_ID = models.CharField(max_length=3, unique=True)
 
     def __str__(self) -> str:
         return self.section_ID
 
 class Strand(models.Model):
-    strand_name = models.CharField(max_length=8)
+    class StrandChoices(models.TextChoices):
+        ABM = "ABM", _('ABM')
+        ABMB = "ABM-B", _('ABM-B')
+        ABMBUS = "ABMBUS", _('ABMBUS')
+        HE = "HE", _('HE')
+        HUMS = "HUMS", _('HUMS')
+        HUMSS = "HUMSS", _('HUMSS')
+        ICT = "ICT", _('ICT')
+        STEM = "STEM", _('STEM')
+        STEMM = "STEM-M", _('STEM-M')
+        STEMS = "STEM-S", _('STEM-S')
+        STEMB = "STEMB", _('STEMB')
+        STEMF = "STEMF", _('STEMF')
+        STEMG = "STEMG", _('STEMG')
+        STEMMA = "STEMMA", _('STEMMA')
+        STEMSC = "STEMSC", _('STEMSC')
+
+    strand_name = models.CharField(
+        max_length=10,
+        choices=StrandChoices.choices,
+        default=StrandChoices.HUMSS,
+        unique=True,
+    )
 
     def __str__(self) -> str:
         return self.strand_name
 
     def clean(self):
-        # RegEx Patterns
-        pat_alphadash = re.compile(r"^[A-Z\-]+$")
+        pass
+        # # RegEx Patterns
+        # pat_alphadash = re.compile(r"^[A-Z\-]+$")
 
-        if not pat_alphadash.match(self.strand_name):
-            raise ValidationError("Only CAPITALIZED alphabetic characters and dashes are accepted. No spaces allowed.")
-        if self.strand_name.startswith("-") or self.strand_name.endswith("-"):
-            raise ValidationError("Input cannot start or end with a dash.")
+        # if not pat_alphadash.match(self.strand_name):
+        #     raise ValidationError("Only CAPITALIZED alphabetic characters and dashes are accepted. No spaces allowed.")
+        # if self.strand_name.startswith("-") or self.strand_name.endswith("-"):
+        #     raise ValidationError("Input cannot start or end with a dash.")
 
 class YearLevel(models.Model):
     class YearLevelChoices(models.TextChoices):
@@ -47,8 +69,8 @@ class YearLevel(models.Model):
         return self.level
 
 class AcademicYear(models.Model):
-    start_year = models.PositiveIntegerField()
-    end_year = models.PositiveIntegerField()
+    start_year = models.PositiveIntegerField(primary_key=True)
+    end_year = models.PositiveIntegerField(unique=True)
 
     def __str__(self) -> str:
         return f"{self.start_year}-{self.end_year}"
@@ -60,35 +82,8 @@ class AcademicYear(models.Model):
             raise ValidationError("'End year' can only be 1 year later than 'Start year'.")
 
 class FacultyEvaluation(models.Model):
-    academic_year = models.OneToOneField(AcademicYear, on_delete=models.CASCADE)
-    is_active = models.BooleanField(default=False)
+    academic_year = models.OneToOneField('AcademicYear', on_delete=models.CASCADE)
+    is_ongoing = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return f"FE {self.academic_year}"
-
-# LIST OF STRANDS
-# https://docs.djangoproject.com/en/4.1/ref/models/fields/#choices
-# NOTE Used the 'choices' field option
-# class StrandChoices(models.TextChoices):
-#     ABM = "ABM", _('ABM')
-#     ABMB = "ABM-B", _('ABM-B')
-#     ABMBUS = "ABMBUS", _('ABMBUS')
-#     HE = "HE", _('HE')
-#     HUMS = "HUMS", _('HUMS')
-#     HUMSS = "HUMSS", _('HUMSS')
-#     ICT = "ICT", _('ICT')
-#     STEM = "STEM", _('STEM')
-#     STEMM = "STEM-M", _('STEM-M')
-#     STEMS = "STEM-S", _('STEM-S')
-#     STEMB = "STEMB", _('STEMB')
-#     STEMF = "STEMF", _('STEMF')
-#     STEMG = "STEMG", _('STEMG')
-#     STEMMA = "STEMMA", _('STEMMA')
-#     STEMSC = "STEMSC", _('STEMSC')
-
-# strand_name = models.CharField(
-#     max_length=10,
-#     choices=StrandChoices.choices,
-#     default=StrandChoices.HUMSS,
-#     primary_key=True
-# )

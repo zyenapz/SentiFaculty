@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 
-from users.managers import MclUserManager
+from users.managers import MalayanUserManager
 
 # User Type - choices
 DEFAULT = 0
@@ -19,14 +19,14 @@ USER_TYPE_CHOICE = (
     (ADMIN, 'admin'),
 )
 
-
-class MclUser(AbstractBaseUser, PermissionsMixin):
-    
+class MalayanUser(AbstractBaseUser, PermissionsMixin):
+    # Authentication related
     email = models.EmailField(_('email address'), unique=True)
     mcl_id = models.CharField(max_length=10, unique=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
 
+    # Metadata
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now)
@@ -36,7 +36,7 @@ class MclUser(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
-    objects = MclUserManager()
+    objects = MalayanUserManager()
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -47,7 +47,7 @@ class MclUser(AbstractBaseUser, PermissionsMixin):
         pass
 
 class Person(models.Model):
-    user = models.OneToOneField(MclUser, on_delete=models.CASCADE)
+    user = models.OneToOneField('MalayanUser', on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return f"{self.user.first_name} {self.user.last_name}"
@@ -56,7 +56,6 @@ class Person(models.Model):
         abstract = True
 
 class Student(Person):
-    user = models.ForeignKey(MclUser, on_delete=models.CASCADE)
     section = models.ForeignKey("visualizer.Section", on_delete=models.PROTECT)
     strand = models.ForeignKey("visualizer.Strand", on_delete=models.PROTECT)
     year_level = models.ForeignKey("visualizer.YearLevel", on_delete=models.PROTECT)
@@ -69,7 +68,7 @@ class Student(Person):
         if self.user.user_type != STUDENT:
             raise ValidationError("User must be a Student.")
 
-        # TODO add validation to ensure that 'MclUser' can only be assigned to one unique 'FacultyEvaluation'
+        # TODO add validation to ensure that 'MalayanUser' can only be assigned to one unique 'FacultyEvaluation'
 
 class Teacher(Person):
     def clean(self):

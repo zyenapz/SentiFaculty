@@ -1,17 +1,17 @@
 from django.apps import apps
 from django.contrib import admin
-from .models import MclUser, Principal, Student, Teacher
+from .models import MalayanUser, Principal, Student, Teacher
 
 from django.contrib.auth.admin import UserAdmin
 
-from .forms import MclUserCreationForm, MclUserChangeForm
-from .models import MclUser
+from .forms import MalayanUserCreationForm, MalayanUserChangeForm
+from .models import MalayanUser
 
-
-class MclUserAdmin(UserAdmin):
-    add_form = MclUserCreationForm
-    form = MclUserChangeForm
-    model = MclUser
+@admin.register(MalayanUser)
+class MalayanUserAdmin(UserAdmin):
+    add_form = MalayanUserCreationForm
+    form = MalayanUserChangeForm
+    model = MalayanUser
     list_display = ["email", "mcl_id", "first_name",
                     "last_name", "is_staff", "is_active", 'user_type']
     list_filter = ["email", "mcl_id", "first_name",
@@ -54,8 +54,6 @@ class StudentAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'section', 'strand', 'year_level']
     filter_horizontal = ['subjects',]
 
-
-admin.site.register(MclUser, MclUserAdmin)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Teacher)
 admin.site.register(Principal)
