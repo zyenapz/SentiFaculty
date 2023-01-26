@@ -1,0 +1,172 @@
+{% extends 'feedback/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+
+{% block stylesheets %}
+  <!-- Page-specific CSS -->
+  <style>
+    label {
+      width: 100%;
+      font-size: 1rem;
+      padding: 0.5rem;
+    }
+
+    .card-input-element+.card {
+      height: calc(36px + 20*1rem);
+      /*** color: #00ff00; ***/
+      -webkit-box-shadow: none;
+      box-shadow: none;
+      border: 2px solid transparent;
+      border-radius: 4px;
+    }
+
+    .card-input-element+.card:hover {
+      cursor: pointer;
+    }
+
+    .card-input-element:checked+.card {
+      border: 2px solid #00ff00;
+      -webkit-transition: border .3s;
+      -o-transition: border .3s;
+      transition: border .3s;
+    }
+
+  /***
+    .card-input-element:checked+.card::after {
+      content: '\2713';
+      color: #00ff00;
+      font-size: 24px;
+      -webkit-animation-name: fadeInCheckbox;
+      animation-name: fadeInCheckbox;
+      -webkit-animation-duration: .5s;
+      animation-duration: .5s;
+      -webkit-animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  ***/
+
+    @-webkit-keyframes fadeInCheckbox {
+      from {
+        opacity: 0;
+        background-color: 
+        -webkit-transform: rotateZ(-20deg);
+      }
+      to {
+        opacity: 1;
+        -webkit-transform: rotateZ(0deg);
+      }
+    }
+
+    @keyframes fadeInCheckbox {
+      from {
+        opacity: 0;
+        transform: rotateZ(-20deg);
+      }
+      to {
+        opacity: 1;
+        transform: rotateZ(0deg);
+      }
+    }
+
+    input[type="radio"] {
+      opacity: 1;
+      //width: 0;
+      //height: 0;
+    }
+
+    input[type="radio"]:active ~ label {
+      opacity: 1;
+    }
+
+    input[type="radio"]:checked ~ label {
+      opacity: 1;
+      border: 1px solid $font-color;
+    }
+
+    .teacher-card {
+      height: 10em;
+    }
+  </style>
+{% endblock %}
+
+{% block feedback-content %}
+
+<div class="container">
+
+  {% if not form.is_empty_query %}
+  <h2 class="text-center">Select a Teacher</h2>
+  {% if messages %}
+    <div class="row gx-0 mb-4">
+        {% for message in messages %}
+        <div class="card rounded shadow-sm messages bg-warning py-4">{{ message }}</div>
+        {% endfor %}
+    </div>
+  {% endif %}
+
+  <form action="" method="post">
+      {% csrf_token %}
+
+      <div class="row gx-0 d-flex justify-content-center">
+
+        {% for choice in form.evaluatee.field.queryset %}
+          <div class="col-xl-3 col-sm-6 mb-5">
+            <label>
+            <input type="radio" name="evaluatee" value="{{choice.id}}" class="card-input-element d-none" id="{{choice.id}}" required>
+            <div class="card bg-white rounded shadow-sm py-5 px-4 justify-content-between align-items-center">
+                <img src="{% static 'images/mcl_banner-2.png' %}" alt="" width="100" class="img-fluid rounded-circle mb-3 img-thumbnail">
+                <h5 class="mb-0">{{choice.teacher.user.first_name}} {{choice.teacher.user.last_name}}</h5>
+                <span class="small text-uppercase text-muted">{{choice.subject.subject_name}} ({{choice.subject.subject_code}})</span>
+                <ul class="mb-0 list-inline mt-3">
+                  <!-- TODO put 'already evaluated' mark here -->
+                  <li class="text-uppercase">
+                    {% comment %} Not yet evaluated {% endcomment %}
+                    {% for evaluatee in already_evaluated %}
+                      {% if choice.id == evaluatee.id %}
+                        <img src="{% static 'images/checkmark.png' %}" alt="" width="30" class="img-fluid rounded-circle mb-3">
+                        <h6 class="text-muted">Already evaluated</h6>
+                      {% endif %}
+                    {% endfor %}
+                  </li>
+                </ul>
+            </div>
+            </label>
+          </div>
+        {% endfor %}
+        
+      </div>
+
+      <div class="text-center mt-4 pt-2">
+          <button id="evaluateTeacher" type="submit" class="btn btn-lg btn-mcl text-center" disabled>Evaluate</button>
+      </div>
+  </form>
+  {% else %}
+
+  <div class="row gx-0">
+    <div class="col mt-5">
+      <img src="{% static 'images/empty.png' %}" alt="" width="100" class="img-fluid mb-5">
+      <h3>Looks like you have no professors to evaluate at this time.</h3>
+      <h4 class="text-muted mb-5">You may log out and come back later!</h4>
+
+      <form action="{%url 'logout' %}">
+        <button id="logout" type="submit" class="btn btn-lg btn-mcl text-center">Log Out</button>
+      </form>
+    </div>
+  </div>
+
+  {% endif %}
+</div>
+
+{% endblock %}
+
+{% block bodyscript %}
+<script>
+  var radios = document.getElementsByClassName("card-input-element");
+  for (var i = radios.length - 1; i >= 0; --i) {
+    var e = radios[i];
+    e.onchange = function () {
+      document.getElementById("evaluateTeacher").removeAttribute("disabled");
+    };
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'feedback/base.html' %}
+{% load static %}
+{% load bootstrap_icons %}
+{% load widget_tweaks %}
+
+{% block feedback-content %}
+<h1 class="text-center">
+    Feedback
+</h1>
+
+<div class="text-center mb-4">
+    {% bs_icon 'person-circle' size='5em' %}
+    <p class="mt-4 mb-0">{{ evaluatee.teacher.user.last_name.upper }}, {{ evaluatee.teacher.user.first_name }}</p>
+    <p class="m-0">({{ evaluatee.teacher.user.mcl_id }})</p>
+    <p class="m-0">{{ evaluatee.subject.subject_name.upper }} ({{ evaluatee.subject.subject_code }}) </p>
+</div>  
+
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.text|add_class:"form-control form-control-lg"|attr:"placeholder:Enter your feedback" }}
+    <h6 class="mt-5">Is the sentiment of your comment: </h6>
+    {{ form.actual_sentiment|add_class:"inline-radio" }}
+    <div class="text-center mt-4 pt-2">
+        <button type="submit" class="btn btn-primary btn-mcl btn-lg text-center">Submit</button>
+    </div>
+</form>
+</div>
+{% endblock %}
