@@ -134,39 +134,41 @@ def select_teacher(request):
     # Retrieve already evaluated teachers
     user = request.user.student # Logged-in user
     feedbacks = Feedback.objects.filter(evaluator__student=user)
-    already_evaluated = list()
+    evaluated_profs = list()
     form = SelectEvaluateeForm()
 
     for feedback in feedbacks:
         for evaluatee in form.query:
             if feedback.evaluatee == evaluatee:
-                already_evaluated.append(evaluatee)
+                evaluated_profs.append(evaluatee)
 
     # Process form
     if request.method == "POST":
         form = SelectEvaluateeForm(request.POST)
 
         if form.is_valid():
+
+            # Check if selected evaluatee has already been evaluated
             selected_evaluatee = form.cleaned_data['evaluatee']
 
-            if already_evaluated:
-                for evaluatee in already_evaluated:
+            if evaluated_profs:
+                for evaluatee in evaluated_profs:
                     if evaluatee.id == selected_evaluatee.id:
                         messages.info(request, f"You have already evaluated {selected_evaluatee}.")
-                        return redirect('fb-select')
-            else:
-                request.session['selected_evaluatee'] = serializers.serialize('json', [selected_evaluatee])
-                return redirect('fb-getfb') 
+                        return redirect('fb-select') 
+
+            request.session['selected_evaluatee'] = serializers.serialize('json', [selected_evaluatee])
+            return redirect('fb-getfb') 
 
     else:
         feedbacks = Feedback.objects.filter(evaluator__student=user)
-        already_evaluated = list()
+        evaluated_profs = list()
 
         for feedback in feedbacks:
             for evaluatee in form.query:
 
                 if feedback.evaluatee == evaluatee: 
-                    already_evaluated.append(evaluatee)
+                    evaluated_profs.append(evaluatee)
 
         init_query = form['evaluatee'].field.queryset
         new_query = filter_evaluatees(init_query, user)
@@ -174,18 +176,15 @@ def select_teacher(request):
 
         form['evaluatee'].field.queryset = new_query
 
+    has_subjects = True
     context = {
         'title': "Select Faculty",
         'form': form, 
         'navbar_name': "select",
-        'already_evaluated': already_evaluated,
+        'already_evaluated': evaluated_profs,
         'has_subjects': has_subjects,
     }
     return render(request, 'feedback/select.html', context)    
-
-
-
-
 
 # TODO Construct a proper redirect url later depending on whether or not ...
 # ... a user has logged in as student, teacher, or principal
