@@ -4,15 +4,22 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
 from feedback.models import Feedback
-from users.models import TEACHER
+from users.models import TEACHER, ADMIN
 from visualizer.models import Subject, AcademicYear
 
 from wordcloud import WordCloud, STOPWORDS
 
 from .forms import SubjectSortForm
 
+# User checks
 def teacher_check(user):
     return user.user_type == TEACHER
+
+def teacher_or_admin_check(user):
+    return user.user_type == TEACHER or user.user_type == ADMIN
+
+def admin_check(user):
+    return user.user_type == ADMIN
 
 # Create your views here.
 @user_passes_test(teacher_check, login_url="login")
@@ -20,7 +27,7 @@ def visualizer_home(request):
     context = {
         'title': "Visualizer dashboard",
     }
-    return render(request, 'visualizer/visualizer_home.html', context)
+    return render(request, 'visualizer/home.html', context)
 
 # FIXME take the current teacher from request.user.id or whatever
 # NOTE this implementation is included in both admin and faculty views
@@ -55,8 +62,8 @@ def visualizer_dashboard(request):
 # NOTE this is overall polarity rating history for individual faculty member
 # this can be viewed by administrator
 def visualizer_linegraph(request):
-    #change teacher to current selected teacher
-    teacher=2019151000
+    # TODO change teacher to current selected teacher
+    teacher=2019151001
     years = AcademicYear.objects.all()
     sentimentRating=[]
     for year in years:
@@ -80,8 +87,8 @@ def visualizer_linegraph(request):
 
 # NOTE The wordcloud should be available for admin accounts
 def visualizer_wordcloud(request):
-    # need selected teacher for query
-    data = Feedback.objects.filter(evaluatee__teacher__user__mcl_id=2019151000)
+    # TODO need selected teacher for query
+    data = Feedback.objects.filter(evaluatee__teacher__user__mcl_id=2019151001)
     words=''.join([str(entry.comment) for entry in data])
     cloud=WordCloud(stopwords=STOPWORDS).generate(words).to_svg()
     context = {

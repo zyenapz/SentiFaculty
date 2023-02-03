@@ -1,5 +1,5 @@
 <!-- This is the project-level 'base.html' -->
-{% extends 'base.html' %}
+{% extends 'base.html' %} 
 
 {% load bootstrap_icons %}
 {% load widget_tweaks %}
@@ -16,7 +16,7 @@
         <div class="container-fluid">
             <a class="navbar-brand text-white" href="{%url 'fb-select' %}">
                 <img src="{% static 'images/mcl_logo-small.png' %}" alt="" width="30" height="30" class="d-inline-block align-text-top">
-                Faculty Evaluation
+                FE Visualizer
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -25,11 +25,11 @@
             <ul class="navbar-nav text-center">
 
                 <li class="nav-item">
-                {% if navbar_name == "getfeedback" %}
+                {% comment %} {% if navbar_name == "getfeedback" %}
                 <a class="nav-link" href="{%url 'fb-select' %}">Go Back</a>
                 {% else %}
                 <a class="nav-link" href="{%url 'fb-select' %}">Select Faculty</a>
-                {% endif %}
+                {% endif %} {% endcomment %}
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{%url 'logout' %}">Log Out</a>
@@ -38,11 +38,11 @@
             </ul>
             </div>
         </div>
-        </nav>
+    </nav>
 
     <!-- Content -->
     <div class="col py-4 text-center">
-        {% block feedback-content %}{%endblock%}
+        {% block visualizer-content %}{%endblock%}
     </div>
 
 </div>
