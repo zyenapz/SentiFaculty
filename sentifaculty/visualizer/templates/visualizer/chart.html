@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if form %}
+<form action="{% url 'dashboard' %}" method="get">
+    {{ form.as_p }}
+    <button type="submit">Sort</button>
+</form>
+{% endif %}
+
+{% if wordcloud %}
+{{ wordcloud|safe }}
+{% endif %}
+
+{% if chart %}
+{{ chart|safe }}
+{% endif %}
+
+{% endblock content %}

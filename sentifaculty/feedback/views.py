@@ -39,7 +39,7 @@ def calc_sentiment(text):
 
     return score
 
-@user_passes_test(student_check, login_url="todo-page")
+@user_passes_test(student_check, login_url="login")
 def get_feedback(request):
     # Get selected evaluatee from session data
     evaluatee = next(
@@ -129,18 +129,20 @@ def filter_evaluatees(init_query, user):
 
     return new_query
 
-@user_passes_test(student_check, login_url="todo-page")
+@user_passes_test(student_check, login_url="login")
 def select_teacher(request):
-    # Retrieve already evaluated teachers
     user = request.user.student # Logged-in user
     feedbacks = Feedback.objects.filter(evaluator__student=user)
     evaluated_profs = list()
     form = SelectEvaluateeForm()
 
+    # Retrieve already evaluated teachers
     for feedback in feedbacks:
         for evaluatee in form.query:
             if feedback.evaluatee == evaluatee:
                 evaluated_profs.append(evaluatee)
+
+    print(evaluated_profs)
 
     # Process form
     if request.method == "POST":
