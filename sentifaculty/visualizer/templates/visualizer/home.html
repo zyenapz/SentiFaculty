@@ -12,7 +12,7 @@
                 {{ chart|safe }}
             {% endif %}
         </div>
-    </div>
+    </div>  
 
     {% if wordcloud %}
     <div class="row">
@@ -36,29 +36,29 @@
     <div class="row">
         <div class="col-md-3 card">
             <h3 class="m-4">YOU HAVE RECEIVED</h3>
-            <h4 class="mb-4">118 Total comments</h4>
-            <h5 class="text-primary">4 today</h5>
-            <h5 class="text-primary">32 last week</h5>
+            <h4 class="mb-4">{{comment_report.comments_total}} Total comments</h4>
+            <h5 class="text-primary">{{comment_report.comments_today}} today</h5>
+            <h5 class="text-primary">{{comment_report.comments_thisweek}} this week</h5>
         </div>
 
-        <div class="col card">
+        <div class="col card align-items-center justify-content-center">
             <div class="row p-3">
-                <div class="col">
+                <div class="col-md-5">
                     <h3>Best comment</h3>
-                    <blockquote class="blockquote text-success text-start">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam mi justo, consequat vitae blandit eget, placerat vitae augue.</p>
+                    <blockquote class="blockquote text-success text-center">
+                        <p>"{{best_comment.text}}"</p>
                     </blockquote>
                     <figcaption class="blockquote-footer">
-                        <cite>From Grade 11 ABM C58</cite>
+                        <cite>From {{best_comment.year_level}} {{best_comment.strand}} (Section {{best_comment.section}})</cite>
                     </figcaption>
                 </div>
                 <div class="col">
                     <h3>Worst comment</h3>
-                    <blockquote class="blockquote text-danger text-start">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam mi justo, consequat vitae blandit eget, placerat vitae augue.</p>
+                    <blockquote class="blockquote text-danger text-center">
+                        <p>"{{worst_comment.text}}"</p>
                     </blockquote>
                     <figcaption class="blockquote-footer">
-                        <cite>From Grade 12 STEM C58</cite>
+                        <cite>From {{worst_comment.year_level}} {{worst_comment.strand}} (Section {{worst_comment.section}})</cite>
                     </figcaption>
                 </div>
             </div>
@@ -67,6 +67,36 @@
     </div>
 
 </div>
+
+{% endblock %}
+
+    {% comment %} <div class="row">
+        <div class="col card">
+            <h4>Overall sentiment</h4>
+            <div class="row">
+                <div class="col">
+                    Lorem ipsum dolor sit amet.
+                </div>
+                <div class="col">
+                    Lorem ipsum dolor sit amet.
+                </div>
+            </div>
+        </div>
+
+        <div class="col card">
+            <h4>Feedback breakdown</h4>
+            <div class="row">
+                <div class="col">
+                    Lorem ipsum dolor sit amet.
+                </div>
+                <div class="col">
+                    Lorem ipsum dolor sit amet.
+                </div>
+            </div>
+        </div>
+    </div class="row">
+    {%endcoment%}
+
 {% comment %} <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Offcanvas navbar large">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Sentifaculty visualizer dashboard</a>
@@ -108,4 +138,3 @@
         </div>
     </div>
 </nav> {% endcomment %}
-{% endblock %}

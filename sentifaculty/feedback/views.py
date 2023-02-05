@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.db.models import Case, IntegerField, Value, When
 
 from feedback.helpers.analyzer import SFAnalyzer
+from feedback.helpers.feedback_proc import FeedbackProcessor
 from users.models import Teacher, Student, STUDENT, ADMIN
 from visualizer.models import FacultyEvaluation
 from .forms import CommentForm, SelectEvaluateeForm
@@ -21,24 +22,6 @@ def student_check(user):
     return user.user_type == STUDENT or user.user_type == ADMIN
 
 # GET-FEEDBACK VIEW ---------------------------------------------
-def calc_sentiment(text):
-    # Calculate Vader, BERT and hybrid scores
-    analyzer = SFAnalyzer()
-    vader = analyzer.use_vader(text)
-    bert = analyzer.use_bert(text)
-    hybrid = analyzer.use_hybrid(text)
-
-    score = SentimentScore(
-        vader_pos = vader.pos,
-        vader_neg = vader.neg,
-        bert_pos = bert.pos,
-        bert_neg = bert.neg,
-        hybrid_pos = hybrid.pos,
-        hybrid_neg = hybrid.neg,
-    )
-
-    return score
-
 @user_passes_test(student_check, login_url="login")
 def get_feedback(request):
     # Get selected evaluatee from session data
@@ -54,41 +37,13 @@ def get_feedback(request):
         form = CommentForm(request.POST)
 
         if form.is_valid():
-            # Process comment
-            comment = form.save(commit=False)
-            score = calc_sentiment(comment.text)
-            comment.sentiment_score = score
-
-            # Process evaluator
-            student = request.user.student
-            evaluator = Evaluator(
-                section=student.section,
-                strand=student.strand,
-                year_level=student.year_level,
-                fe=FacultyEvaluation.objects.first(), # TODO dummy data
-                student=student,
-            )
-            
-            # Process feedback
-            feedback = Feedback(
-                evaluatee=evaluatee,
-                evaluator=evaluator,
-                comment=comment,
-            )
-
-            # Save objects
+            proc_fb = FeedbackProcessor(request, form, evaluatee)
             try:
-                with transaction.atomic():
-                    score.save()
-                    comment.save()
-                    evaluator.save()
-                    feedback.save()
+                proc_fb.save()
+            except Exception as e:
+                raise Exception(e)
 
-            except IntegrityError:
-                print("Something went wrong")
-
-            return redirect('fb-select')       
-
+            return redirect('fb-select')
     else:
         form = CommentForm()
         form.fields['actual_sentiment'].initial = None
@@ -137,15 +92,19 @@ def select_teacher(request):
     form = SelectEvaluateeForm()
 
     # Retrieve already evaluated teachers
-    for feedback in feedbacks:
-        for evaluatee in form.query:
-            if feedback.evaluatee == evaluatee:
-                evaluated_profs.append(evaluatee)
-
-    print(evaluated_profs)
+    # for feedback in feedbacks:
+    #     for evaluatee in form.query:
+    #         if feedback.evaluatee == evaluatee and feedback.evaluatee not in evaluated_profs:
+    #             evaluated_profs.append(evaluatee)
 
     # Process form
     if request.method == "POST":
+        # Retrieve already evaluated teachers
+        for feedback in feedbacks:
+            for evaluatee in form.query:
+                if feedback.evaluatee == evaluatee and feedback.evaluatee not in evaluated_profs:
+                    evaluated_profs.append(evaluatee)
+
         form = SelectEvaluateeForm(request.POST)
 
         if form.is_valid():
@@ -166,10 +125,14 @@ def select_teacher(request):
         feedbacks = Feedback.objects.filter(evaluator__student=user)
         evaluated_profs = list()
 
+        # for feedback in feedbacks:
+        #     for evaluatee in form.query:
+        #         if feedback.evaluatee == evaluatee: 
+        #             evaluated_profs.append(evaluatee)
+
         for feedback in feedbacks:
             for evaluatee in form.query:
-
-                if feedback.evaluatee == evaluatee: 
+                if feedback.evaluatee == evaluatee and feedback.evaluatee not in evaluated_profs:
                     evaluated_profs.append(evaluatee)
 
         init_query = form['evaluatee'].field.queryset

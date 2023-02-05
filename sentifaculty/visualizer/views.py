@@ -4,6 +4,8 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
 from feedback.models import Feedback
+from visualizer.helpers.charts_html import SF_SentipieHTML, SF_WordcloudHTML
+from visualizer.helpers.comments import SF_BestComment, SF_WorstComment, SF_CommentReport
 from users.models import TEACHER, ADMIN
 from visualizer.models import Subject, AcademicYear
 
@@ -24,44 +26,13 @@ def admin_check(user):
 # Create your views here.
 @user_passes_test(teacher_check, login_url="login")
 def visualizer_home(request):
-    user_id = request.user.id
-    data = Feedback.objects.filter(evaluatee__teacher__user__id=user_id)
-    subjects = Subject.objects.filter(
-        evaluatee__teacher__user__id=user_id)
-    section = request.GET.get('subject')
-    if section:
-        data = Feedback.objects.filter(evaluatee__subject__id=section)
-
-    fig = px.pie(
-        values=[
-            len(data.filter(comment__sentiment_score__hybrid_pos__gt=0.00)),
-            len(data.filter(comment__sentiment_score__hybrid_neg__gt=0.00)),
-        ],
-        names=['positive', 'negative'],
-        title='Sentiment Rating',
-        color=['positive', 'negative'],
-        color_discrete_map={
-            'positive': 'green',
-            'negative': 'red',
-        }
-    )
-    chart = fig.to_html()
-
-     # TODO need selected teacher for query
-    data = Feedback.objects.filter(evaluatee__teacher__user__mcl_id=2019151001)
-    words=''.join([str(entry.comment) for entry in data])
-    cloud=WordCloud(
-        stopwords=STOPWORDS, 
-        background_color='white',
-        width=200,
-        height=200,
-    ).generate(words).to_svg()
-
     context = {
-        'chart': chart,
-        'form': SubjectSortForm(choices=[(entry.id, entry.subject_name) for entry in subjects]),
         'title': "Visualizer dashboard",
-        'wordcloud': cloud,
+        'wordcloud': SF_WordcloudHTML(request),
+        'chart': SF_SentipieHTML(request),
+        'best_comment': SF_BestComment(request),
+        'worst_comment': SF_WorstComment(request),
+        'comment_report': SF_CommentReport(request),
     }
 
     return render(request, 'visualizer/home.html', context)
