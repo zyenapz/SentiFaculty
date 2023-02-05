@@ -1,7 +1,72 @@
 {%extends "visualizer/base.html"%}
 
 {% block visualizer-content %}
-<h1>Hello world!</h1>
+<div class="container">
+    <div>
+        <h1>Sentiment Overview for FE 2023-2024 </h1>
+    </div>
+
+    <div class="row">
+        <div class="col card p-2 m-2">
+            {% if chart %}
+                {{ chart|safe }}
+            {% endif %}
+        </div>
+    </div>
+
+    {% if wordcloud %}
+    <div class="row">
+        <div class="col card p-2 m-2 text-center">
+            <h1> Wordcloud </h1>
+            
+            <div class="row">
+                <div class="col text-center">
+                    <h3>Positive</h3>
+                    {{ wordcloud|safe }}
+                </div>
+                <div class="col text-center">
+                    <h3>Negative</h3>
+                    {{ wordcloud|safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-3 card">
+            <h3 class="m-4">YOU HAVE RECEIVED</h3>
+            <h4 class="mb-4">118 Total comments</h4>
+            <h5 class="text-primary">4 today</h5>
+            <h5 class="text-primary">32 last week</h5>
+        </div>
+
+        <div class="col card">
+            <div class="row p-3">
+                <div class="col">
+                    <h3>Best comment</h3>
+                    <blockquote class="blockquote text-success text-start">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam mi justo, consequat vitae blandit eget, placerat vitae augue.</p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer">
+                        <cite>From Grade 11 ABM C58</cite>
+                    </figcaption>
+                </div>
+                <div class="col">
+                    <h3>Worst comment</h3>
+                    <blockquote class="blockquote text-danger text-start">
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam mi justo, consequat vitae blandit eget, placerat vitae augue.</p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer">
+                        <cite>From Grade 12 STEM C58</cite>
+                    </figcaption>
+                </div>
+            </div>
+           
+        </div>
+    </div>
+
+</div>
 {% comment %} <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Offcanvas navbar large">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Sentifaculty visualizer dashboard</a>

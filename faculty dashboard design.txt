@@ -1,0 +1,14 @@
+Teacher dashboard
+- Sorted by faculty evaluation
+	- Overall sentiment 
+	- Net changes from last faculty eval
+	- Word cloud
+	- Sentiment breakdown by submission date
+	- Breakdown of comments' sentiments
+		- Total number of comments
+	- Sentiment timeline
+
+
+	- Breakdown of sentiments by:
+		- Subjects
+		- Students
