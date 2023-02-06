@@ -54,6 +54,16 @@ class SentimentScore(models.Model):
     hybrid_pos = models.DecimalField(max_digits=MAX_DIGITS, decimal_places=MAX_DECIMAL)
     hybrid_neg = models.DecimalField(max_digits=MAX_DIGITS, decimal_places=MAX_DECIMAL)
 
+    def get_sentiment_as_str(self) -> str:
+        hybrid_total = self.hybrid_pos - self.hybrid_neg
+
+        if hybrid_total > 0:
+            return "positive"
+        if hybrid_total < 0:
+            return "negative"
+        if hybrid_total == 0:
+            return "neutral"
+
 class Evaluatee(models.Model):
     teacher = models.ForeignKey('users.Teacher', on_delete=models.CASCADE)
     subject = models.ForeignKey('visualizer.Subject', on_delete=models.CASCADE)

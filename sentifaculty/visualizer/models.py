@@ -22,21 +22,21 @@ class Section(models.Model):
 
 class Strand(models.Model):
     class StrandChoices(models.TextChoices):
+        STEM = "STEM", _('STEM')
         ABM = "ABM", _('ABM')
-        ABMB = "ABM-B", _('ABM-B')
-        ABMBUS = "ABMBUS", _('ABMBUS')
-        HE = "HE", _('HE')
-        HUMS = "HUMS", _('HUMS')
         HUMSS = "HUMSS", _('HUMSS')
         ICT = "ICT", _('ICT')
-        STEM = "STEM", _('STEM')
-        STEMM = "STEM-M", _('STEM-M')
-        STEMS = "STEM-S", _('STEM-S')
-        STEMB = "STEMB", _('STEMB')
-        STEMF = "STEMF", _('STEMF')
-        STEMG = "STEMG", _('STEMG')
-        STEMMA = "STEMMA", _('STEMMA')
-        STEMSC = "STEMSC", _('STEMSC')
+        # ABMB = "ABM-B", _('ABM-B')
+        # ABMBUS = "ABMBUS", _('ABMBUS')
+        # HE = "HE", _('HE')
+        # HUMS = "HUMS", _('HUMS')
+        # STEMM = "STEM-M", _('STEM-M')
+        # STEMS = "STEM-S", _('STEM-S')
+        # STEMB = "STEMB", _('STEMB')
+        # STEMF = "STEMF", _('STEMF')
+        # STEMG = "STEMG", _('STEMG')
+        # STEMMA = "STEMMA", _('STEMMA')
+        # STEMSC = "STEMSC", _('STEMSC')
 
     strand_name = models.CharField(
         max_length=10,

@@ -1,4 +1,5 @@
 import plotly.express as px
+import pandas as pd
 from feedback.models import Feedback
 from wordcloud import STOPWORDS, WordCloud
 from feedback.models import Feedback
@@ -24,7 +25,7 @@ class SF_SentipieHTML:
             color_discrete_map={
                 'positive': 'green',
                 'negative': 'red',
-            }
+            },
         )
 
         chart = fig.to_html()
@@ -40,9 +41,10 @@ class SF_WordcloudHTML:
 
         cloud=WordCloud(
             stopwords=STOPWORDS, 
-            background_color='white',
+            background_color=None,
             width=200,
             height=200,
         ).generate(words).to_svg()
 
         return cloud
+

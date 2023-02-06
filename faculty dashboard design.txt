@@ -9,6 +9,16 @@ Teacher dashboard
 	- Sentiment timeline
 
 
-	- Breakdown of sentiments by:
+	- Breakdown of sentiment percentage by:
+		- Strand	
+			(According to curriculum)
+			- STEM
+			- ICT
+			- HUMSS
+			- ABM
 		- Subjects
-		- Students
+			> List all subjects taught by teacher 
+
+Teacher view of individual comments
+- Sorted by faculty evaluation
+	- List all individual comments with pretty formatting, and filtering 

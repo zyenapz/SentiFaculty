@@ -4,8 +4,9 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
 from feedback.models import Feedback
+from visualizer.models import FacultyEvaluation
 from visualizer.helpers.charts_html import SF_SentipieHTML, SF_WordcloudHTML
-from visualizer.helpers.comments import SF_BestComment, SF_WorstComment, SF_CommentReport
+from visualizer.helpers.comments import SF_BestComment, SF_WorstComment, SF_CommentReport, SF_StrandReport
 from users.models import TEACHER, ADMIN
 from visualizer.models import Subject, AcademicYear
 
@@ -26,6 +27,9 @@ def admin_check(user):
 # Create your views here.
 @user_passes_test(teacher_check, login_url="login")
 def visualizer_home(request):
+    user_id = request.user.id
+    faculty_eval = FacultyEvaluation.objects.get() # TODO: Use currently selected FE period
+ 
     context = {
         'title': "Visualizer dashboard",
         'wordcloud': SF_WordcloudHTML(request),
@@ -33,6 +37,7 @@ def visualizer_home(request):
         'best_comment': SF_BestComment(request),
         'worst_comment': SF_WorstComment(request),
         'comment_report': SF_CommentReport(request),
+        'strand_report': SF_StrandReport(user_id, faculty_eval),
     }
 
     return render(request, 'visualizer/home.html', context)

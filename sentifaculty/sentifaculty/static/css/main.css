@@ -18,13 +18,39 @@
   background-color: #1b2c53;
 }
 
+.bg-mcl-red {
+  background-color: #ec1f28;
+}
+
 .bg-mcl-light {
   background-color: #233d79;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  color: #1b2c53;
+}
+
+p {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+}
+
 .text-mcl {
   color: #1b2c53;
-  font-weight: 500;
+}
+
+.text-mcl-red {
+  color: #ec1f28;
+}
+
+.strand-box {
+  transition: transform .2s; /* Animation */
+}
+
+.strand-box:hover {
+  transform: scale(1.05);
 }
 
 .bg-green {
