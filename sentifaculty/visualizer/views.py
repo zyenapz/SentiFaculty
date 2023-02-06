@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
 from feedback.models import Feedback
+from visualizer.helpers.tables import FeedbackTable
 from visualizer.models import FacultyEvaluation
 from visualizer.helpers.charts_html import SF_SentipieHTML, SF_WordcloudHTML
 from visualizer.helpers.comments import SF_BestComment, SF_WorstComment
@@ -31,9 +32,15 @@ def admin_check(user):
 def visualizer_home(request):
     user_id = request.user.id
     faculty_eval = FacultyEvaluation.objects.get() # TODO: Use currently selected FE period
+
+    query_exists = Feedback.objects.filter(
+        evaluatee__teacher__user__id=user_id,   
+        evaluatee__fe=faculty_eval
+    ).exists()
  
     context = {
         'title': "Visualizer dashboard",
+        'query_exists': query_exists,
         'wordcloud': SF_WordcloudHTML(user_id, faculty_eval),
         'chart': SF_SentipieHTML(request, user_id, faculty_eval),
         'best_comment': SF_BestComment(user_id, faculty_eval),
@@ -44,6 +51,23 @@ def visualizer_home(request):
     }
 
     return render(request, 'visualizer/home.html', context)
+
+@user_passes_test(teacher_check, login_url="login")
+def visualizer_comments(request):
+    user_id = request.user.id
+    faculty_eval = FacultyEvaluation.objects.get() # TODO: Use currently selected FE period
+    
+    query = Feedback.objects.filter(
+        evaluatee__teacher__user__id=user_id,   
+        evaluatee__fe=faculty_eval
+    )
+
+    context = {
+        'title': "Comments",
+        'feedback_table': FeedbackTable(query),
+        'query': query,
+    }
+    return render(request, 'visualizer/comments.html', context)
 
 # FIXME take the current teacher from request.user.id or whatever
 # NOTE this implementation is included in both admin and faculty views
@@ -79,7 +103,7 @@ def visualizer_dashboard(request):
 # this can be viewed by administrator
 def visualizer_linegraph(request):
     # TODO change teacher to current selected teacher
-    teacher=2019151001
+    teacher = 2019151001
     years = AcademicYear.objects.all()
     sentimentRating=[]
     for year in years:
@@ -99,7 +123,7 @@ def visualizer_linegraph(request):
     fig.update_yaxes(dtick=1,tickvals=[0,1,2],ticktext=['Negative','Neutral','Positive'],range=[0,2])
     chart = fig.to_html()
     context = {'chart':chart}
-    return render(request, 'visualizer/chart.html', context)
+    return render(request, 'visualizer/history.html', context)
 
 # NOTE The wordcloud should be available for admin accounts
 def visualizer_wordcloud(request):

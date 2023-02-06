@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django_bootstrap_icons',
     'crispy_forms',
     'crispy_bootstrap5',
+    'django_tables2',
     # 'multiforloop', # TODO REMOVE LATER
 
     # Django apps

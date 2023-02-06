@@ -1,0 +1,22 @@
+{%extends "visualizer/base.html"%}
+{% load render_table from django_tables2 %}
+
+{% block visualizer-content %}
+
+<div class="container">
+    {% if query %}
+        <div>
+            <h1>Comments for <span class="text-mcl-red">FE 2023-2024</span> </h1>
+        </div>
+        
+        {%render_table feedback_table%}
+
+    {% else %}
+        <div>
+            <h1><span class="text-mcl-red">No data</span> for FE 2023-2024 </h1>
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

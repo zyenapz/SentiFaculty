@@ -2,154 +2,161 @@
 
 {% block visualizer-content %}
 <div class="container">
-    <div>
-        <h1>Sentiment <span class="text-mcl-red">Overview</span> for FE 2023-2024 </h1>
-    </div>
-
-    <div class="row">
-        <div class="col card p-2 m-2 rounded-0 shadow">
-            {% if chart %}
-                {{ chart|safe }}
-            {% endif %}
-        </div>
-    </div>  
-
-    {% if wordcloud %}
-    <div class="row">
-        <div class="col card p-2 m-2 text-center rounded-0 shadow">
-            <h1> Wordcloud </h1>
-            
-            <div class="row">
-                <div class="col text-center">
-                    <h3>Positive</h3>
-                    {{ wordcloud.positive|safe }}
-                </div>
-                <div class="col text-center">
-                    <h3>Negative</h3>
-                    {{ wordcloud.negative|safe }}
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
-    <div class="row shadow">
-        <div class="col-md-4 card rounded-0">
-            <h3 class="m-4">YOU HAVE RECEIVED</h3>
-            <h4 class="mb-4">{{comment_report.comments_total}} Total comments</h4>
-            <h5 class="text-primary">{{comment_report.comments_today}} today</h5>
-            <h5 class="text-primary">{{comment_report.comments_thisweek}} this week</h5>
+    {%if query_exists %}
+        <div>
+            <h1>Sentiment <span class="text-mcl-red">Overview</span> for FE 2023-2024</h1>
         </div>
 
-        <div class="col card align-items-center justify-content-center rounded-0">
-            <div class="row p-3">
-                <div class="col-md-5">
-                    <h3>Best comment</h3>
-                    <blockquote class="blockquote text-success text-center">
-                        <p>"{{best_comment.text}}"</p>
-                    </blockquote>
-                    <figcaption class="blockquote-footer">
-                        <cite>From {{best_comment.year_level}} {{best_comment.strand}} (Section {{best_comment.section}})</cite>
-                    </figcaption>
-                </div>
-                <div class="col">
-                    <h3>Worst comment</h3>
-                    <blockquote class="blockquote text-mcl-red text-center">
-                        <p>"{{worst_comment.text}}"</p>
-                    </blockquote>
-                    <figcaption class="blockquote-footer">
-                        <cite>From {{worst_comment.year_level}} {{worst_comment.strand}} (Section {{worst_comment.section}})</cite>
-                    </figcaption>
-                </div>
-            </div>
-           
-        </div>
-    </div>
-
-    <!-- Approval rate by strand-->
-    <h2 class="m-4">Approval rate by <span class="text-mcl-red">Strand</strand></h2>
-    <div class="row">   
-
-        <!-- STEM -->
-        {% if strand_report.sentis.stem.total %}
-        <a href="" class="col m-2 p-4 bg-mcl shadow text-decoration-none strand-box">
-            <h3 class="text-white">STEM</h3>
-
-            {% if strand_report.approval_rates.stem >= 50 %}
-            <h4 class="text-white">{{strand_report.approval_rates.stem}}% approve</h4>
-            {% else %}
-            <h4 class="text-mcl-red">{{strand_report.approval_rates.stem}}% approve</h4>
-            {% endif %}
-
-            <p class="text-white">From <span class="text-mcl-red fw-bold">{{strand_report.sentis.stem.total}}</span> comment(s)</p>
-        </a>
-        {% endif %}
-
-        <!-- HUMSS -->
-        {% if strand_report.sentis.humss.total %}
-        <a href="" class="col m-2 p-4 bg-mcl shadow text-decoration-none strand-box">
-            <h3 class="text-white">HUMSS</h3>
-
-            {% if strand_report.approval_rates.humss >= 50 %}
-            <h4 class="text-white">{{strand_report.approval_rates.humss}}% approve</h4>
-            {% else %}
-            <h4 class="text-mcl-red">{{strand_report.approval_rates.humss}}% approve</h4>
-            {% endif %}
-
-            <p class="text-white">From <span class="text-mcl-red fw-bold">{{strand_report.sentis.humss.total}}</span> comment(s)</p>
-        </a>
-        {% endif %}
-
-        <!-- ABM -->
-        {% if strand_report.sentis.abm.total %}
-        <a href="" class="col m-2 p-4 bg-mcl shadow text-decoration-none strand-box">
-            <h3 class="text-white">ABM</h3>
-
-            {% if strand_report.approval_rates.abm >= 50 %}
-            <h4 class="text-white">{{strand_report.approval_rates.abm}}% approve</h4>
-            {% else %}
-            <h4 class="text-mcl-red">{{strand_report.approval_rates.abm}}% approve</h4>
-            {% endif %}
-
-            <p class="text-white">From <span class="text-mcl-red fw-bold">{{strand_report.sentis.abm.total}}</span> comment(s)</p>
-        </a>
-        {% endif %}
-
-        <!-- ICT -->
-        {% if strand_report.sentis.ict.total %}
-        <a href="" class="col m-2 p-4 bg-mcl shadow text-decoration-none strand-box">
-            <h3 class="text-white">ICT</h3>
-
-            {% if strand_report.approval_rates.ict >= 50 %}
-            <h4 class="text-white">{{strand_report.approval_rates.ict}}% approve</h4>
-            {% else %}
-            <h4 class="text-mcl-red">{{strand_report.approval_rates.ict}}% approve</h4>
-            {% endif %}
-
-            <p class="text-white">From <span class="text-mcl-red fw-bold">{{strand_report.sentis.ict.total}}</span> comment(s)</p>
-        </a>
-        {% endif %}
-        
-    </div>
-    <form action="#">
-        <button class="btn btn-primary btn-mcl btn-lg m-4" style="padding-left: 2.5rem; padding-right: 2.5rem;">View all comments ></button>
-    </form>
-
-    <!-- Approval rate by subject -->
-    <h2 class="m-4">Approval rate by <span class="text-mcl-red">Subject</strand></h2>
-    <div class="row">
-        {% for subj_code, tallies in subject_report.subjects_approval.items %}
-            <a href="" class="col m-2 p-4 bg-mcl shadow text-decoration-none strand-box">
-                <h3 class="text-white">{{subj_code}}</h3>
-
-                {% if tallies.approval >= 50 %}
-                <h4 class="text-white">{{tallies.approval}}% approval</h4>
-                {% else %}
-                <h4 class="text-mcl-red">{{tallies.approval}}% approval</h4>
+        <div class="row">
+            <div class="col card p-2 m-2 rounded-0 shadow">
+                {% if chart %}
+                    {{ chart|safe }}
                 {% endif %}
+            </div>
+        </div>  
+
+        {% if wordcloud %}
+        <div class="row">
+            <div class="col card p-2 m-2 text-center rounded-0 shadow">
+                <h1> Wordcloud </h1>
+                
+                <div class="row">
+                    <div class="col text-center">
+                        <h3>Positive</h3>
+                        {{ wordcloud.positive|safe }}
+                    </div>
+                    <div class="col text-center">
+                        <h3>Negative</h3>
+                        {{ wordcloud.negative|safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="row shadow">
+            <div class="col-md-4 card rounded-0">
+                <h3 class="m-4">YOU HAVE RECEIVED</h3>
+                <h4 class="mb-4">{{comment_report.comments_total}} Total comments</h4>
+                <h5 class="text-primary">{{comment_report.comments_today}} today</h5>
+                <h5 class="text-primary">{{comment_report.comments_thisweek}} this week</h5>
+            </div>
+
+            <div class="col card align-items-center justify-content-center rounded-0">
+                <div class="row p-3">
+                    <div class="col-md-5">
+                        <h3>Best comment</h3>
+                        <blockquote class="blockquote text-success text-center">
+                            <p>"{{best_comment.text}}"</p>
+                        </blockquote>
+                        <figcaption class="blockquote-footer">
+                            <cite>From {{best_comment.year_level}} {{best_comment.strand}} (Section {{best_comment.section}})</cite>
+                        </figcaption>
+                    </div>
+                    <div class="col">
+                        <h3>Worst comment</h3>
+                        <blockquote class="blockquote text-mcl-red text-center">
+                            <p>"{{worst_comment.text}}"</p>
+                        </blockquote>
+                        <figcaption class="blockquote-footer">
+                            <cite>From {{worst_comment.year_level}} {{worst_comment.strand}} (Section {{worst_comment.section}})</cite>
+                        </figcaption>
+                    </div>
+                </div>
+            
+            </div>
+        </div>
+
+        <!-- Approval rate by strand-->
+        <h2 class="m-4">Approval rate by <span class="text-mcl-red">Strand</strand></h2>
+        <div class="row">   
+
+            <!-- STEM -->
+            {% if strand_report.sentis.stem.total %}
+            <a href="" class="col m-2 p-4 bg-mcl shadow text-decoration-none strand-box">
+                <h3 class="text-white">STEM</h3>
+
+                {% if strand_report.approval_rates.stem >= 50 %}
+                <h4 class="text-white">{{strand_report.approval_rates.stem}}% approve</h4>
+                {% else %}
+                <h4 class="text-mcl-red">{{strand_report.approval_rates.stem}}% approve</h4>
+                {% endif %}
+
+                <p class="text-white">From <span class="text-mcl-red fw-bold">{{strand_report.sentis.stem.total}}</span> comment(s)</p>
             </a>
-        {% endfor %}
-    </div>
+            {% endif %}
+
+            <!-- HUMSS -->
+            {% if strand_report.sentis.humss.total %}
+            <a href="" class="col m-2 p-4 bg-mcl shadow text-decoration-none strand-box">
+                <h3 class="text-white">HUMSS</h3>
+
+                {% if strand_report.approval_rates.humss >= 50 %}
+                <h4 class="text-white">{{strand_report.approval_rates.humss}}% approve</h4>
+                {% else %}
+                <h4 class="text-mcl-red">{{strand_report.approval_rates.humss}}% approve</h4>
+                {% endif %}
+
+                <p class="text-white">From <span class="text-mcl-red fw-bold">{{strand_report.sentis.humss.total}}</span> comment(s)</p>
+            </a>
+            {% endif %}
+
+            <!-- ABM -->
+            {% if strand_report.sentis.abm.total %}
+            <a href="" class="col m-2 p-4 bg-mcl shadow text-decoration-none strand-box">
+                <h3 class="text-white">ABM</h3>
+
+                {% if strand_report.approval_rates.abm >= 50 %}
+                <h4 class="text-white">{{strand_report.approval_rates.abm}}% approve</h4>
+                {% else %}
+                <h4 class="text-mcl-red">{{strand_report.approval_rates.abm}}% approve</h4>
+                {% endif %}
+
+                <p class="text-white">From <span class="text-mcl-red fw-bold">{{strand_report.sentis.abm.total}}</span> comment(s)</p>
+            </a>
+            {% endif %}
+
+            <!-- ICT -->
+            {% if strand_report.sentis.ict.total %}
+            <a href="" class="col m-2 p-4 bg-mcl shadow text-decoration-none strand-box">
+                <h3 class="text-white">ICT</h3>
+
+                {% if strand_report.approval_rates.ict >= 50 %}
+                <h4 class="text-white">{{strand_report.approval_rates.ict}}% approve</h4>
+                {% else %}
+                <h4 class="text-mcl-red">{{strand_report.approval_rates.ict}}% approve</h4>
+                {% endif %}
+
+                <p class="text-white">From <span class="text-mcl-red fw-bold">{{strand_report.sentis.ict.total}}</span> comment(s)</p>
+            </a>
+            {% endif %}
+            
+        </div>
+        <form action="#">
+            <button class="btn btn-primary btn-mcl btn-lg m-4" style="padding-left: 2.5rem; padding-right: 2.5rem;">View all comments ></button>
+        </form>
+
+        <!-- Approval rate by subject -->
+        <h2 class="m-4">Approval rate by <span class="text-mcl-red">Subject</strand></h2>
+        <div class="row">
+            {% for subj_code, tallies in subject_report.subjects_approval.items %}
+                <a href="" class="col m-2 p-4 bg-mcl shadow text-decoration-none strand-box">
+                    <h3 class="text-white">{{subj_code}}</h3>
+
+                    {% if tallies.approval >= 50 %}
+                    <h4 class="text-white">{{tallies.approval}}% approval</h4>
+                    {% else %}
+                    <h4 class="text-mcl-red">{{tallies.approval}}% approval</h4>
+                    {% endif %}
+                </a>
+            {% endfor %}
+        </div>
+
+    {%else%}
+        <div>
+            <h1><span class="text-mcl-red">No data</span> for FE 2023-2024 </h1>
+        </div>
+    {%endif%}
 </div>
 
 {% endblock %}

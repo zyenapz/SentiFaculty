@@ -1,6 +1,6 @@
-{% extends 'base.html' %}
+{%extends "visualizer/base.html"%}
 
-{% block content %}
+{% block visualizer-content %}
 
 {% if form %}
 <form action="{% url 'dashboard' %}" method="get">
@@ -17,4 +17,4 @@
 {{ chart|safe }}
 {% endif %}
 
-{% endblock content %}
+{% endblock %}

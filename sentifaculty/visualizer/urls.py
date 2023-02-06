@@ -5,8 +5,10 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('', views.visualizer_home, name="visualizer-home"),
+    path('linegraph/', views.visualizer_linegraph, name='linegraph'),
+    path('comments', views.visualizer_comments, name='visualizer-comments'),
+
     path('dashboard/',views.visualizer_dashboard,name='dashboard'),
-    path('linegraph/',views.visualizer_linegraph,name='linegraph'),
     path('wordcloud/',views.visualizer_wordcloud,name='wordcloud'),
 
     path('login/', auth_views.LoginView.as_view(template_name='visualizer/login.html',
