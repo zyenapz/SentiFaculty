@@ -59,15 +59,24 @@ p {
 
 .btn-mcl {
   color: #ffffff;
-  background-color: #1b2c53;
+  background-color: #ec1f28;
   border-radius: 4px;
   padding-left: 2.5rem; 
   padding-right: 2.5rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  border: 0px;
+  transition: transform .2s; /* Animation */
+
 }
 
 .btn-mcl:hover {
   color: #ffffff;
   background-color: #ec1e28;
+  transform: scale(1.05);
+  
 }
 
 .btn-mcl:disabled {

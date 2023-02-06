@@ -6,9 +6,11 @@ from django.contrib.auth.decorators import user_passes_test
 from feedback.models import Feedback
 from visualizer.models import FacultyEvaluation
 from visualizer.helpers.charts_html import SF_SentipieHTML, SF_WordcloudHTML
-from visualizer.helpers.comments import SF_BestComment, SF_WorstComment, SF_CommentReport, SF_StrandReport
+from visualizer.helpers.comments import SF_BestComment, SF_WorstComment
+from visualizer.helpers.reports import SF_CommentReport, SF_StrandReport, SF_SubjectReport
 from users.models import TEACHER, ADMIN
 from visualizer.models import Subject, AcademicYear
+from django.template.defaulttags import register
 
 from wordcloud import WordCloud, STOPWORDS
 
@@ -32,12 +34,13 @@ def visualizer_home(request):
  
     context = {
         'title': "Visualizer dashboard",
-        'wordcloud': SF_WordcloudHTML(request),
-        'chart': SF_SentipieHTML(request),
-        'best_comment': SF_BestComment(request),
-        'worst_comment': SF_WorstComment(request),
-        'comment_report': SF_CommentReport(request),
+        'wordcloud': SF_WordcloudHTML(user_id, faculty_eval),
+        'chart': SF_SentipieHTML(request, user_id, faculty_eval),
+        'best_comment': SF_BestComment(user_id, faculty_eval),
+        'worst_comment': SF_WorstComment(user_id, faculty_eval),
+        'comment_report': SF_CommentReport(user_id, faculty_eval),
         'strand_report': SF_StrandReport(user_id, faculty_eval),
+        'subject_report': SF_SubjectReport(user_id, faculty_eval),
     }
 
     return render(request, 'visualizer/home.html', context)

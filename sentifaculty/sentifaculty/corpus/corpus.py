@@ -2,7 +2,7 @@ import csv
 import json
 
 from nltk.corpus import wordnet
-from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+#from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 
 def FindSynonyms(word):
@@ -70,4 +70,6 @@ for jsonObj in (adjsList, descList, encList, csvList):
 
 # purge duplicates using set datatype, order change is irrelevant
 corpusList = list(set(corpusList))
-vader = SentimentIntensityAnalyzer()
+
+print(corpusList)
+#vader = SentimentIntensityAnalyzer()

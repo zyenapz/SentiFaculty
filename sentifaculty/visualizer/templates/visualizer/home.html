@@ -2,7 +2,6 @@
 
 {% block visualizer-content %}
 <div class="container">
-
     <div>
         <h1>Sentiment <span class="text-mcl-red">Overview</span> for FE 2023-2024 </h1>
     </div>
@@ -23,11 +22,11 @@
             <div class="row">
                 <div class="col text-center">
                     <h3>Positive</h3>
-                    {{ wordcloud|safe }}
+                    {{ wordcloud.positive|safe }}
                 </div>
                 <div class="col text-center">
                     <h3>Negative</h3>
-                    {{ wordcloud|safe }}
+                    {{ wordcloud.negative|safe }}
                 </div>
             </div>
         </div>
@@ -130,9 +129,27 @@
             <p class="text-white">From <span class="text-mcl-red fw-bold">{{strand_report.sentis.ict.total}}</span> comment(s)</p>
         </a>
         {% endif %}
-
+        
     </div>
+    <form action="#">
+        <button class="btn btn-primary btn-mcl btn-lg m-4" style="padding-left: 2.5rem; padding-right: 2.5rem;">View all comments ></button>
+    </form>
 
+    <!-- Approval rate by subject -->
+    <h2 class="m-4">Approval rate by <span class="text-mcl-red">Subject</strand></h2>
+    <div class="row">
+        {% for subj_code, tallies in subject_report.subjects_approval.items %}
+            <a href="" class="col m-2 p-4 bg-mcl shadow text-decoration-none strand-box">
+                <h3 class="text-white">{{subj_code}}</h3>
+
+                {% if tallies.approval >= 50 %}
+                <h4 class="text-white">{{tallies.approval}}% approval</h4>
+                {% else %}
+                <h4 class="text-mcl-red">{{tallies.approval}}% approval</h4>
+                {% endif %}
+            </a>
+        {% endfor %}
+    </div>
 </div>
 
 {% endblock %}
