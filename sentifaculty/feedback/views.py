@@ -32,6 +32,16 @@ def get_feedback(request):
         )
     ).object
 
+    # Check if teacher is already evaluated
+    # TODO filter it also based on the currently active faculty evaluation year
+    already_evaluated = Feedback.objects.filter(
+        evaluatee_id=evaluatee.id,
+        evaluator__student__user__id=request.user.id,
+    ).exists()
+
+    if already_evaluated:
+        return redirect('fb-select')
+
     # Process form
     if request.method == "POST":
         form = CommentForm(request.POST)
@@ -46,7 +56,7 @@ def get_feedback(request):
             return redirect('fb-select')
     else:
         form = CommentForm()
-        form.fields['actual_sentiment'].initial = None
+        # form.fields['actual_sentiment'].initial = None
 
     context = {
         'title': "Get Feedback",
@@ -74,7 +84,8 @@ def filter_evaluatees(init_query, user):
 
     # Construct new query
     new_query = Evaluatee.objects.filter(
-        pk__in=evaluatee_ids
+        pk__in=evaluatee_ids,
+        section=user.section
     ).order_by(
         Case(
             *[When(pk=pk, then=Value(i)) for i, pk in enumerate(evaluatee_ids)],

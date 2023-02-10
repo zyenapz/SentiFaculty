@@ -10,13 +10,17 @@ class SF_SentipieHTML:
         data = Feedback.objects.filter(evaluatee__teacher__user__id=user_id, evaluatee__fe=faculty_eval)
         section = request.GET.get('subject')
 
-        if section:
-            data = Feedback.objects.filter(evaluatee__subject__id=section)
+        # if section:
+        #     data = Feedback.objects.filter(evaluatee__subject__id=section)
 
+        # Count number of positive and negative sentiments
+        positives = [fb for fb in data if fb.comment.sentiment_score.get_sentiment_as_str() == "positive"]
+        negatives = [fb for fb in data if fb.comment.sentiment_score.get_sentiment_as_str() == "negative"]
+        
         fig = px.pie(
             values=[
-                len(data.filter(comment__sentiment_score__hybrid_pos__gt=0.00)),
-                len(data.filter(comment__sentiment_score__hybrid_neg__gt=0.00)),
+                len(positives),
+                len(negatives),
             ],
             names=['positive', 'negative'],
             title='Sentiment Rating',

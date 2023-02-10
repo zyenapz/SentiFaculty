@@ -29,11 +29,11 @@ class Comment(models.Model):
 
     # Fields
     text = models.TextField(max_length=100, validators=validators)
-    actual_sentiment = models.CharField(
-        max_length=10, 
-        choices=SentimentChoice.choices, 
-        default=SentimentChoice.NEUTRAL,
-    ) 
+    # actual_sentiment = models.CharField(
+    #     max_length=10, 
+    #     choices=SentimentChoice.choices, 
+    #     default=SentimentChoice.NEUTRAL,
+    # ) 
 
     # Foreign Keys
     sentiment_score = models.OneToOneField('SentimentScore', on_delete=models.CASCADE)
@@ -68,6 +68,7 @@ class Evaluatee(models.Model):
     teacher = models.ForeignKey('users.Teacher', on_delete=models.CASCADE)
     subject = models.ForeignKey('visualizer.Subject', on_delete=models.CASCADE)
     fe = models.ForeignKey('visualizer.FacultyEvaluation', on_delete=models.CASCADE)
+    section = models.ForeignKey('visualizer.Section', on_delete=models.CASCADE)
 
     class Meta:
         constraints = [

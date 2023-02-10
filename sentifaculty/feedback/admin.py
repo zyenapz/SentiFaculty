@@ -13,8 +13,10 @@ class FeedbackAdmin(admin.ModelAdmin):
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     model = Comment
-    list_display = ['id', 'text', 'actual_sentiment']
-    list_filter = ['id', 'text', 'actual_sentiment']
+    list_display = ['id', 'text']
+    list_filter = ['id', 'text']
+    # list_display = ['id', 'text', 'actual_sentiment']
+    # list_filter = ['id', 'text', 'actual_sentiment']
 
 @admin.register(SentimentScore)
 class SentimentScoreAdmin(admin.ModelAdmin):
@@ -25,8 +27,8 @@ class SentimentScoreAdmin(admin.ModelAdmin):
 @admin.register(Evaluatee)
 class EvaluateeAdmin(admin.ModelAdmin):
     model = Evaluatee
-    list_display = ['id', 'teacher', 'subject', 'fe']
-    list_filter = ['id', 'teacher', 'subject', 'fe']
+    list_display = ['id', 'teacher', 'subject', 'section', 'fe']
+    list_filter = ['id', 'teacher', 'subject', 'section', 'fe']
 
 @admin.register(Evaluator)
 class EvaluatorAdmin(admin.ModelAdmin):

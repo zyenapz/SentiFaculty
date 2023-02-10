@@ -46,26 +46,43 @@
                 <div class="row p-3">
                     <div class="col-md-5">
                         <h3>Best comment</h3>
+                        {% if best_comment %}
                         <blockquote class="blockquote text-success text-center">
                             <p>"{{best_comment.text}}"</p>
                         </blockquote>
                         <figcaption class="blockquote-footer">
                             <cite>From {{best_comment.year_level}} {{best_comment.strand}} (Section {{best_comment.section}})</cite>
                         </figcaption>
+                        {% else %}
+                        <blockquote class="blockquote text-center">
+                            <p>No best comment yet</p>
+                        </blockquote>
+                        {% endif %}
                     </div>
                     <div class="col">
                         <h3>Worst comment</h3>
+                        {% if worst_comment %}
+                        
                         <blockquote class="blockquote text-mcl-red text-center">
                             <p>"{{worst_comment.text}}"</p>
                         </blockquote>
                         <figcaption class="blockquote-footer">
                             <cite>From {{worst_comment.year_level}} {{worst_comment.strand}} (Section {{worst_comment.section}})</cite>
                         </figcaption>
+                        {% else %}
+                        <blockquote class="blockquote text-center">
+                            <p>No worst comment yet</p>
+                        </blockquote>
+                        {% endif %}
                     </div>
                 </div>
             
             </div>
         </div>
+
+        <form action="#">
+            <button class="btn btn-primary btn-mcl btn-lg m-4" style="padding-left: 2.5rem; padding-right: 2.5rem;">View all comments ></button>
+        </form>
 
         <!-- Approval rate by strand-->
         <h2 class="m-4">Approval rate by <span class="text-mcl-red">Strand</strand></h2>
@@ -132,9 +149,6 @@
             {% endif %}
             
         </div>
-        <form action="#">
-            <button class="btn btn-primary btn-mcl btn-lg m-4" style="padding-left: 2.5rem; padding-right: 2.5rem;">View all comments ></button>
-        </form>
 
         <!-- Approval rate by subject -->
         <h2 class="m-4">Approval rate by <span class="text-mcl-red">Subject</strand></h2>

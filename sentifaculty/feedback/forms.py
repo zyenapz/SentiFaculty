@@ -13,10 +13,11 @@ class FeedbackForm(ModelForm):
 class CommentForm(ModelForm):
     class Meta:
         model = Comment
-        fields = ['text', 'actual_sentiment']
-        widgets = {
-            'actual_sentiment': forms.RadioSelect()
-        }
+        fields = ['text']
+        # fields = ['text', 'actual_sentiment']
+        # widgets = {
+        #     'actual_sentiment': forms.RadioSelect()
+        # }
 
 class SelectEvaluateeForm(forms.Form):
     # TODO add a way to filter evaluatees based on if they are taken by a Student
