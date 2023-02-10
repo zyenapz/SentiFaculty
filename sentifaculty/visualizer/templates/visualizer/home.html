@@ -1,12 +1,21 @@
 {%extends "visualizer/base.html"%}
 
+{% block javascript %}
+    
+{% endblock javascript %}
+
 {% block visualizer-content %}
 <div class="container">
-    {%if query_exists %}
         <div>
-            <h1>Sentiment <span class="text-mcl-red">Overview</span> for FE 2023-2024</h1>
-        </div>
+            <h1>Sentiment <span class="text-mcl-red">Overview</span> for {{selected_fe}} </h1>
 
+            <form action="" method="get" id="selection-form">
+                {% csrf_token %}
+                {{ fe_select }}
+                <input type="submit" value="Update" id="selection-button">
+            </form>
+        </div>
+    {%if query_exists %}
         <div class="row">
             <div class="col card p-2 m-2 rounded-0 shadow">
                 {% if chart %}
@@ -80,17 +89,17 @@
             </div>
         </div>
 
-        <form action="#">
+        {% comment %} <form action="#">
             <button class="btn btn-primary btn-mcl btn-lg m-4" style="padding-left: 2.5rem; padding-right: 2.5rem;">View all comments ></button>
-        </form>
+        </form> {% endcomment %}
 
         <!-- Approval rate by strand-->
-        <h2 class="m-4">Approval rate by <span class="text-mcl-red">Strand</strand></h2>
+        <h2 class="m-4">Approval rate by <span class="text-mcl-red">Strand</span></h2>
         <div class="row">   
 
             <!-- STEM -->
             {% if strand_report.sentis.stem.total %}
-            <a href="" class="col m-2 p-4 bg-mcl shadow text-decoration-none strand-box">
+            <div class="col m-2 p-4 bg-mcl shadow text-decoration-none">
                 <h3 class="text-white">STEM</h3>
 
                 {% if strand_report.approval_rates.stem >= 50 %}
@@ -100,12 +109,12 @@
                 {% endif %}
 
                 <p class="text-white">From <span class="text-mcl-red fw-bold">{{strand_report.sentis.stem.total}}</span> comment(s)</p>
-            </a>
+            </div>
             {% endif %}
 
             <!-- HUMSS -->
             {% if strand_report.sentis.humss.total %}
-            <a href="" class="col m-2 p-4 bg-mcl shadow text-decoration-none strand-box">
+            <div class="col m-2 p-4 bg-mcl shadow text-decoration-none">
                 <h3 class="text-white">HUMSS</h3>
 
                 {% if strand_report.approval_rates.humss >= 50 %}
@@ -115,12 +124,12 @@
                 {% endif %}
 
                 <p class="text-white">From <span class="text-mcl-red fw-bold">{{strand_report.sentis.humss.total}}</span> comment(s)</p>
-            </a>
+            </div>
             {% endif %}
 
             <!-- ABM -->
             {% if strand_report.sentis.abm.total %}
-            <a href="" class="col m-2 p-4 bg-mcl shadow text-decoration-none strand-box">
+            <div class="col m-2 p-4 bg-mcl shadow text-decoration-none">
                 <h3 class="text-white">ABM</h3>
 
                 {% if strand_report.approval_rates.abm >= 50 %}
@@ -130,12 +139,12 @@
                 {% endif %}
 
                 <p class="text-white">From <span class="text-mcl-red fw-bold">{{strand_report.sentis.abm.total}}</span> comment(s)</p>
-            </a>
+            </div>
             {% endif %}
 
             <!-- ICT -->
             {% if strand_report.sentis.ict.total %}
-            <a href="" class="col m-2 p-4 bg-mcl shadow text-decoration-none strand-box">
+            <div class="col m-2 p-4 bg-mcl shadow text-decoration-none">
                 <h3 class="text-white">ICT</h3>
 
                 {% if strand_report.approval_rates.ict >= 50 %}
@@ -145,7 +154,7 @@
                 {% endif %}
 
                 <p class="text-white">From <span class="text-mcl-red fw-bold">{{strand_report.sentis.ict.total}}</span> comment(s)</p>
-            </a>
+            </div>
             {% endif %}
             
         </div>
@@ -154,7 +163,7 @@
         <h2 class="m-4">Approval rate by <span class="text-mcl-red">Subject</strand></h2>
         <div class="row">
             {% for subj_code, tallies in subject_report.subjects_approval.items %}
-                <a href="" class="col m-2 p-4 bg-mcl shadow text-decoration-none strand-box">
+                <div class="col m-2 p-4 bg-mcl shadow text-decoration-none">
                     <h3 class="text-white">{{subj_code}}</h3>
 
                     {% if tallies.approval >= 50 %}
@@ -162,15 +171,38 @@
                     {% else %}
                     <h4 class="text-mcl-red">{{tallies.approval}}% approval</h4>
                     {% endif %}
-                </a>
+                </div>
             {% endfor %}
         </div>
 
     {%else%}
-        <div>
-            <h1><span class="text-mcl-red">No data</span> for FE 2023-2024 </h1>
+        <div class="m-5">
+            <h3 class="">Sorry but there currently is</h3>
+            <h3 class=""><span class="text-mcl-red">NO DATA</span> for {{selected_fe}} </h3>
         </div>
     {%endif%}
 </div>
 
 {% endblock %}
+
+{% block bodyscript %}
+<script>
+    var url = $( '#selection-form' ).attr( 'action' );
+    $("selection-button").click(function(e) {
+        e.preventDefault();
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: { 
+                id: $('#selection-form').val(), 
+            },
+            success: function(result) {
+                alert('ok');
+            },
+            error: function(result) {
+                alert('error');
+            }
+        });
+    });
+</script>
+{% endblock bodyscript %}

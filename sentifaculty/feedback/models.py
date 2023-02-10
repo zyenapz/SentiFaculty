@@ -14,7 +14,7 @@ class Feedback(models.Model):
     # Foreign Keys
     evaluatee = models.ForeignKey('Evaluatee', on_delete=models.CASCADE)
     evaluator = models.OneToOneField('Evaluator', on_delete=models.CASCADE)
-    comment = models.OneToOneField('Comment', on_delete=models.CASCADE)
+    comment = models.OneToOneField('Comment', on_delete=models.CASCADE, related_name='comment')
 
     def __str__(self) -> str:
         return self.comment.text
@@ -63,6 +63,9 @@ class SentimentScore(models.Model):
             return "negative"
         if hybrid_total == 0:
             return "neutral"
+        
+    def get_hybrid_total(self):
+        return self.hybrid_pos - self.hybrid_neg
 
 class Evaluatee(models.Model):
     teacher = models.ForeignKey('users.Teacher', on_delete=models.CASCADE)

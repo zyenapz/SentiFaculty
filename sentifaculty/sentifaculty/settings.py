@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'django_tables2',
+    'django_filters',
     # 'multiforloop', # TODO REMOVE LATER
 
     # Django apps
@@ -151,3 +152,8 @@ USERNAME_FIELD = 'email'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+ALLOWED_HOSTS = [
+    "192.168.0.181",
+    "localhost"
+]

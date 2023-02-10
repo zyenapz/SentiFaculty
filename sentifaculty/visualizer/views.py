@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
 from feedback.models import Feedback
+from visualizer.helpers.tables import FeedbackFilterSet
 from visualizer.helpers.tables import FeedbackTable
 from visualizer.models import FacultyEvaluation
 from visualizer.helpers.charts_html import SF_SentipieHTML, SF_WordcloudHTML
@@ -15,7 +16,7 @@ from django.template.defaulttags import register
 
 from wordcloud import WordCloud, STOPWORDS
 
-from .forms import SubjectSortForm
+from .forms import FEPeriodForm, SubjectSortForm
 
 # User checks
 def teacher_check(user):
@@ -31,23 +32,31 @@ def admin_check(user):
 @user_passes_test(teacher_check, login_url="login")
 def visualizer_home(request):
     user_id = request.user.id
-    faculty_eval = FacultyEvaluation.objects.get() # TODO: Use currently selected FE period
+    
+    selected_fe = FacultyEvaluation.objects.filter(is_ongoing=True).first()
+    if request.method == 'GET':
+        selection = request.GET.get('fe', None)
+
+        if selection:
+            selected_fe = FacultyEvaluation.objects.filter(pk=selection).first()
 
     query_exists = Feedback.objects.filter(
         evaluatee__teacher__user__id=user_id,   
-        evaluatee__fe=faculty_eval
+        evaluatee__fe=selected_fe
     ).exists()
  
     context = {
         'title': "Visualizer dashboard",
         'query_exists': query_exists,
-        'wordcloud': SF_WordcloudHTML(user_id, faculty_eval),
-        'chart': SF_SentipieHTML(request, user_id, faculty_eval),
-        'best_comment': SF_BestComment(user_id, faculty_eval),
-        'worst_comment': SF_WorstComment(user_id, faculty_eval),
-        'comment_report': SF_CommentReport(user_id, faculty_eval),
-        'strand_report': SF_StrandReport(user_id, faculty_eval),
-        'subject_report': SF_SubjectReport(user_id, faculty_eval),
+        'wordcloud': SF_WordcloudHTML(user_id, selected_fe),
+        'chart': SF_SentipieHTML(request, user_id, selected_fe),
+        'best_comment': SF_BestComment(user_id, selected_fe),
+        'worst_comment': SF_WorstComment(user_id, selected_fe),
+        'comment_report': SF_CommentReport(user_id, selected_fe),
+        'strand_report': SF_StrandReport(user_id, selected_fe),
+        'subject_report': SF_SubjectReport(user_id, selected_fe),
+        'fe_select': FEPeriodForm(),
+        'selected_fe': selected_fe,
     }
 
     return render(request, 'visualizer/home.html', context)
@@ -55,17 +64,30 @@ def visualizer_home(request):
 @user_passes_test(teacher_check, login_url="login")
 def visualizer_comments(request):
     user_id = request.user.id
-    faculty_eval = FacultyEvaluation.objects.get() # TODO: Use currently selected FE period
-    
-    query = Feedback.objects.filter(
+
+    selected_fe = FacultyEvaluation.objects.filter(is_ongoing=True).first()
+    if request.method == 'GET':
+        selection = request.GET.get('fe', None)
+
+        if selection:
+            selected_fe = FacultyEvaluation.objects.filter(pk=selection).first()
+
+    feedbacks = Feedback.objects.filter(
         evaluatee__teacher__user__id=user_id,   
-        evaluatee__fe=faculty_eval
+        evaluatee__fe=selected_fe
     )
 
+    # FilterSet
+    myFilter = FeedbackFilterSet(request.GET, queryset=feedbacks)
+    feedbacks = myFilter.qs
+    
     context = {
         'title': "Comments",
-        'feedback_table': FeedbackTable(query),
-        'query': query,
+        'fe_select': FEPeriodForm(),
+        'feedback_table': FeedbackTable(feedbacks),
+        'query_exists': feedbacks.exists(),
+        'selected_fe': selected_fe,
+        'filter': myFilter,
     }
     return render(request, 'visualizer/comments.html', context)
 

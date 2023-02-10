@@ -4,19 +4,55 @@
 {% block visualizer-content %}
 
 <div class="container">
-    {% if query %}
-        <div>
-            <h1>Comments for <span class="text-mcl-red">FE 2023-2024</span> </h1>
-        </div>
-        
-        {%render_table feedback_table%}
+    <div>
+        <h1>Comments for <span class="text-mcl-red">FE 2023-2024</span> </h1>
+    </div>
 
+    <form action="" method="get" id="selection-form">
+        {% csrf_token %}
+        {{ fe_select }}
+        <input type="submit" value="Update" id="selection-button">
+    </form>
+
+    {% if filter %}
+    <form action="" method="get" class="form form-inline">
+        {{ filter.form }}
+        <input type="submit" label="Search" />
+    </form>
+    {% endif %}
+
+    {% if not query_exists %}
+        <div class="m-5">
+            <h3 class="">Found <span class="text-mcl-red">NO DATA</span></h3>
+        </div>
     {% else %}
-        <div>
-            <h1><span class="text-mcl-red">No data</span> for FE 2023-2024 </h1>
+        <div class="table-responsive m-4">
+            {% render_table feedback_table %}
         </div>
     {% endif %}
 
 </div>
 
 {% endblock %}
+
+{% block bodyscript %}
+    <script>
+        var url = $( '#selection-form' ).attr( 'action' );
+        $("selection-button").click(function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: { 
+                    id: $('#selection-form').val(), 
+                },
+                success: function(result) {
+                    alert('ok');
+                },
+                error: function(result) {
+                    alert('error');
+                }
+            });
+        });
+    </script>
+{% endblock bodyscript %}

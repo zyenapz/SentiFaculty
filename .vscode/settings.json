@@ -10,5 +10,5 @@
     "python.testing.unittestEnabled": true,
     "python.testing.pytestArgs": [
         "sentifaculty"
-    ]
+    ],
 }

@@ -93,3 +93,16 @@ label.required::after {
   color: #ff0000;
 }
 
+
+tr[sentiment-label='positive'] {
+  background-color: #b6edb9;
+}
+
+
+tr[sentiment-label='neutral'] {
+  background-color: #e8e8e8;
+}
+
+tr[sentiment-label='negative'] {
+  background-color: #ea7c7c;
+}
