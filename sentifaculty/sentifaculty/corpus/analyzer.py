@@ -2,7 +2,6 @@ from pysentimiento import create_analyzer
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 #from feedback.models import SentimentScore
-from sentifaculty.corpus.preprocessor import preprocessText
 
 class Sentiment:
     def __init__(self, pos, neg):
@@ -21,7 +20,7 @@ class Sentiment:
             return "NEGATIVE"
         else:
             return None
-        
+
 class SFAnalyzer:
     def __init__(self):
         self.vader = SentimentIntensityAnalyzer()
@@ -50,6 +49,36 @@ class SFAnalyzer:
 
         return Sentiment(hybrid_pos, hybrid_neg)
 
+    def use_all(self, comment) -> dict():
+        return {
+            "vader": self.use_vader(comment),
+            "bert": self.use_bert(comment),
+            "hybrid": self.use_hybrid(comment)
+        }
+
     def _preprocess(self, comment):
-        return preprocessText(comment)
+        # TODO
+        # 1. Translate tagalog words into english
+        # 2. Remove punctuations
+        # 3. Remove urls
+        # 4. Remove stop words
+
+        # NOTE: Delegate the preprocessing job to SFTextCleaner class
+
+        # See https://github.com/pysentimiento/pysentimiento
+        # In the pre-processing section
+        return comment
+
+analyzer = SFAnalyzer()
+
+comment = "She is very approachable and explains the lessons clearly and very"
+
+results = analyzer.use_all(comment)
+
+print(f"Comment: {comment}")
+print(f"VADER: {results['vader'].classify()} ")
+print(f"BERT: {results['bert'].classify()} ")
+print(f"HYBRID: {results['hybrid'].classify()}")
+
+
 
