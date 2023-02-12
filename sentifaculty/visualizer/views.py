@@ -10,7 +10,7 @@ from visualizer.models import FacultyEvaluation
 from visualizer.helpers.charts_html import SF_SentipieHTML, SF_WordcloudHTML
 from visualizer.helpers.comments import SF_BestComment, SF_WorstComment
 from visualizer.helpers.reports import SF_CommentReport, SF_StrandReport, SF_SubjectReport
-from users.models import TEACHER, ADMIN
+from users.models import TEACHER, ADMIN, PRINCIPAL
 from visualizer.models import Subject, AcademicYear
 from django.template.defaulttags import register
 
@@ -90,6 +90,13 @@ def visualizer_comments(request):
         'filter': myFilter,
     }
     return render(request, 'visualizer/comments.html', context)
+
+@user_passes_test(admin_check, login_url="login")
+def admin_home(request):
+    context = {
+        'title': "Admin Home"
+    }
+    return render(request, 'visualizer/admin_home.html', context)
 
 # FIXME take the current teacher from request.user.id or whatever
 # NOTE this implementation is included in both admin and faculty views

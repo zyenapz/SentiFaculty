@@ -10,10 +10,12 @@ from users.managers import MalayanUserManager
 DEFAULT = 0
 STUDENT = 1
 TEACHER = 2
-ADMIN = 3
+PRINCIPAL = 3
+ADMIN = 4
 USER_TYPE_CHOICE = (
     (STUDENT, 'student'),
     (TEACHER, 'teacher'),
+    (PRINCIPAL, 'principal'),
     (ADMIN, 'admin'),
 )
 

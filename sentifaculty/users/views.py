@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth import login
+from users.models import PRINCIPAL
 from users.models import STUDENT, ADMIN, TEACHER
 
 # Create your views here.
@@ -17,5 +18,7 @@ def login_redirect(request):
         return redirect("fb-select")
     elif user_type == TEACHER:
         return redirect("visualizer-home")
+    elif user_type == ADMIN:
+        return redirect("admin-home")
     else:
         return redirect("todo-page")

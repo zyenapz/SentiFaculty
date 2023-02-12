@@ -1,6 +1,6 @@
 from django.apps import apps
 from django.contrib import admin
-from .models import MalayanUser, Principal, Student, Teacher
+from .models import MalayanUser, Student, Teacher
 
 from django.contrib.auth.admin import UserAdmin
 
@@ -20,7 +20,7 @@ class MalayanUserAdmin(UserAdmin):
     fieldsets = (
         ('User Info', {
                 # 'fields': ('mcl_id', 'first_name', 'last_name', 'user_type'),
-                'fields': ('mcl_id', 'first_name', 'last_name'),
+                'fields': ('mcl_id', 'first_name', 'last_name', 'user_type'),
             }
         ),
         ('Account Info', {
@@ -56,7 +56,7 @@ class StudentAdmin(admin.ModelAdmin):
 
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Teacher)
-admin.site.register(Principal)
+# admin.site.register(Principal)
 
 # Register your models here.
 # feedback_models = apps.get_app_config('users').get_models()
