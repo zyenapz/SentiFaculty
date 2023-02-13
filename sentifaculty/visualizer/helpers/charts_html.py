@@ -1,9 +1,12 @@
 import plotly.express as px
+import plotly.graph_objects as go
 import pandas as pd
 from feedback.models import Feedback
 from wordcloud import STOPWORDS, WordCloud
 from feedback.models import Feedback
 from sentifaculty.corpus.corpus_reader import get_corpus_polarities
+from visualizer.models import AcademicYear, FacultyEvaluation
+from users.models import Teacher
 
 class SF_SentipieHTML:
     def __new__(self, request, user_id, faculty_eval):
@@ -76,3 +79,30 @@ class SF_WordcloudHTML:
         
         return clouds
 
+class SF_OverallWordcloudHTML:
+    def __init__(self, faculty_eval=FacultyEvaluation.objects.filter(is_ongoing=True).first()):
+        data = Feedback.objects.filter(evaluatee__fe=faculty_eval)
+        self.words=''.join([str(entry.comment) for entry in data])
+        self.cloud=WordCloud(stopwords=STOPWORDS).generate(self.words).to_svg()
+
+class SF_OverallLinegraphHTML:
+    def __init__(self):
+        teachers=Teacher.objects.all()
+        queryYears = AcademicYear.objects.all()
+        self.yearsList = [str(year) for year in queryYears]
+        self.ratings={}
+        for teacher in teachers:
+            sentimentRating=[]
+            for year in queryYears:
+                if len(Feedback.objects.filter(evaluatee__fe__academic_year=year.start_year).filter(comment__sentiment_score__hybrid_pos__gt=0.00).filter(evaluatee__teacher__user__mcl_id=teacher.user.mcl_id)) > len(Feedback.objects.filter(evaluatee__fe__academic_year=year.start_year).filter(comment__sentiment_score__hybrid_neg__gt=0.00).filter(evaluatee__teacher__user__mcl_id=teacher.user.mcl_id)):
+                    sentimentRating.append(2)
+                elif len(Feedback.objects.filter(evaluatee__fe__academic_year=year.start_year).filter(comment__sentiment_score__hybrid_pos__gt=0.00).filter(evaluatee__teacher__user__mcl_id=teacher.user.mcl_id)) < len(Feedback.objects.filter(evaluatee__fe__academic_year=year.start_year).filter(comment__sentiment_score__hybrid_neg__gt=0.00).filter(evaluatee__teacher__user__mcl_id=teacher.user.mcl_id)):
+                    sentimentRating.append(0)
+                else:
+                    sentimentRating.append(1)
+            self.ratings[str(teacher)]=sentimentRating
+        self.fig = go.Figure()
+        for entry in self.ratings:
+            self.fig.add_trace(go.Scatter(x=self.yearsList,y=self.ratings[entry], name=entry))
+        self.fig.update_layout(title='testing',yaxis_dtick=1, yaxis_tickvals=[0,1,2], yaxis_ticktext=['Negative','Neutral','Positive'], yaxis_range=[0,2])
+        self.chart=self.fig.to_html()
