@@ -88,21 +88,25 @@ class SF_OverallWordcloudHTML:
 class SF_OverallLinegraphHTML:
     def __init__(self):
         teachers=Teacher.objects.all()
-        queryYears = AcademicYear.objects.all()
+        queryYears = AcademicYear.objects.all().order_by('start_year')
         self.yearsList = [str(year) for year in queryYears]
         self.ratings={}
         for teacher in teachers:
             sentimentRating=[]
             for year in queryYears:
-                if len(Feedback.objects.filter(evaluatee__fe__academic_year=year.start_year).filter(comment__sentiment_score__hybrid_pos__gt=0.00).filter(evaluatee__teacher__user__mcl_id=teacher.user.mcl_id)) > len(Feedback.objects.filter(evaluatee__fe__academic_year=year.start_year).filter(comment__sentiment_score__hybrid_neg__gt=0.00).filter(evaluatee__teacher__user__mcl_id=teacher.user.mcl_id)):
+                positives=len(Feedback.objects.filter(evaluatee__fe__academic_year=year.start_year).filter(comment__sentiment_score__hybrid_pos__gt=0.00).filter(evaluatee__teacher__user__mcl_id=teacher.user.mcl_id))
+                negatives=len(Feedback.objects.filter(evaluatee__fe__academic_year=year.start_year).filter(comment__sentiment_score__hybrid_neg__gt=0.00).filter(evaluatee__teacher__user__mcl_id=teacher.user.mcl_id))
+                if positives > negatives :
                     sentimentRating.append(2)
-                elif len(Feedback.objects.filter(evaluatee__fe__academic_year=year.start_year).filter(comment__sentiment_score__hybrid_pos__gt=0.00).filter(evaluatee__teacher__user__mcl_id=teacher.user.mcl_id)) < len(Feedback.objects.filter(evaluatee__fe__academic_year=year.start_year).filter(comment__sentiment_score__hybrid_neg__gt=0.00).filter(evaluatee__teacher__user__mcl_id=teacher.user.mcl_id)):
+                elif positives < negatives:
                     sentimentRating.append(0)
-                else:
+                elif positives > 0 and negatives > 0 and positives == negatives:
                     sentimentRating.append(1)
+                else:
+                    sentimentRating.append(None)
             self.ratings[str(teacher)]=sentimentRating
         self.fig = go.Figure()
         for entry in self.ratings:
             self.fig.add_trace(go.Scatter(x=self.yearsList,y=self.ratings[entry], name=entry))
-        self.fig.update_layout(title='testing',yaxis_dtick=1, yaxis_tickvals=[0,1,2], yaxis_ticktext=['Negative','Neutral','Positive'], yaxis_range=[0,2])
+        self.fig.update_layout(title='Overall faculty history',yaxis_dtick=1, yaxis_tickvals=[0,1,2], yaxis_ticktext=['Negative','Neutral','Positive'], yaxis_range=[0,2])
         self.chart=self.fig.to_html()
