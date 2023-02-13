@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 
 from visualizer.models import Strand, FacultyEvaluation
 from users.models import Teacher
+from wordcloud import WordCloud, STOPWORDS
 
 class SF_CommentReport:
     def __init__(self, user_id, faculty_eval):
@@ -141,3 +142,9 @@ class SF_FacultyRankings:
             feedbackAverage=sum(feedbackScores)/len(feedbackScores)
             self.teachersAveraged[str(teacher)]=feedbackAverage
         self.teachersSorted=sorted(self.teachersAveraged.items(), key=lambda x: x[1], reverse=True)
+
+class SF_OverallWordcloud:
+    def __init__(self, faculty_eval=FacultyEvaluation.objects.filter(is_ongoing=True).first()):
+        data = Feedback.objects.filter(evaluatee__fe=faculty_eval)
+        self.words=''.join([str(entry.comment) for entry in data])
+        self.cloud=WordCloud(stopwords=STOPWORDS).generate(self.words).to_svg()
