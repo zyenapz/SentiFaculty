@@ -2,7 +2,8 @@ from feedback.models import Feedback
 from datetime import date
 from datetime import datetime, timedelta
 
-from visualizer.models import Strand
+from visualizer.models import Strand, FacultyEvaluation
+from users.models import Teacher
 
 class SF_CommentReport:
     def __init__(self, user_id, faculty_eval):
@@ -128,3 +129,15 @@ class SF_SubjectReport:
                 self.subjects_approval[subject]["approval"] = None    
 
         pass
+
+class SF_FacultyRankings:
+    #prepares a sorted list of faculty members: 2d array with (name: index 0,averageScore: index 1)
+    def __init__(self, faculty_eval=FacultyEvaluation.objects.filter(is_ongoing=True).first()):
+        teachers=Teacher.objects.filter(evaluatee__fe=faculty_eval).distinct()
+        self.teachersAveraged={}
+        for teacher in teachers:
+            feedbacks=Feedback.objects.filter(evaluatee__teacher__user__mcl_id=teacher.user.mcl_id)
+            feedbackScores=[entry.comment.sentiment_score.hybrid_pos - entry.comment.sentiment_score.hybrid_neg for entry in feedbacks]
+            feedbackAverage=sum(feedbackScores)/len(feedbackScores)
+            self.teachersAveraged[str(teacher)]=feedbackAverage
+        self.teachersSorted=sorted(self.teachersAveraged.items(), key=lambda x: x[1], reverse=True)
