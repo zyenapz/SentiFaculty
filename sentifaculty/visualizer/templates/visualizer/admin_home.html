@@ -1,5 +1,19 @@
 {%extends "visualizer/admin_base.html"%}
 
 {% block visualizer-content %}
+
+{% if title_home %}
 <h1>Welcome to Admin Dashboard</h1>
+{{ cloud.cloud|safe }}
+<ul>
+    {% for teacher in rankings.teachersSorted %}
+        <li>{{ teacher.0 }}: {{ teacher.1 }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% if title_history %}
+{{ chart.chart|safe }}
+{% endif %}
+
 {% endblock %}

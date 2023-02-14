@@ -7,9 +7,9 @@ from feedback.models import Feedback
 from visualizer.helpers.tables import FeedbackFilterSet
 from visualizer.helpers.tables import FeedbackTable
 from visualizer.models import FacultyEvaluation
-from visualizer.helpers.charts_html import SF_SentipieHTML, SF_WordcloudHTML
+from visualizer.helpers.charts_html import SF_SentipieHTML, SF_WordcloudHTML, SF_OverallWordcloudHTML, SF_OverallLinegraphHTML
 from visualizer.helpers.comments import SF_BestComment, SF_WorstComment
-from visualizer.helpers.reports import SF_CommentReport, SF_StrandReport, SF_SubjectReport
+from visualizer.helpers.reports import SF_CommentReport, SF_StrandReport, SF_SubjectReport, SF_FacultyRankings
 from users.models import TEACHER, ADMIN, PRINCIPAL
 from visualizer.models import Subject, AcademicYear
 from django.template.defaulttags import register
@@ -94,7 +94,17 @@ def visualizer_comments(request):
 @user_passes_test(admin_check, login_url="login")
 def admin_home(request):
     context = {
-        'title': "Admin Home"
+        'title_home': "Admin Home",
+        'rankings': SF_FacultyRankings(),
+        'cloud': SF_OverallWordcloudHTML(),
+    }
+    return render(request, 'visualizer/admin_home.html', context)
+
+@user_passes_test(admin_check, login_url="login")
+def admin_faculty_history(request):
+    context = {
+        'title_history': 'Admin faculty history',
+        'chart': SF_OverallLinegraphHTML(),
     }
     return render(request, 'visualizer/admin_home.html', context)
 
