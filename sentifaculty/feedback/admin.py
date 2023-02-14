@@ -33,5 +33,7 @@ class EvaluateeAdmin(admin.ModelAdmin):
 @admin.register(Evaluator)
 class EvaluatorAdmin(admin.ModelAdmin):
     model = Evaluator
-    list_display = ['id', 'section', 'strand', 'year_level', 'fe', 'student']
-    list_filter = ['id', 'section', 'strand', 'year_level', 'fe', 'student']
+    # list_display = ['id', 'section', 'strand', 'year_level', 'fe', 'student']
+    # list_filter = ['id', 'section', 'strand', 'year_level', 'fe', 'student']
+    list_display = ['id', 'section', 'strand', 'year_level', 'fe']
+    list_filter = ['id', 'section', 'strand', 'year_level', 'fe']

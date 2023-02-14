@@ -3,13 +3,15 @@
 {% block visualizer-content %}
 
 {% if title_home %}
-<h1>Welcome to Admin Dashboard</h1>
+<h3>Wordcloud</h3>
 {{ cloud.cloud|safe }}
-<ul>
+
+<h3>Rankings</h3>
+<ol>
     {% for teacher in rankings.teachersSorted %}
         <li>{{ teacher.0 }}: {{ teacher.1 }}</li>
     {% endfor %}
-</ul>
+</ol>
 {% endif %}
 
 {% if title_history %}
