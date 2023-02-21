@@ -9,6 +9,7 @@ urlpatterns = [
     path('comments/', views.visualizer_comments, name='visualizer-comments'),
     path('admin-home/', views.admin_home, name='admin-home'),
     path('admin-history/', views.admin_faculty_history, name='admin-history'),
+    path('admin-faculty/<int:teacher_id>', views.admin_faculty_view, name='admin-faculty-view'),
 
     path('dashboard/',views.visualizer_dashboard,name='dashboard'),
     path('wordcloud/',views.visualizer_wordcloud,name='wordcloud'),

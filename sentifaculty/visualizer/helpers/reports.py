@@ -139,5 +139,5 @@ class SF_FacultyRankings:
             feedbacks=Feedback.objects.filter(evaluatee__teacher__user__mcl_id=teacher.user.mcl_id)
             feedbackScores=[entry.comment.sentiment_score.hybrid_pos - entry.comment.sentiment_score.hybrid_neg for entry in feedbacks]
             feedbackAverage=sum(feedbackScores)/len(feedbackScores)
-            self.teachersAveraged[str(teacher)]=feedbackAverage
+            self.teachersAveraged[str(teacher)]=[feedbackAverage, teacher.user.id]
         self.teachersSorted=sorted(self.teachersAveraged.items(), key=lambda x: x[1], reverse=True)

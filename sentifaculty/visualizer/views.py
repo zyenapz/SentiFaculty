@@ -1,7 +1,7 @@
 import plotly.express as px
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import user_passes_test
 from feedback.models import Feedback
 from visualizer.helpers.tables import FeedbackFilterSet
@@ -10,7 +10,7 @@ from visualizer.models import FacultyEvaluation
 from visualizer.helpers.charts_html import SF_SentipieHTML, SF_WordcloudHTML, SF_OverallWordcloudHTML, SF_OverallLinegraphHTML
 from visualizer.helpers.comments import SF_BestComment, SF_WorstComment
 from visualizer.helpers.reports import SF_CommentReport, SF_StrandReport, SF_SubjectReport, SF_FacultyRankings
-from users.models import TEACHER, ADMIN, PRINCIPAL
+from users.models import TEACHER, ADMIN, PRINCIPAL, Teacher
 from visualizer.models import Subject, AcademicYear
 from django.template.defaulttags import register
 
@@ -99,6 +99,39 @@ def admin_home(request):
         'cloud': SF_OverallWordcloudHTML(),
     }
     return render(request, 'visualizer/admin_home.html', context)
+
+@user_passes_test(admin_check, login_url="login")
+def admin_faculty_view(request, teacher_id):
+    check = get_object_or_404(Teacher, user__id=teacher_id)
+    teacher = teacher_id
+    
+    selected_fe = FacultyEvaluation.objects.filter(is_ongoing=True).first()
+    if request.method == 'GET':
+        selection = request.GET.get('fe', None)
+
+        if selection:
+            selected_fe = FacultyEvaluation.objects.filter(pk=selection).first()
+
+    query_exists = Feedback.objects.filter(
+        evaluatee__teacher__user__id=teacher,   
+        evaluatee__fe=selected_fe
+    ).exists()
+ 
+    context = {
+        'title': "Visualizer dashboard",
+        'query_exists': query_exists,
+        'wordcloud': SF_WordcloudHTML(teacher, selected_fe),
+        'chart': SF_SentipieHTML(request, teacher, selected_fe),
+        'best_comment': SF_BestComment(teacher, selected_fe),
+        'worst_comment': SF_WorstComment(teacher, selected_fe),
+        'comment_report': SF_CommentReport(teacher, selected_fe),
+        'strand_report': SF_StrandReport(teacher, selected_fe),
+        'subject_report': SF_SubjectReport(teacher, selected_fe),
+        'fe_select': FEPeriodForm(),
+        'selected_fe': selected_fe,
+    }
+
+    return render(request, 'visualizer/home.html', context)
 
 @user_passes_test(admin_check, login_url="login")
 def admin_faculty_history(request):

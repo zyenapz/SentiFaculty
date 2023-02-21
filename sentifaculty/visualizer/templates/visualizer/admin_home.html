@@ -9,7 +9,7 @@
 <h3>Rankings</h3>
 <ol>
     {% for teacher in rankings.teachersSorted %}
-        <li>{{ teacher.0 }}: {{ teacher.1 }}</li>
+        <li><a href="{% url 'admin-faculty-view' teacher.1.1 %}">{{ teacher.0 }}</a>: {{ teacher.1.0 }}</li>
     {% endfor %}
 </ol>
 {% endif %}
