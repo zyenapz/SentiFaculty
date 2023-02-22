@@ -1,5 +1,5 @@
 <!-- This is the project-level 'base.html' -->
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 
 {% load bootstrap_icons %}
 {% load widget_tweaks %}
@@ -12,18 +12,52 @@
 {% block content %}
 <div class="row">
     <!-- Navigation bar -->
-    <!-- Override for admin by encapsulating in block -->
-    {% block navigation %}
-        <nav class="shadow p-3 navbar navbar-expand-lg navbar-dark bg-mcl">
-            <div class="container-fluid">
-                <a class="navbar-brand text-white" href="{%url 'fb-select' %}">
-                    <img src="{% static 'images/mcl_logo-small.png' %}" alt="" width="30" height="30" class="d-inline-block align-text-top">
-                    FE Statistics
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    {% if admin %}
+    <nav class="shadow p-3 navbar navbar-expand-lg navbar-dark bg-mcl">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="{%url 'admin-home' %}">
+                <img src="{% static 'images/mcl_logo-small.png' %}" alt="" width="30" height="30"
+                    class="d-inline-block align-text-top">
+                FE Admin
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse ms-2" id="navbarNav">
+            </button>
+            <div class="collapse navbar-collapse ms-2" id="navbarNav">
+                <ul class="navbar-nav text-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{%url 'admin-home' %}">Overview</a>
+                    </li>
+                    {% comment %} <li class="nav-item">
+                        <a class="nav-link" href="#">Comments</a>
+                    </li> {% endcomment %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'admin-history' %}">History</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{%url 'admin:index' %}">Manage FE</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{%url 'logout' %}">Log Out</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    {% else %}
+    <nav class="shadow p-3 navbar navbar-expand-lg navbar-dark bg-mcl">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="{%url 'visualizer-home' %}">
+                <img src="{% static 'images/mcl_logo-small.png' %}" alt="" width="30" height="30"
+                    class="d-inline-block align-text-top">
+                FE Statistics
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse ms-2" id="navbarNav">
                 <ul class="navbar-nav text-center">
                     <li class="nav-item">
                         <a class="nav-link" href="{%url 'visualizer-home' %}">Overview</a>
@@ -38,10 +72,10 @@
                         <a class="nav-link" href="{%url 'logout' %}">Log Out</a>
                     </li>
                 </ul>
-                </div>
             </div>
-        </nav>
-    {% endblock navigation %}
+        </div>
+    </nav>
+    {% endif %}
 
     <!-- Content -->
     <div class="col py-4 text-center">

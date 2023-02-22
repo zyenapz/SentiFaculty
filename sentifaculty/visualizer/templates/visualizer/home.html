@@ -1,49 +1,8 @@
 {%extends "visualizer/base.html"%}
 
-{% load static %}
-
 {% block javascript %}
 
 {% endblock javascript %}
-
-{% block navigation %}
-    {% if admin %}
-    <nav class="shadow p-3 navbar navbar-expand-lg navbar-dark bg-mcl">
-        <div class="container-fluid">
-            <a class="navbar-brand text-white" href="{%url 'fb-select' %}">
-                <img src="{% static 'images/mcl_logo-small.png' %}" alt="" width="30" height="30"
-                    class="d-inline-block align-text-top">
-                FE Admin Home
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse ms-2" id="navbarNav">
-                <ul class="navbar-nav text-center">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{%url 'admin-home' %}">Overview</a>
-                    </li>
-                    {% comment %} <li class="nav-item">
-                        <a class="nav-link" href="#">Comments</a>
-                    </li> {% endcomment %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'admin-history' %}">History</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{%url 'admin:index' %}">Manage FE</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{%url 'logout' %}">Log Out</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    {% else %}
-    {{ block.super }}
-    {% endif %}
-{% endblock navigation %}
 
 {% block visualizer-content %}
     {% if title == "Admin Home" %}
@@ -105,7 +64,11 @@
 
         <div class="row shadow">
             <div class="col-md-4 card rounded-0">
+                {% if admin %}
+                <h3 class="m-4">Teacher has received</h3>
+                {% else %}
                 <h3 class="m-4">YOU HAVE RECEIVED</h3>
+                {% endif %}
                 <h4 class="mb-4">{{comment_report.comments_total}} Total comments</h4>
                 <h5 class="text-primary">{{comment_report.comments_today}} today</h5>
                 <h5 class="text-primary">{{comment_report.comments_thisweek}} this week</h5>
