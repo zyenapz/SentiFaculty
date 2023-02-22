@@ -5,14 +5,11 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('', views.visualizer_home, name="visualizer-home"),
-    path('linegraph/', views.visualizer_linegraph, name='linegraph'),
     path('comments/', views.visualizer_comments, name='visualizer-comments'),
     path('admin-home/', views.admin_home, name='admin-home'),
     path('admin-history/', views.admin_faculty_history, name='admin-history'),
     path('admin-faculty/<int:teacher_id>', views.admin_faculty_view, name='admin-faculty-view'),
-
-    path('dashboard/',views.visualizer_dashboard,name='dashboard'),
-    path('wordcloud/',views.visualizer_wordcloud,name='wordcloud'),
+    path('admin-faculty-comments/<int:teacher_id>', views.admin_faculty_comments, name='admin-faculty-comments'),
 
     path('login/', auth_views.LoginView.as_view(template_name='visualizer/login.html',
          extra_context={'title': "Visualizer login"}), name='login'),

@@ -1,12 +1,72 @@
 {%extends "visualizer/base.html"%}
 
+{% load static %}
+
 {% block javascript %}
-    
+
 {% endblock javascript %}
 
+{% block navigation %}
+    {% if admin %}
+    <nav class="shadow p-3 navbar navbar-expand-lg navbar-dark bg-mcl">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="{%url 'fb-select' %}">
+                <img src="{% static 'images/mcl_logo-small.png' %}" alt="" width="30" height="30"
+                    class="d-inline-block align-text-top">
+                FE Admin Home
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse ms-2" id="navbarNav">
+                <ul class="navbar-nav text-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{%url 'admin-home' %}">Overview</a>
+                    </li>
+                    {% comment %} <li class="nav-item">
+                        <a class="nav-link" href="#">Comments</a>
+                    </li> {% endcomment %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'admin-history' %}">History</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{%url 'admin:index' %}">Manage FE</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{%url 'logout' %}">Log Out</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    {% else %}
+    {{ block.super }}
+    {% endif %}
+{% endblock navigation %}
+
 {% block visualizer-content %}
-<div class="container">
+    {% if title == "Admin Home" %}
+    <h3>Wordcloud</h3>
+    {{ cloud.cloud|safe }}
+
+    <h3>Rankings</h3>
+    <ol>
+        {% for teacher in rankings.teachersSorted %}
+        <li>{{ teacher.0 }}: {{ teacher.1.0 }} (<a href="{% url 'admin-faculty-view' teacher.1.1 %}">View faculty
+                homepage</a>,
+            <a href="{% url 'admin-faculty-comments' teacher.1.1 %}">View Comments</a>)
+        </li>
+        {% endfor %}
+    </ol>
+    {% elif title == "Admin faculty history" %}
+    {{ chart.chart|safe }}
+    {% else %}
+    <div class="container">
         <div>
+            {% if admin %}
+            <h1>{{ teacher }}</h1>
+            {% endif %}
             <h1>Sentiment <span class="text-mcl-red">Overview</span> for {{selected_fe}} </h1>
 
             <form action="" method="get" id="selection-form">
@@ -15,20 +75,20 @@
                 <input type="submit" value="Update" id="selection-button">
             </form>
         </div>
-    {%if query_exists %}
+        {%if query_exists %}
         <div class="row">
             <div class="col card p-2 m-2 rounded-0 shadow">
                 {% if chart %}
-                    {{ chart|safe }}
+                {{ chart|safe }}
                 {% endif %}
             </div>
-        </div>  
+        </div>
 
         {% if wordcloud %}
         <div class="row">
             <div class="col card p-2 m-2 text-center rounded-0 shadow">
                 <h1> Wordcloud </h1>
-                
+
                 <div class="row">
                     <div class="col text-center">
                         <h3>Positive</h3>
@@ -60,7 +120,8 @@
                             <p>"{{best_comment.text}}"</p>
                         </blockquote>
                         <figcaption class="blockquote-footer">
-                            <cite>From {{best_comment.year_level}} {{best_comment.strand}} (Section {{best_comment.section}})</cite>
+                            <cite>From {{best_comment.year_level}} {{best_comment.strand}} (Section
+                                {{best_comment.section}})</cite>
                         </figcaption>
                         {% else %}
                         <blockquote class="blockquote text-center">
@@ -71,12 +132,13 @@
                     <div class="col">
                         <h3>Worst comment</h3>
                         {% if worst_comment %}
-                        
+
                         <blockquote class="blockquote text-mcl-red text-center">
                             <p>"{{worst_comment.text}}"</p>
                         </blockquote>
                         <figcaption class="blockquote-footer">
-                            <cite>From {{worst_comment.year_level}} {{worst_comment.strand}} (Section {{worst_comment.section}})</cite>
+                            <cite>From {{worst_comment.year_level}} {{worst_comment.strand}} (Section
+                                {{worst_comment.section}})</cite>
                         </figcaption>
                         {% else %}
                         <blockquote class="blockquote text-center">
@@ -85,17 +147,18 @@
                         {% endif %}
                     </div>
                 </div>
-            
+
             </div>
         </div>
 
         {% comment %} <form action="#">
-            <button class="btn btn-primary btn-mcl btn-lg m-4" style="padding-left: 2.5rem; padding-right: 2.5rem;">View all comments ></button>
+            <button class="btn btn-primary btn-mcl btn-lg m-4" style="padding-left: 2.5rem; padding-right: 2.5rem;">View all
+                comments ></button>
         </form> {% endcomment %}
 
         <!-- Approval rate by strand-->
         <h2 class="m-4">Approval rate by <span class="text-mcl-red">Strand</span></h2>
-        <div class="row">   
+        <div class="row">
 
             <!-- STEM -->
             {% if strand_report.sentis.stem.total %}
@@ -108,7 +171,8 @@
                 <h4 class="text-mcl-red">{{strand_report.approval_rates.stem}}% approve</h4>
                 {% endif %}
 
-                <p class="text-white">From <span class="text-mcl-red fw-bold">{{strand_report.sentis.stem.total}}</span> comment(s)</p>
+                <p class="text-white">From <span class="text-mcl-red fw-bold">{{strand_report.sentis.stem.total}}</span>
+                    comment(s)</p>
             </div>
             {% endif %}
 
@@ -123,7 +187,8 @@
                 <h4 class="text-mcl-red">{{strand_report.approval_rates.humss}}% approve</h4>
                 {% endif %}
 
-                <p class="text-white">From <span class="text-mcl-red fw-bold">{{strand_report.sentis.humss.total}}</span> comment(s)</p>
+                <p class="text-white">From <span class="text-mcl-red fw-bold">{{strand_report.sentis.humss.total}}</span>
+                    comment(s)</p>
             </div>
             {% endif %}
 
@@ -138,7 +203,8 @@
                 <h4 class="text-mcl-red">{{strand_report.approval_rates.abm}}% approve</h4>
                 {% endif %}
 
-                <p class="text-white">From <span class="text-mcl-red fw-bold">{{strand_report.sentis.abm.total}}</span> comment(s)</p>
+                <p class="text-white">From <span class="text-mcl-red fw-bold">{{strand_report.sentis.abm.total}}</span>
+                    comment(s)</p>
             </div>
             {% endif %}
 
@@ -153,56 +219,60 @@
                 <h4 class="text-mcl-red">{{strand_report.approval_rates.ict}}% approve</h4>
                 {% endif %}
 
-                <p class="text-white">From <span class="text-mcl-red fw-bold">{{strand_report.sentis.ict.total}}</span> comment(s)</p>
+                <p class="text-white">From <span class="text-mcl-red fw-bold">{{strand_report.sentis.ict.total}}</span>
+                    comment(s)</p>
             </div>
             {% endif %}
-            
+
         </div>
 
         <!-- Approval rate by subject -->
-        <h2 class="m-4">Approval rate by <span class="text-mcl-red">Subject</strand></h2>
+        <h2 class="m-4">Approval rate by <span class="text-mcl-red">Subject</strand>
+        </h2>
         <div class="row">
             {% for subj_code, tallies in subject_report.subjects_approval.items %}
-                <div class="col m-2 p-4 bg-mcl shadow text-decoration-none">
-                    <h3 class="text-white">{{subj_code}}</h3>
+            <div class="col m-2 p-4 bg-mcl shadow text-decoration-none">
+                <h3 class="text-white">{{subj_code}}</h3>
 
-                    {% if tallies.approval >= 50 %}
-                    <h4 class="text-white">{{tallies.approval}}% approval</h4>
-                    {% else %}
-                    <h4 class="text-mcl-red">{{tallies.approval}}% approval</h4>
-                    {% endif %}
-                </div>
+                {% if tallies.approval >= 50 %}
+                <h4 class="text-white">{{tallies.approval}}% approval</h4>
+                {% else %}
+                <h4 class="text-mcl-red">{{tallies.approval}}% approval</h4>
+                {% endif %}
+            </div>
             {% endfor %}
         </div>
 
-    {%else%}
+        {%else%}
         <div class="m-5">
             <h3 class="">Sorry but there currently is</h3>
             <h3 class=""><span class="text-mcl-red">NO DATA</span> for {{selected_fe}} </h3>
         </div>
-    {%endif%}
-</div>
-
+        {%endif%}
+    </div>
+    {% endif %}
 {% endblock %}
 
 {% block bodyscript %}
+{% if title != "Admin Home" and title != "Admin faculty history" %}
 <script>
-    var url = $( '#selection-form' ).attr( 'action' );
-    $("selection-button").click(function(e) {
+    var url = $('#selection-form').attr('action');
+    $("selection-button").click(function (e) {
         e.preventDefault();
         $.ajax({
             type: "GET",
             url: url,
-            data: { 
-                id: $('#selection-form').val(), 
+            data: {
+                id: $('#selection-form').val(),
             },
-            success: function(result) {
+            success: function (result) {
                 alert('ok');
             },
-            error: function(result) {
+            error: function (result) {
                 alert('error');
             }
         });
     });
 </script>
+{% endif %}
 {% endblock bodyscript %}

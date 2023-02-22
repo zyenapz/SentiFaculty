@@ -12,33 +12,36 @@
 {% block content %}
 <div class="row">
     <!-- Navigation bar -->
-    <nav class="shadow p-3 navbar navbar-expand-lg navbar-dark bg-mcl">
-        <div class="container-fluid">
-            <a class="navbar-brand text-white" href="{%url 'fb-select' %}">
-                <img src="{% static 'images/mcl_logo-small.png' %}" alt="" width="30" height="30" class="d-inline-block align-text-top">
-                FE Statistics
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse ms-2" id="navbarNav">
-            <ul class="navbar-nav text-center">
-                <li class="nav-item">
-                    <a class="nav-link" href="{%url 'visualizer-home' %}">Overview</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{%url 'visualizer-comments' %}">Comments</a>
-                </li>
-                {% comment %} <li class="nav-item">
-                    <a class="nav-link" href="{%url 'linegraph' %}">History</a>
-                </li> {% endcomment %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{%url 'logout' %}">Log Out</a>
-                </li>
-            </ul>
+    <!-- Override for admin by encapsulating in block -->
+    {% block navigation %}
+        <nav class="shadow p-3 navbar navbar-expand-lg navbar-dark bg-mcl">
+            <div class="container-fluid">
+                <a class="navbar-brand text-white" href="{%url 'fb-select' %}">
+                    <img src="{% static 'images/mcl_logo-small.png' %}" alt="" width="30" height="30" class="d-inline-block align-text-top">
+                    FE Statistics
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse ms-2" id="navbarNav">
+                <ul class="navbar-nav text-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{%url 'visualizer-home' %}">Overview</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{%url 'visualizer-comments' %}">Comments</a>
+                    </li>
+                    {% comment %} <li class="nav-item">
+                        <a class="nav-link" href="{%url 'linegraph' %}">History</a>
+                    </li> {% endcomment %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{%url 'logout' %}">Log Out</a>
+                    </li>
+                </ul>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
+    {% endblock navigation %}
 
     <!-- Content -->
     <div class="col py-4 text-center">
