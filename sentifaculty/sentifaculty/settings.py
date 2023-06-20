@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-zs%9xr=$wnxc5n^h=6&8p15%o*+9ar^wiazz3x7=hhdxrvv9p8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['dangodjango.pythonanywhere.com']
 
 # Application definition
 
@@ -132,10 +132,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+#STATIC_URL = '/home/dangodjango/SentiFaculty/sentifaculty/static/'
+STATIC_URL = "/static/"
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+#STATIC_ROOT = '/home/dangodjango/SentiFaculty/sentifaculty/static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'sentifaculty/static/',
+    BASE_DIR / '/sentifaculty/static/',
+
 ]
 
 # Default primary key field type
@@ -155,5 +160,6 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 ALLOWED_HOSTS = [
     "192.168.0.181",
-    "localhost"
+    "localhost",
+    "dangodjango.pythonanywhere.com",
 ]
