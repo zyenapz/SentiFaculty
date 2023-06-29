@@ -5,3 +5,4 @@ venv
 #*.sqlite3
 RlangComputations
 .python-version
+sentifaculty/static

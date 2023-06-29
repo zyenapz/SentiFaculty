@@ -9,23 +9,24 @@
     <h3>Wordcloud</h3>
     {{ cloud.cloud|safe }}
 
-    <h3>Rankings</h3>
-    <ol>
-        {% for teacher in rankings.teachersSorted %}
-        <li>{{ teacher.0 }}: {{ teacher.1.0 }} (<a href="{% url 'admin-faculty-view' teacher.1.1 %}">View faculty
-                homepage</a>,
-            <a href="{% url 'admin-faculty-comments' teacher.1.1 %}">View Comments</a>)
-        </li>
-        {% endfor %}
-    </ol>
+    <h3 class="mt-3">Rankings</h3>
+    <sup>Averaged feedback scores for each faculty member</sup>
+    <div class="container">
+        <ol class="row shadow m-2 card">
+            {% for teacher in rankings.teachersSorted %}
+            <li>{{ teacher.0 }}: {{ teacher.1.0 }} (<a href="{% url 'admin-faculty-view' teacher.1.1 %}">View faculty
+                    homepage</a>,
+                <a href="{% url 'admin-faculty-comments' teacher.1.1 %}">View Comments</a>)
+            </li>
+            {% endfor %}
+        </ol>
+    </div>
     {% elif title == "Admin faculty history" %}
     {{ chart.chart|safe }}
     {% else %}
     <div class="container">
         <div>
-            {% if admin %}
             <h1>{{ teacher }}</h1>
-            {% endif %}
             <h1>Sentiment <span class="text-mcl-red">Overview</span> for {{selected_fe}} </h1>
 
             <form action="" method="get" id="selection-form">

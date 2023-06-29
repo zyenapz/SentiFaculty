@@ -133,13 +133,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 #STATIC_URL = '/home/dangodjango/SentiFaculty/sentifaculty/static/'
-STATIC_URL = "/static/"
+STATIC_URL = "static/"
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 #STATIC_ROOT = '/home/dangodjango/SentiFaculty/sentifaculty/static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / '/sentifaculty/static/',
+    BASE_DIR / 'sentifaculty/static/',
 
 ]
 

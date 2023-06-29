@@ -32,6 +32,7 @@ def admin_check(user):
 @user_passes_test(teacher_check, login_url="login")
 def visualizer_home(request):
     user_id = request.user.id
+    check = get_object_or_404(Teacher, user__id=user_id)
     
     selected_fe = FacultyEvaluation.objects.filter(is_ongoing=True).first()
     if request.method == 'GET':
@@ -47,6 +48,7 @@ def visualizer_home(request):
  
     context = {
         'title': "Visualizer dashboard",
+        'teacher': check,
         'query_exists': query_exists,
         'wordcloud': SF_WordcloudHTML(user_id, selected_fe),
         'chart': SF_SentipieHTML(request, user_id, selected_fe),
