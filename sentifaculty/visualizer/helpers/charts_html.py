@@ -129,5 +129,6 @@ class SF_OverallLinegraphHTML:
         self.fig.update_layout(title=go.layout.Title(text='Faculty sentiment per school year<br><sup>Comment majority determines sentiment rating</sup>'),
                                yaxis_dtick=1, yaxis_tickvals=[0, 1, 2],
                                yaxis_ticktext=['Negative', 'Neutral', 'Positive'], yaxis_range=[0, 2],
-                               margin = dict(pad=5))
+                               margin = dict(pad=20))
+        self.fig.update_traces(cliponaxis=False,connectgaps=False)
         self.chart = self.fig.to_html()
