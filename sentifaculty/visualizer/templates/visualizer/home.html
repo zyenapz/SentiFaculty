@@ -6,23 +6,42 @@
 
 {% block visualizer-content %}
     {% if title == "Admin Home" %}
-    <h3>Wordcloud</h3>
-    {{ cloud.cloud|safe }}
-
-    <h3 class="mt-3">Rankings</h3>
-    <sup>Averaged feedback scores for each faculty member</sup>
-    <div class="container">
-        <ol class="row shadow m-2 card">
-            {% for teacher in rankings.teachersSorted %}
-            <li>{{ teacher.0 }}: {{ teacher.1.0 }} (<a href="{% url 'admin-faculty-view' teacher.1.1 %}">View faculty
-                    homepage</a>,
-                <a href="{% url 'admin-faculty-comments' teacher.1.1 %}">View Comments</a>)
-            </li>
-            {% endfor %}
-        </ol>
-    </div>
+        <h1>Principal's dashboard for {{selected_fe}}</h1>
+        <form action="" method="get" id="selection-form">
+            {% csrf_token %}
+            {{ fe_select }}
+            <input type="submit" value="Update" id="selection-button">
+        </form>
+        <h3 class="mt-3">Wordcloud</h3>
+        {% if cloud.cloud %}
+            {{ cloud.cloud|safe }}
+        {% else %}
+            <div class="m-5">
+                <h3 class="">Wordcloud unavailable</h3>
+            </div>
+        {% endif %}
+        <h3 class="mt-3">Rankings</h3>
+        <sup>Averaged feedback scores for each faculty member</sup>
+        <div class="container">
+            <ol class="row shadow m-2 card">
+                {% for teacher in rankings.teachersSorted %}
+                    <li>{{ teacher.0 }}: {{ teacher.1.0 }} (<a href="{% url 'admin-faculty-view' teacher.1.1 %}">View faculty
+                            homepage</a>,
+                        <a href="{% url 'admin-faculty-comments' teacher.1.1 %}">View Comments</a>)
+                    </li>
+                {% empty %}
+                    <li>No data available for {{selected_fe}}</li>
+                {% endfor %}
+            </ol>
+        </div>
     {% elif title == "Admin faculty history" %}
-    {{ chart.chart|safe }}
+        {% if chart %}
+            {{ chart.chart|safe }}
+        {% else %}
+            <div class="m-5">
+                <h3 class="">No chart data available</h3>
+            </div>
+        {% endif %}
     {% else %}
     <div class="container">
         <div>

@@ -95,11 +95,20 @@ def visualizer_comments(request):
 
 @user_passes_test(admin_check, login_url="login")
 def admin_home(request):
+    selected_fe = FacultyEvaluation.objects.filter(is_ongoing=True).first()
+    if request.method == 'GET':
+        selection = request.GET.get('fe', None)
+
+        if selection:
+            selected_fe = FacultyEvaluation.objects.filter(pk=selection).first()
+
     context = {
         'title': "Admin Home",
         'admin': True,
-        'rankings': SF_FacultyRankings(),
-        'cloud': SF_OverallWordcloudHTML(),
+        'rankings': SF_FacultyRankings(selected_fe),
+        'cloud': SF_OverallWordcloudHTML(selected_fe),
+        'selected_fe': selected_fe,
+        'fe_select': FEPeriodForm(),
     }
     return render(request, 'visualizer/home.html', context)
 
