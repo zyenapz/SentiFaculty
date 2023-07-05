@@ -128,5 +128,6 @@ class SF_OverallLinegraphHTML:
                 x=self.yearsList, y=self.ratings[entry], name=entry))
         self.fig.update_layout(title=go.layout.Title(text='Faculty sentiment per school year<br><sup>Comment majority determines sentiment rating</sup>'),
                                yaxis_dtick=1, yaxis_tickvals=[0, 1, 2],
-                               yaxis_ticktext=['Negative', 'Neutral', 'Positive'], yaxis_range=[0, 2])
+                               yaxis_ticktext=['Negative', 'Neutral', 'Positive'], yaxis_range=[0, 2],
+                               margin = dict(pad=5))
         self.chart = self.fig.to_html()

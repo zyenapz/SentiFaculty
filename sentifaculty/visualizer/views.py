@@ -20,13 +20,13 @@ from .forms import FEPeriodForm, SubjectSortForm
 
 # User checks
 def teacher_check(user):
-    return user.user_type == TEACHER
+    return user.is_authenticated and user.user_type == TEACHER
 
 def teacher_or_admin_check(user):
-    return user.user_type == TEACHER or user.user_type == ADMIN
+    return user.is_authenticated and (user.user_type == TEACHER or user.user_type == ADMIN)
 
 def admin_check(user):
-    return user.user_type == ADMIN
+    return user.is_authenticated and user.user_type == ADMIN
 
 # Create your views here.
 @user_passes_test(teacher_check, login_url="login")
