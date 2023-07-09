@@ -23,7 +23,7 @@
         <h3 class="mt-3">Rankings</h3>
         <sup>Averaged feedback scores for each faculty member</sup>
         <div class="container">
-            <ol class="row shadow m-2 card">
+            <ol class="row shadow card" style="width: fit-content; margin: auto;">
                 {% for teacher in rankings.teachersSorted %}
                     <li>{{ teacher.0 }}: {{ teacher.1.0 }} (<a href="{% url 'admin-faculty-view' teacher.1.1 %}">View faculty
                             homepage</a>,
@@ -97,7 +97,7 @@
             <div class="col card align-items-center justify-content-center rounded-0">
                 <div class="row p-3">
                     <div class="col-md-5">
-                        <h3>Best comment</h3>
+                        <h3>Highest rated comment</h3>
                         {% if best_comment %}
                         <blockquote class="blockquote text-success text-center">
                             <p>"{{best_comment.text}}"</p>
@@ -108,12 +108,12 @@
                         </figcaption>
                         {% else %}
                         <blockquote class="blockquote text-center">
-                            <p>No best comment yet</p>
+                            <p>No highest rated comment yet</p>
                         </blockquote>
                         {% endif %}
                     </div>
                     <div class="col">
-                        <h3>Worst comment</h3>
+                        <h3>Lowest rated comment</h3>
                         {% if worst_comment %}
 
                         <blockquote class="blockquote text-mcl-red text-center">
@@ -125,7 +125,7 @@
                         </figcaption>
                         {% else %}
                         <blockquote class="blockquote text-center">
-                            <p>No worst comment yet</p>
+                            <p>No lowest rated comment yet</p>
                         </blockquote>
                         {% endif %}
                     </div>
