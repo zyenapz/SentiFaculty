@@ -109,16 +109,11 @@ class SF_OverallLinegraphHTML:
         for teacher in teachers:
             sentimentRating = []
             for year in queryYears:
-                positives = len(Feedback.objects.filter(evaluatee__fe__academic_year=year.start_year).filter(
-                    comment__sentiment_score__hybrid_pos__gt=0.00).filter(evaluatee__teacher__user__mcl_id=teacher.user.mcl_id))
-                negatives = len(Feedback.objects.filter(evaluatee__fe__academic_year=year.start_year).filter(
-                    comment__sentiment_score__hybrid_neg__gt=0.00).filter(evaluatee__teacher__user__mcl_id=teacher.user.mcl_id))
-                if positives > negatives:
-                    sentimentRating.append(2)
-                elif positives < negatives:
-                    sentimentRating.append(0)
-                elif positives > 0 and negatives > 0 and positives == negatives:
-                    sentimentRating.append(1)
+                feedbacks=Feedback.objects.filter(evaluatee__teacher__user__mcl_id=teacher.user.mcl_id).filter(evaluatee__fe__academic_year=year.start_year)
+                if feedbacks:
+                    feedbackScores=[entry.comment.sentiment_score.hybrid_pos - entry.comment.sentiment_score.hybrid_neg for entry in feedbacks]
+                    feedbackAverage=sum(feedbackScores)/len(feedbackScores)
+                    sentimentRating.append(feedbackAverage)
                 else:
                     sentimentRating.append(None)
             self.ratings[str(teacher)] = sentimentRating
@@ -126,9 +121,9 @@ class SF_OverallLinegraphHTML:
         for entry in self.ratings:
             self.fig.add_trace(go.Scatter(
                 x=self.yearsList, y=self.ratings[entry], name=entry))
-        self.fig.update_layout(title=go.layout.Title(text='Faculty sentiment per school year<br><sup>Comment majority determines sentiment rating</sup>'),
-                               yaxis_dtick=1, yaxis_tickvals=[0, 1, 2],
-                               yaxis_ticktext=['Negative', 'Neutral', 'Positive'], yaxis_range=[0, 2],
+        self.fig.update_layout(title=go.layout.Title(text='Faculty averaged feedback scores per academic year<br><sup>Values closer to 1 skew positive while values closer to -1 skew negative</sup>'),
+                               yaxis_dtick=1, yaxis_tickvals=[-1,0,1],
+                               yaxis_ticktext=['Negative', 'Neutral', 'Positive'], yaxis_range=[-1,1],
                                margin = dict(pad=20))
         self.fig.update_traces(cliponaxis=False,connectgaps=False)
         self.chart = self.fig.to_html()
