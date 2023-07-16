@@ -140,7 +140,7 @@ class SF_FacultyRankings:
             feedbacks=Feedback.objects.filter(evaluatee__teacher__user__mcl_id=teacher.user.mcl_id)
             if feedbacks:
                 feedbackScores=[entry.comment.sentiment_score.hybrid_pos - entry.comment.sentiment_score.hybrid_neg for entry in feedbacks]
-                feedbackAverage=sum(feedbackScores)/len(feedbackScores)
+                feedbackAverage=round(sum(feedbackScores)/len(feedbackScores), 2)
                 self.teachersAveraged[str(teacher)]=[feedbackAverage, teacher.user.id]
             else:
                 self.teachersUnrated[str(teacher)]=teacher.user.id
