@@ -34,6 +34,14 @@
                 {% endfor %}
             </ol>
         </div>
+        {% if rankings.teachersUnrated %}
+            <h3 class="mt-3">Unrated teachers</h3>
+            <ul class="row shadow card" style="width: fit-content; margin: auto;">
+                {% for key,value in rankings.teachersUnrated.items %}
+                <li>{{ key }}: <a href="{% url 'admin-faculty-view' value %}">View faculty homepage</a>, <a href="{% url 'admin-faculty-comments' value %}">View comments</a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     {% elif title == "Admin faculty history" %}
         {% if chart %}
             {{ chart.chart|safe }}

@@ -135,9 +135,13 @@ class SF_FacultyRankings:
     def __init__(self, faculty_eval=FacultyEvaluation.objects.filter(is_ongoing=True).first()):
         teachers=Teacher.objects.filter(evaluatee__fe=faculty_eval).distinct()
         self.teachersAveraged={}
+        self.teachersUnrated={}
         for teacher in teachers:
             feedbacks=Feedback.objects.filter(evaluatee__teacher__user__mcl_id=teacher.user.mcl_id)
-            feedbackScores=[entry.comment.sentiment_score.hybrid_pos - entry.comment.sentiment_score.hybrid_neg for entry in feedbacks]
-            feedbackAverage=sum(feedbackScores)/len(feedbackScores)
-            self.teachersAveraged[str(teacher)]=[feedbackAverage, teacher.user.id]
+            if feedbacks:
+                feedbackScores=[entry.comment.sentiment_score.hybrid_pos - entry.comment.sentiment_score.hybrid_neg for entry in feedbacks]
+                feedbackAverage=sum(feedbackScores)/len(feedbackScores)
+                self.teachersAveraged[str(teacher)]=[feedbackAverage, teacher.user.id]
+            else:
+                self.teachersUnrated[str(teacher)]=teacher.user.id
         self.teachersSorted=sorted(self.teachersAveraged.items(), key=lambda x: x[1], reverse=True)
