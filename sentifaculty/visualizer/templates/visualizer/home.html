@@ -91,7 +91,7 @@
         {% endif %}
 
         <div class="row shadow">
-            <div class="col-md-4 card rounded-0">
+            {% comment %} <div class="col-md-4 card rounded-0">
                 {% if admin %}
                 <h3 class="m-4">Teacher has received</h3>
                 {% else %}
@@ -100,7 +100,7 @@
                 <h4 class="mb-4">{{comment_report.comments_total}} Total comments</h4>
                 <h5 class="text-primary">{{comment_report.comments_today}} today</h5>
                 <h5 class="text-primary">{{comment_report.comments_thisweek}} this week</h5>
-            </div>
+            </div> {% endcomment %}
 
             <div class="col card align-items-center justify-content-center rounded-0">
                 <div class="row p-3">

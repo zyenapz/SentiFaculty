@@ -15,5 +15,6 @@ class SubjectSortForm(forms.Form):
 class FEPeriodForm(forms.Form):
     fe = forms.ModelChoiceField(
         queryset=FacultyEvaluation.objects.all(),
-        required=True
+        required=True,
+        label="Academic Year"
     )

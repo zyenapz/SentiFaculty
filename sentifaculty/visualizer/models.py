@@ -86,4 +86,5 @@ class FacultyEvaluation(models.Model):
     is_ongoing = models.BooleanField(default=False)
 
     def __str__(self) -> str:
-        return f"FE {self.academic_year}"
+        #return f"FE {self.academic_year}"
+        return f"AY {self.academic_year}"
