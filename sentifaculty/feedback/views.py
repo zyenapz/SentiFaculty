@@ -78,14 +78,14 @@ def filter_evaluatees(init_query, user):
 
     for evaluatee in init_query:
         for subject in user_subjects:
-            # TODO filter it also based on the currently active faculty evaluation year
-            if evaluatee.subject == subject:
+            # (DONE 24 July 2023) filter it also based on the currently active faculty evaluation year
+            if evaluatee.subject == subject and evaluatee.fe.is_ongoing:
                 evaluatee_ids.append(evaluatee.id)
 
     # Construct new query
     new_query = Evaluatee.objects.filter(
         pk__in=evaluatee_ids,
-        section=user.section
+        section=user.section,
     ).order_by(
         Case(
             *[When(pk=pk, then=Value(i)) for i, pk in enumerate(evaluatee_ids)],
