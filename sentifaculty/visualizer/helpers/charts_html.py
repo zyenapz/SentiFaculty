@@ -92,7 +92,7 @@ class SF_OverallWordcloudHTML:
     def __init__(self, faculty_eval=FacultyEvaluation.objects.filter(is_ongoing=True).first()):
         data = Feedback.objects.filter(evaluatee__fe=faculty_eval)
         if data:
-            self.words = ''.join([str(entry.comment) for entry in data])
+            self.words = ' '.join([str(entry.comment) for entry in data])
             self.cloud = WordCloud(stopwords=STOPWORDS).generate(
                 self.words).to_svg()
         else:
