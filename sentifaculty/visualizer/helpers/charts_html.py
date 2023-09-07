@@ -1,7 +1,6 @@
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
-from feedback.models import Feedback
 from wordcloud import STOPWORDS, WordCloud
 from feedback.models import Feedback
 from sentifaculty.corpus.corpus_reader import get_corpus_polarities
@@ -96,34 +95,43 @@ class SF_OverallWordcloudHTML:
             self.cloud = WordCloud(stopwords=STOPWORDS).generate(
                 self.words).to_svg()
         else:
-            #just return an empty list, janky but works
+            # just return an empty list, janky but works
             self.cloud = []
 
 
 class SF_OverallLinegraphHTML:
     def __init__(self):
         teachers = Teacher.objects.all()
-        queryYears = AcademicYear.objects.all().order_by('start_year')
-        self.yearsList = [str(year) for year in queryYears]
+        # get total feedbacks to determine length of list
+        totalFeedbacks = Feedback.objects.all()
+        self.feedbackDates = [
+            feedback.submit_date for feedback in totalFeedbacks]
         self.ratings = {}
         for teacher in teachers:
-            sentimentRating = []
-            for year in queryYears:
-                feedbacks=Feedback.objects.filter(evaluatee__teacher__user__mcl_id=teacher.user.mcl_id).filter(evaluatee__fe__academic_year=year.start_year)
-                if feedbacks:
-                    feedbackScores=[entry.comment.sentiment_score.hybrid_pos - entry.comment.sentiment_score.hybrid_neg for entry in feedbacks]
-                    feedbackAverage=sum(feedbackScores)/len(feedbackScores)
-                    sentimentRating.append(feedbackAverage)
+            sentimentScores = []
+            feedbacks = Feedback.objects.filter(
+                evaluatee__teacher__user__mcl_id=teacher.user.mcl_id)
+            for tf in totalFeedbacks:
+                checked = False
+                for entry in feedbacks:
+                    if tf.id == entry.id:
+                        sentimentScores.append(
+                            entry.comment.sentiment_score.hybrid_pos - entry.comment.sentiment_score.hybrid_neg)
+                        checked = True
+                        break
+                if checked:
+                    continue
                 else:
-                    sentimentRating.append(None)
-            self.ratings[str(teacher)] = sentimentRating
+                    sentimentScores.append(None)
+            self.ratings[str(teacher)] = sentimentScores
         self.fig = go.Figure()
         for entry in self.ratings:
             self.fig.add_trace(go.Scatter(
-                x=self.yearsList, y=self.ratings[entry], name=entry))
-        self.fig.update_layout(title=go.layout.Title(text='Faculty averaged feedback scores per academic year<br><sup>Values closer to 1 skew positive while values closer to -1 skew negative</sup>'),
-                               yaxis_dtick=1, yaxis_tickvals=[-1,0,1],
-                               yaxis_ticktext=['Negative', 'Neutral', 'Positive'], yaxis_range=[-1,1],
-                               margin = dict(pad=20))
-        self.fig.update_traces(cliponaxis=False,connectgaps=False)
+                x=self.feedbackDates, y=self.ratings[entry], name=entry, mode='markers'))
+        self.fig.update_layout(title=go.layout.Title(text='Faculty feedback and scores <br><sup>Values closer to 1 skew positive while values closer to -1 skew negative</sup>'),
+                               yaxis_dtick=1, yaxis_tickvals=[-1, 0, 1],
+                               yaxis_ticktext=['Negative', 'Neutral', 'Positive'], yaxis_range=[-1, 1],
+                               margin=dict(pad=20),
+                               )
+        self.fig.update_xaxes(dtick="M1", tickformat="%b\n%Y")
         self.chart = self.fig.to_html()
